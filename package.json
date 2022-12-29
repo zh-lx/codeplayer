@@ -1,0 +1,18 @@
+{
+  "name": "sandbox-coding",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:zh-lx/sandbox-coding.git",
+  "author": "zh-lx <18366276315@163.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/standalone": "^7.20.11",
+    "@vue/compiler-sfc": "^3.2.45",
+    "hash-sum": "^2.0.0"
+  },
+  "devDependencies": {
+    "@babel/types": "^7.20.7",
+    "fflate": "^0.7.4",
+    "sucrase": "^3.29.0"
+  }
+}
