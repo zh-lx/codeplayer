@@ -1,5 +1,6 @@
 import { modulesKey, exportKey, dynamicImportKey, nextKey } from '../constant';
 import { ReplStore } from '../core/store';
+import { compileModulesForPreview } from '../core/module-compiler';
 
 interface IframeWindow extends Window {
   process: Record<string, any>;
@@ -10,11 +11,18 @@ interface IframeWindow extends Window {
 }
 
 export const createSandbox = async (
-  el: HTMLElement,
-  store: ReplStore,
-  modules: string[]
+  el: HTMLElement | string,
+  store: ReplStore
 ) => {
+  await store.init();
+
+  const modules = compileModulesForPreview(store);
+
   const iframe = document.createElement('iframe');
+  iframe.className = 'code-sandbox-iframe';
+
+  el =
+    typeof el === 'string' ? (document.querySelector(el) as HTMLElement) : el;
   el.append(iframe);
 
   const iframeDoc = iframe.contentDocument as Document;

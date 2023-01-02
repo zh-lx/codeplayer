@@ -1,0 +1,23 @@
+.code-sandbox-split-pane {
+  display: flex;
+  position: relative;
+}
+
+.code-sandbox-split-pane-left {
+  position: relative;
+  border-right: 1px solid #ddd;
+}
+
+.code-sandbox-dragger {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  bottom: 0;
+  right: -5px;
+  width: 10px;
+  cursor: ew-resize;
+}
+
+.code-sandbox-iframe {
+  border: 0;
+}
