@@ -1,6 +1,7 @@
 import CodeMirror from 'codemirror';
 import './codemirror.css';
 import { ReplStore } from '../core/store';
+import { getMode } from '../utils';
 
 // modes
 import 'codemirror/mode/javascript/javascript.js';
@@ -22,14 +23,6 @@ interface CodeMirrorOptions {
   readonly?: boolean;
   store: ReplStore;
 }
-
-const getMode = (filename: string) => {
-  return filename.endsWith('.vue') || filename.endsWith('.html')
-    ? 'htmlmixed'
-    : filename.endsWith('.css')
-    ? 'css'
-    : 'javascript';
-};
 
 export const createCodeMirror = (
   el: HTMLElement,
@@ -55,7 +48,9 @@ export const createCodeMirror = (
     ...addonOptions,
   });
 
-  editor.on('change', () => {
-    console.log(editor.getValue());
-  });
+  // editor.on('change', () => {
+  //   console.log(editor.getValue());
+  // });
+
+  return editor;
 };

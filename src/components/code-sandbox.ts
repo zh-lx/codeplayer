@@ -25,7 +25,7 @@ export const createCodeSandbox = (el: HTMLElement, options?: StoreOptions) => {
 
   // create Mirror
   const codeEditor = codeSandbox.querySelector('#__code-editor') as HTMLElement;
-  createCodeMirror(codeEditor, {
+  const editorInstance = createCodeMirror(codeEditor, {
     store,
   });
 
@@ -39,6 +39,7 @@ export const createCodeSandbox = (el: HTMLElement, options?: StoreOptions) => {
   new FileSelector({
     store,
     el: codeSandbox.querySelector('#__file-selector') as HTMLElement,
+    editorInstance,
   });
 
   // create splitter

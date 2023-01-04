@@ -11,11 +11,36 @@
 
 .code-sandbox-file-item {
   line-height: 18px;
-  padding: 4px;
+  padding: 4px 2px 4px 8px;
   box-sizing: border-box;
   border-bottom: 2px solid transparent;
   font-size: 12px;
   cursor: pointer;
+  color: #999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.code-sandbox-file-item-no-close {
+  padding: 4px 8px;
+}
+
+.code-sandbox-file-item svg {
+  font-size: 16px;
+  visibility: hidden;
+}
+
+.code-sandbox-file-item:hover {
+  background-color: #f8f8f8;
+}
+
+.code-sandbox-file-item:hover svg {
+  visibility: visible;
+}
+
+.code-sandbox-file-item svg:hover {
+  background-color: #e3e3e3;
 }
 
 .code-sandbox-file-active-item {
