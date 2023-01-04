@@ -8,6 +8,7 @@ import * as defaultCompiler from 'vue/compiler-sfc';
 import { File } from './file';
 import { utoa, atou } from '../utils';
 import { compileFile } from '../transform';
+import { MapFile } from '../constant';
 
 const defaultMainFile = 'App.vue';
 
@@ -199,10 +200,10 @@ export class ReplStore implements Store {
   }
 
   private initImportMap() {
-    const map = this.state.files['import-map.json'];
+    const map = this.state.files[MapFile];
     if (!map) {
-      this.state.files['import-map.json'] = new File(
-        'import-map.json',
+      this.state.files[MapFile] = new File(
+        MapFile,
         JSON.stringify(
           {
             imports: {
@@ -231,10 +232,10 @@ export class ReplStore implements Store {
 
   getImportMap() {
     try {
-      return JSON.parse(this.state.files['import-map.json'].code);
+      return JSON.parse(this.state.files[MapFile].code);
     } catch (e) {
       this.state.errors = [
-        `Syntax error in import-map.json: ${(e as Error).message}`,
+        `Syntax error in ${MapFile}: ${(e as Error).message}`,
       ];
       return {};
     }
@@ -244,7 +245,7 @@ export class ReplStore implements Store {
     imports: Record<string, string>;
     scopes?: Record<string, Record<string, string>>;
   }) {
-    this.state.files['import-map.json']!.code = JSON.stringify(map, null, 2);
+    this.state.files[MapFile]!.code = JSON.stringify(map, null, 2);
   }
 
   async setVueVersion(version: string) {

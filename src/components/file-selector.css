@@ -1,0 +1,24 @@
+.code-sandbox-file-selector {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  justify-content: space-between;
+}
+
+.code-sandbox-file-selector-left {
+  display: flex;
+  flex: 1;
+}
+
+.code-sandbox-file-item {
+  line-height: 18px;
+  padding: 4px;
+  box-sizing: border-box;
+  border-bottom: 2px solid transparent;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.code-sandbox-file-active-item {
+  border-bottom-color: #3491fa;
+  color: #3491fa;
+}
