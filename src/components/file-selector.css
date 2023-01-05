@@ -6,6 +6,7 @@
 
 .code-sandbox-file-selector-left {
   display: flex;
+  align-items: center;
   flex: 1;
 }
 
@@ -46,4 +47,30 @@
 .code-sandbox-file-active-item {
   border-bottom-color: #3491fa;
   color: #3491fa;
+}
+
+.code-sandbox-add-file-button {
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  cursor: pointer;
+}
+
+.code-sandbox-add-file-button:hover path {
+  stroke: #3491fa;
+}
+
+.code-sandbox-filename-input {
+  outline: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100px;
+  height: 24px;
+  margin: 0 4px;
+  padding: 0 4px;
+}
+
+.code-sandbox-filename-input::placeholder {
+  font-size: 2px;
+  color: #ccc;
 }
