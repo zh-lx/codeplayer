@@ -36,6 +36,7 @@ export default class Splitter {
   }
 
   init() {
+    this.initSplit();
     this.elements.el.addEventListener('mousedown', this.dragStart);
     this.elements.container.addEventListener('mousemove', this.dragMove);
     this.elements.container.addEventListener('mouseup', this.dragEnd);
@@ -80,4 +81,11 @@ export default class Splitter {
     this.elements.container.style.userSelect = 'initial';
     this.elements.container.style.cursor = 'initial';
   };
+
+  initSplit() {
+    this.elements.left.style[this.state.isVertical ? 'height' : 'width'] =
+      this.computedSplitBound() + '%';
+    this.elements.right.style[this.state.isVertical ? 'height' : 'width'] =
+      100 - this.computedSplitBound() + '%';
+  }
 }

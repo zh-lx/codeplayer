@@ -28,9 +28,6 @@ export const createCodeMirror = (
   el: HTMLElement,
   { readonly, store }: CodeMirrorOptions
 ) => {
-  const editorContainer = document.createElement('div');
-  el.append(editorContainer);
-
   const addonOptions = {
     autoCloseBrackets: true,
     autoCloseTags: true,
@@ -38,7 +35,7 @@ export const createCodeMirror = (
     gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
   };
 
-  const editor = CodeMirror(editorContainer!, {
+  const editor = CodeMirror(el!, {
     value: store.state.activeFile.code || '',
     mode: getMode(store.state.activeFile.filename),
     readOnly: readonly,
@@ -47,10 +44,6 @@ export const createCodeMirror = (
     lineNumbers: true,
     ...addonOptions,
   });
-
-  // editor.on('change', () => {
-  //   console.log(editor.getValue());
-  // });
 
   return editor;
 };

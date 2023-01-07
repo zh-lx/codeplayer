@@ -12,11 +12,11 @@ interface FileSelectorOptions {
 export default class FileSelector {
   store: ReplStore;
   el: HTMLElement;
-  activeFileItem: HTMLElement;
-  mainFileItem: HTMLElement;
   editorInstance: Editor;
   fileInput: HTMLInputElement | null;
+  fileMap: Record<string, HTMLElement>;
   constructor(options: FileSelectorOptions) {
+    this.fileMap = {};
     this.store = options.store;
     this.el = options.el;
     this.editorInstance = options.editorInstance;
@@ -45,6 +45,9 @@ export default class FileSelector {
         left?.append(fileItem);
       }
     }
+    this.fileMap[this.store.state.activeFile.filename].classList.add(
+      'code-sandbox-file-active-item'
+    );
     this.createAddFileButton(left);
     return selector;
   }
@@ -55,10 +58,7 @@ export default class FileSelector {
     fileItem.innerHTML = `<span>${
       filename === MapFile ? 'ImportMap' : filename
     }</span>`;
-    if (filename === MapFile) {
-      fileItem.classList.add('code-sandbox-file-item-no-close');
-    } else if (this.store.state.mainFile === filename) {
-      this.mainFileItem = fileItem;
+    if (filename === MapFile || filename === this.store.state.mainFile) {
       fileItem.classList.add('code-sandbox-file-item-no-close');
     } else {
       fileItem.innerHTML += `<svg width="1em" height="1em" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -66,22 +66,11 @@ export default class FileSelector {
       <path d="M14 34L34 14" stroke="#606266" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>`;
     }
-    if (this.store.state.activeFile.filename === filename) {
-      fileItem.classList.add('code-sandbox-file-active-item');
-      this.activeFileItem = fileItem;
-    }
+    this.fileMap[filename] = fileItem;
 
-    // 点击切换文件
+    // 点击选择当前文件
     const clickFileItem = () => {
-      if (fileItem === this.activeFileItem) {
-        return;
-      }
-      this.activeFileItem.classList.remove('code-sandbox-file-active-item');
-      fileItem.classList.add('code-sandbox-file-active-item');
-      this.activeFileItem = fileItem;
-      this.store.setActive(filename);
-      this.editorInstance.setValue(this.store.state.activeFile.code);
-      this.editorInstance.setOption('mode', getMode(filename));
+      this.selectFile(filename);
     };
 
     // 点击删除按钮删除文件
@@ -90,15 +79,9 @@ export default class FileSelector {
       if (!confirm) {
         return;
       } else {
-        fileItem.removeEventListener('click', clickFileItem);
         fileItem.remove();
         if (this.store.state.activeFile.filename === filename) {
-          const mainFile = this.store.state.mainFile;
-          this.store.setActive(mainFile);
-          this.activeFileItem = this.mainFileItem;
-          this.activeFileItem.classList.add('code-sandbox-file-active-item');
-          this.editorInstance.setValue(this.store.state.activeFile.code);
-          this.editorInstance.setOption('mode', getMode(filename));
+          this.selectFile(this.store.state.mainFile);
         }
       }
     };
@@ -107,6 +90,21 @@ export default class FileSelector {
     fileItem.querySelector('svg')?.addEventListener('click', deleteFile);
 
     return fileItem;
+  }
+
+  // 选择文件高亮并展示其代码
+  selectFile(filename: string) {
+    if (filename === this.store.state.activeFile.filename) {
+      return;
+    }
+    const activeFileItem = this.el.querySelector(
+      '.code-sandbox-file-active-item'
+    );
+    activeFileItem?.classList.remove('code-sandbox-file-active-item');
+    this.fileMap[filename].classList.add('code-sandbox-file-active-item');
+    this.store.setActive(filename);
+    this.editorInstance.setValue(this.store.state.activeFile.code);
+    this.editorInstance.setOption('mode', getMode(filename));
   }
 
   // 添加文件
@@ -138,18 +136,14 @@ export default class FileSelector {
     input.placeholder = '请输入新文件名';
     input.addEventListener('blur', () => {
       const filename = input.value;
-      const validate = validateFile(filename);
+      const validate = validateFile(filename, this.fileMap);
       if (validate) {
         this.fileInput = null;
         this.store.addFile(filename);
         const newFileItem = this.createFileItem(filename);
         parentNode.insertBefore(newFileItem, input);
         input.remove();
-        // this.activeFileItem.classList.remove('code-sandbox-file-active-item');
-        // this.activeFileItem = newFileItem;
-        // newFileItem.classList.add('code-sandbox-file-active-item');
-        // this.editorInstance.setValue(this.store.state.activeFile.code);
-        // this.editorInstance.setOption('mode', getMode(filename));
+        this.selectFile(filename);
       }
     });
     return input;

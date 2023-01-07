@@ -10,7 +10,7 @@ interface IframeWindow extends Window {
   __next__: Function;
 }
 
-export const createSandbox = async (
+export const renderSandbox = async (
   el: HTMLElement | string,
   store: ReplStore
 ) => {
@@ -23,6 +23,9 @@ export const createSandbox = async (
 
   el =
     typeof el === 'string' ? (document.querySelector(el) as HTMLElement) : el;
+  if (el.querySelector('.code-sandbox-iframe')) {
+    el.querySelector('.code-sandbox-iframe')?.remove();
+  }
   el.append(iframe);
 
   const iframeDoc = iframe.contentDocument as Document;

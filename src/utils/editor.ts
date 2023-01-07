@@ -6,14 +6,26 @@ export const getMode = (filename: string) => {
     : 'javascript';
 };
 
-export const validateFile = (filename: string) => {
-  const result = ['.html', '.css', '.js', '.ts', '.vue'].some((item) =>
-    filename.endsWith(item)
-  );
-  if (!result) {
+export const validateFile = (
+  filename: string,
+  files: Record<string, HTMLElement>
+) => {
+  // 校验是否为可解析文件
+  if (
+    !['.html', '.css', '.js', '.ts', '.vue'].some((item) =>
+      filename.endsWith(item)
+    )
+  ) {
     window.alert(
       'Code Sandbox 当前仅支持以 *.html、*.css、*.js、*.ts、*.vue 的文件'
     );
+    return false;
   }
-  return result;
+  // 校验文件是否已存在
+  if (files[filename]) {
+    window.alert(`${filename}文件已存在！`);
+    return false;
+  }
+
+  return true;
 };

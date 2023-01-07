@@ -7,7 +7,16 @@
 .code-sandbox-file-selector-left {
   display: flex;
   align-items: center;
+  overflow-x: scroll;
   flex: 1;
+}
+
+.code-sandbox-file-selector-right {
+  border-left: 1px solid #eee;
+}
+
+.code-sandbox-file-selector ::-webkit-scrollbar {
+  display: none;
 }
 
 .code-sandbox-file-item {
