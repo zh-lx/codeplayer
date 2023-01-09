@@ -8,7 +8,7 @@ import {
   extractIdentifiers,
   isInDestructureAssignment,
   isStaticProperty,
-} from 'vue/compiler-sfc';
+} from '@vue/compiler-sfc';
 import { ExportSpecifier, Identifier, Node } from '@babel/types';
 import {
   modulesKey,

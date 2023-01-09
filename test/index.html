@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <div class="container" style="height: 500px"></div>
+  </body>
+  <script type="module">
+    import Sandbox from '../src/index.ts';
+    import { defaultMainFile, ifile, ifileCode, welcomeCode } from './file.ts';
+
+    Sandbox({
+      el: document.querySelector('.container'),
+      options: {
+        initFiles: {
+          [defaultMainFile]: welcomeCode,
+          [ifile]: ifileCode,
+        },
+      },
+    });
+  </script>
+</html>

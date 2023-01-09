@@ -20,6 +20,7 @@ export default class FileSelector {
     this.store = options.store;
     this.el = options.el;
     this.editorInstance = options.editorInstance;
+    this.fileInput = null;
     this.init();
   }
 

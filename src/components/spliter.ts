@@ -59,6 +59,8 @@ export default class Splitter {
     this.elements.container.style.cursor = this.state.isVertical
       ? 'ns-resize'
       : 'ew-resize';
+    const mask = document.querySelector('.code-sandbox-iframe-mask');
+    mask?.classList.remove('code-sandbox-iframe-mask-hidden');
   };
 
   dragMove = (e: MouseEvent) => {
@@ -80,6 +82,8 @@ export default class Splitter {
     this.state.isDrag = false;
     this.elements.container.style.userSelect = 'initial';
     this.elements.container.style.cursor = 'initial';
+    const mask = document.querySelector('.code-sandbox-iframe-mask');
+    mask?.classList.add('code-sandbox-iframe-mask-hidden');
   };
 
   initSplit() {

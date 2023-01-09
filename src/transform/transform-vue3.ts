@@ -6,7 +6,7 @@ import {
   SFCDescriptor,
   BindingMetadata,
   CompilerOptions,
-} from 'vue/compiler-sfc';
+} from '@vue/compiler-sfc';
 import { transformTS } from './transform-ts';
 
 export const transformVue3 = async (

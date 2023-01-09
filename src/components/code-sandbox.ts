@@ -72,8 +72,12 @@ export default class CodeSandbox {
   }
 
   createIframeSandbox() {
-    const sandbox = this.el.querySelector('#__split-pane-right') as HTMLElement;
-    renderSandbox(sandbox, this.store);
+    const right = this.el.querySelector('#__split-pane-right') as HTMLElement;
+    const iframeContainer = document.createElement('div');
+    iframeContainer.classList.add('code-sandbox-iframe-mask');
+    iframeContainer.classList.add('code-sandbox-iframe-mask-hidden');
+    right.append(iframeContainer);
+    renderSandbox(right, this.store);
   }
 
   createSplitter() {

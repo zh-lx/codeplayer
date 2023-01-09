@@ -11,6 +11,10 @@
   border-right: 1px solid #ddd;
 }
 
+.code-sandbox-split-pane-right {
+  position: relative;
+}
+
 .code-sandbox-dragger {
   position: absolute;
   z-index: 3;
@@ -38,4 +42,15 @@
 #__code-editor {
   flex: 1;
   overflow: hidden;
+}
+
+.code-sandbox-iframe-mask {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
+}
+
+.code-sandbox-iframe-mask-hidden {
+  display: none;
 }

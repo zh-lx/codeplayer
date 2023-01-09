@@ -62,7 +62,7 @@
 /* GUTTER */
 
 .CodeMirror-gutters {
-  border-right: 1px solid var(--border);
+  border-right: 1px solid #ddd;
   background-color: transparent;
   white-space: nowrap;
 }

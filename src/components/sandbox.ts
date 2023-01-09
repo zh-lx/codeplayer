@@ -33,14 +33,14 @@ export const renderSandbox = async (
 
   iframeWindow.process = { env: {} };
   iframeWindow[modulesKey] = {};
-  iframeWindow[exportKey] = (mod, key, get) => {
+  iframeWindow[exportKey] = (mod: Object, key: string, get: () => any) => {
     Object.defineProperty(mod, key, {
       enumerable: true,
       configurable: true,
       get,
     });
   };
-  iframeWindow[dynamicImportKey] = (key) => {
+  iframeWindow[dynamicImportKey] = (key: string) => {
     return Promise.resolve(iframeWindow[modulesKey][key]);
   };
 

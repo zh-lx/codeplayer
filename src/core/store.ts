@@ -1,10 +1,10 @@
-import { version, reactive, watchEffect } from 'vue';
+import { version } from '../constant';
 import {
   SFCScriptCompileOptions,
   SFCAsyncStyleCompileOptions,
   SFCTemplateCompileOptions,
-} from 'vue/compiler-sfc';
-import * as defaultCompiler from 'vue/compiler-sfc';
+} from '@vue/compiler-sfc';
+import * as defaultCompiler from '@vue/compiler-sfc';
 import { File } from './file';
 import { utoa, atou } from '../utils';
 import { compileFile } from '../transform';
@@ -120,7 +120,7 @@ export class ReplStore implements Store {
     }
 
     // init state
-    this.state = reactive({
+    this.state = {
       mainFile,
       files,
       activeFile: files[mainFile],
@@ -128,7 +128,7 @@ export class ReplStore implements Store {
       vueRuntimeURL: this.defaultVueRuntimeURL,
       // vueServerRendererURL: this.defaultVueServerRendererURL,
       resetFlip: true,
-    });
+    };
 
     this.initImportMap();
   }

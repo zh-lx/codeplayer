@@ -1,6 +1,6 @@
 import { Store } from '../core/store';
 import { File } from '../core/file';
-import { shouldTransformRef, transformRef } from 'vue/compiler-sfc';
+import { shouldTransformRef, transformRef } from '@vue/compiler-sfc';
 import { transformTS } from './transform-ts';
 import { transformVue3 } from './transform-vue3';
 
