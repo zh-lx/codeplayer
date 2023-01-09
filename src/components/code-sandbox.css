@@ -23,6 +23,9 @@
 
 .code-sandbox-iframe {
   border: 0;
+  position: relative;
+  height: 100%;
+  width: 100%;
 }
 
 #__editor {
