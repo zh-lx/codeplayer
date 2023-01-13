@@ -17,8 +17,9 @@
     "forceConsistentCasingInFileNames": true,
     "useDefineForClassFields": false,
     "skipLibCheck": true,
-    "target": "esnext"
+    "target": "esnext",
+    "strictPropertyInitialization": false
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "_src/**/*.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

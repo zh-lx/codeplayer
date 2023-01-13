@@ -1,4 +1,4 @@
-.code-sandbox-split-pane {
+/* .code-sandbox-split-pane {
   display: flex;
   position: relative;
   height: 100%;
@@ -13,9 +13,9 @@
 
 .code-sandbox-split-pane-right {
   position: relative;
-}
+} */
 
-.code-sandbox-dragger {
+/* .code-sandbox-dragger {
   position: absolute;
   z-index: 3;
   top: 0;
@@ -23,7 +23,7 @@
   right: -5px;
   width: 10px;
   cursor: ew-resize;
-}
+} */
 
 .code-sandbox-iframe {
   border: 0;
@@ -32,12 +32,12 @@
   width: 100%;
 }
 
-#__editor {
+/* #__editor {
   position: relative;
   height: 100%;
   display: flex;
   flex-direction: column;
-}
+} */
 
 #__code-editor {
   flex: 1;

@@ -1,7 +1,6 @@
 import CodeMirror from 'codemirror';
-import './codemirror.css';
-import { ReplStore } from '../core/store';
-import { getMode } from '../utils';
+// import './index.css';
+import { getMode, ReplStore } from '../../utils';
 
 // modes
 import 'codemirror/mode/javascript/javascript.js';

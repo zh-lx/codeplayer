@@ -1,10 +1,10 @@
 import { Editor } from 'codemirror';
-import { ReplStore, StoreOptions } from '../core/store';
-import { createCodeMirror } from './codemirror';
-import { renderSandbox } from './sandbox';
-import Splitter from './spliter';
-import FileSelector from './file-selector';
-import './code-sandbox.css';
+import { ReplStore, StoreOptions } from '../../core/store';
+import { createCodeMirror } from '../codemirror';
+import { renderSandbox } from '../iframe-sandbox';
+import Splitter from '../spliter';
+import FileSelector from '../file-selector';
+import './index.css';
 
 interface CodeSandboxOptions {
   el: HTMLElement;
@@ -18,6 +18,7 @@ export default class CodeSandbox {
   store: ReplStore;
   editor: Editor;
   constructor({ el, options }: CodeSandboxOptions) {
+    this.editor = null as unknown as Editor;
     this.el = el;
     this.store = new ReplStore(options);
     this.init();
@@ -28,6 +29,7 @@ export default class CodeSandbox {
     this.createCodeMirror();
     this.createFileSelector();
     this.createIframeSandbox();
+    this.createIframeMask();
     this.createSplitter();
   }
 
@@ -73,11 +75,17 @@ export default class CodeSandbox {
 
   createIframeSandbox() {
     const right = this.el.querySelector('#__split-pane-right') as HTMLElement;
-    const iframeContainer = document.createElement('div');
-    iframeContainer.classList.add('code-sandbox-iframe-mask');
-    iframeContainer.classList.add('code-sandbox-iframe-mask-hidden');
-    right.append(iframeContainer);
     renderSandbox(right, this.store);
+  }
+
+  // The mouseover event will be invalid when the mouse moves into the iframe.
+  // So create a mask to cover the iframe when dragging the splitter.
+  createIframeMask() {
+    const right = this.el.querySelector('#__split-pane-right') as HTMLElement;
+    const iframeMask = document.createElement('div');
+    iframeMask.classList.add('code-sandbox-iframe-mask');
+    iframeMask.classList.add('code-sandbox-iframe-mask-hidden');
+    right.append(iframeMask);
   }
 
   createSplitter() {

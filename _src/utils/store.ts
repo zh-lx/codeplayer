@@ -4,8 +4,7 @@ import {
   SFCTemplateCompileOptions,
 } from '@vue/compiler-sfc';
 import * as defaultCompiler from '@vue/compiler-sfc';
-import { File } from './file';
-import { utoa, atou } from '../utils';
+import { utoa, atou, File } from './index';
 import { compileFile } from '../transform';
 import { MapFile, version } from '../constant';
 

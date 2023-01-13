@@ -1,6 +1,12 @@
-import { modulesKey, exportKey, dynamicImportKey, nextKey } from '../constant';
-import { ReplStore } from '../core/store';
-import { compileModulesForPreview } from '../core/module-compiler';
+import {
+  modulesKey,
+  exportKey,
+  dynamicImportKey,
+  nextKey,
+} from '../../constant';
+import { ReplStore } from '../../core/store';
+import { compileModulesForPreview } from '../../core/module-compiler';
+import { renderIframeTip } from '../error-tip';
 
 interface IframeWindow extends Window {
   process: Record<string, any>;
@@ -14,15 +20,22 @@ export const renderSandbox = async (
   el: HTMLElement | string,
   store: ReplStore
 ) => {
+  el =
+    typeof el === 'string' ? (document.querySelector(el) as HTMLElement) : el;
+
   await store.init();
 
   const modules = compileModulesForPreview(store);
 
+  if (store.state.errors.length) {
+    console.error(store.state.errors);
+    // renderErrorTip(store.state.errors, el);
+    return;
+  }
+
   const iframe = document.createElement('iframe');
   iframe.className = 'code-sandbox-iframe';
 
-  el =
-    typeof el === 'string' ? (document.querySelector(el) as HTMLElement) : el;
   if (el.querySelector('.code-sandbox-iframe')) {
     el.querySelector('.code-sandbox-iframe')?.remove();
   }

@@ -1,8 +1,8 @@
-import { ReplStore } from '../core/store';
-import './file-selector.css';
-import { MapFile } from '../constant';
+import { ReplStore } from '../../core/store';
+import './index.css';
+import { MapFile } from '../../constant';
 import { Editor } from 'codemirror';
-import { getMode, validateFile } from '../utils';
+import { getMode, validateFile } from '../../utils';
 interface FileSelectorOptions {
   store: ReplStore;
   el: HTMLElement;
