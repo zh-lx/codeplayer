@@ -21,9 +21,9 @@
     "strictPropertyInitialization": false,
     "types": ["node"],
     "paths": {
-      "@/*": ["./_src/*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts", "_src/**/*.ts", "./global.d.ts"],
+  "include": ["src/**/*.ts", "./global.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
