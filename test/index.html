@@ -10,12 +10,20 @@
   </body>
   <script type="module">
     import '../_src/index.ts';
-    import { defaultMainFile, ifile, ifileCode, welcomeCode } from './file.ts';
+    import {
+      defaultMainFile,
+      ifile,
+      ifileCode,
+      welcomeCode,
+      map,
+      mapCode,
+    } from './file.ts';
 
     document.querySelector('code-sandbox').options = {
       initFiles: {
         [defaultMainFile]: welcomeCode,
         [ifile]: ifileCode,
+        [map]: mapCode,
       },
     };
   </script>

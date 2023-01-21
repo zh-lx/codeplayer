@@ -1,0 +1,50 @@
+@import url('@/style/index.less');
+* {
+  box-sizing: border-box;
+}
+
+.code-sandbox-splitter {
+  display: flex;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  .code-sandbox-splitter-left {
+    border-right: 1px solid @border-common-color;
+    position: relative;
+    height: 100%;
+  }
+  .code-sandbox-splitter-right {
+    position: relative;
+  }
+  .split-mask {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+  }
+  .split-mask-hidden {
+    display: none;
+  }
+}
+
+code-sandbox-splitter-left {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+code-sandbox-splitter-right {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+.dragger {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  bottom: 0;
+  right: -5px;
+  width: 10px;
+  cursor: ew-resize;
+}

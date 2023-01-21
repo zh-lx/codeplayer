@@ -18,8 +18,12 @@
     "useDefineForClassFields": false,
     "skipLibCheck": true,
     "target": "esnext",
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "types": ["node"],
+    "paths": {
+      "@/*": ["./_src/*"]
+    }
   },
-  "include": ["src/**/*.ts", "_src/**/*.ts"],
+  "include": ["src/**/*.ts", "_src/**/*.ts", "./global.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

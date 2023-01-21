@@ -1,5 +1,3 @@
-/* BASICS */
-
 .CodeMirror {
   color: var(--symbols);
   --symbols: #777;
@@ -22,7 +20,7 @@
   --cursor: #000;
 
   direction: ltr;
-  font-family: var(--font-code);
+  font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
   height: auto;
 }
 
@@ -62,7 +60,7 @@
 /* GUTTER */
 
 .CodeMirror-gutters {
-  border-right: 1px solid #ddd;
+  border-right: 1px solid #f7f7f7;
   background-color: transparent;
   white-space: nowrap;
 }
@@ -305,7 +303,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 /* STOP */
 
 /* The rest of this file contains styles related to the mechanics of
-   the editor. You probably shouldn't touch them. */
+the editor. You probably shouldn't touch them. */
 
 .CodeMirror {
   position: relative;
@@ -317,8 +315,8 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
   overflow: auto !important; /* Things will break if this is overridden */
   /* 30px is the magic margin used to hide the element's real scrollbars */
   /* See overflow: hidden in .CodeMirror */
-  padding-bottom: 44px;
-  height: calc(100% + 44px);
+  padding-bottom: 32px;
+  height: calc(100% + 32px);
   outline: none; /* Prevent dragging from highlighting the element */
   position: relative;
 }
@@ -329,8 +327,8 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 }
 
 /* The fake, visible scrollbars. Used to force redraw during scrolling
-   before actual scrolling happens, thus preventing shaking and
-   flickering artifacts. */
+before actual scrolling happens, thus preventing shaking and
+flickering artifacts. */
 .CodeMirror-vscrollbar,
 .CodeMirror-hscrollbar,
 .CodeMirror-scrollbar-filler,
@@ -542,6 +540,7 @@ span.CodeMirror-selectedtext {
   height: 100%;
 }
 
-/* .CodeMirror-scroll > div:nth-child(2) {
-  height: 0 !important;
-} */
+.code-mirror-container {
+  position: relative;
+  height: 100%;
+}

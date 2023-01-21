@@ -9,3 +9,5 @@ export const scriptModuleRE =
   /<script\b[^>]*type\s*=\s*(?:"module"|'module')[^>]*>([^]*?)<\/script>/gi;
 export const MapFile = 'import-map.json';
 export const version = '3.2.45';
+export const defaultMainFile = 'App.vue';
+export const fileTypes = ['.html', '.js', '.css', '.vue', '.ts'];

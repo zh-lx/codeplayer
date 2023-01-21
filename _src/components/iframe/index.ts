@@ -1,26 +1,15 @@
-import {
-  LitElement,
-  css,
-  html,
-  PropertyValues,
-  PropertyValueMap,
-  TemplateResult,
-} from 'lit';
-import {
-  customElement,
-  property,
-  query,
-  state,
-  queryAsync,
-} from 'lit/decorators.js';
-import { style } from './style';
-import { ReplStore, StoreOptions, compileModulesForPreview } from '../../utils';
+import { LitElement, html, css, unsafeCSS, PropertyValueMap } from 'lit';
+import { customElement, property, query, state } from 'lit/decorators.js';
+import { compileModulesForPreview, File } from '@/utils';
 import {
   modulesKey,
   exportKey,
   dynamicImportKey,
   nextKey,
-} from '../../constant';
+  MapFile,
+} from '@/constant';
+import { compileFile } from '@/transform';
+import style from './style.less?inline';
 
 interface IframeWindow extends Window {
   process: Record<string, any>;
@@ -30,33 +19,62 @@ interface IframeWindow extends Window {
   __next__: Function;
 }
 
-@customElement('iframe-sandbox')
+@customElement('code-sandbox-iframe')
 export class IframeSandbox extends LitElement {
   @property()
-  store: ReplStore;
-
-  @query('#code-sandbox-iframe')
-  iframeRef: HTMLIFrameElement;
+  files: Record<string, File>;
+  @property()
+  mainFile: string;
 
   @state()
-  scripts: TemplateResult[] = [];
+  errors: (string | Error)[]; // 编译错误
 
-  // protected willUpdate(_changedProperties: PropertyValueMap<this>) {
-  //   if (_changedProperties.has('store') && !!this.store) {
-  //     this.renderSandbox();
-  //   }
-  // }
+  @query('#iframe-container')
+  iframeRef: HTMLIFrameElement;
 
-  updated() {
-    console.log(this.store, this.iframeRef);
+  firstUpdated() {
     this.renderSandbox();
   }
 
+  protected willUpdate(
+    _changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>
+  ): void {
+    if (_changedProperties.has('files') && this.hasUpdated) {
+      this.renderSandbox();
+    }
+  }
+
+  async compileFiles() {
+    const result = { errors: [] };
+    const compileFilePromises = Promise.all(
+      Object.keys(this.files).map((file) =>
+        compileFile(result, this.files[file])
+      )
+    );
+    await compileFilePromises;
+    this.errors = result.errors;
+  }
+
+  getImportMap() {
+    try {
+      return JSON.parse(this.files[MapFile].code);
+    } catch (e) {
+      this.errors = [`Syntax error in ${MapFile}: ${(e as Error).message}`];
+      return {};
+    }
+  }
+
   async renderSandbox() {
-    const modules = compileModulesForPreview(this.store);
+    await this.compileFiles();
+    const modules = compileModulesForPreview(this.files, this.mainFile);
+    // 建立一个新的 iframe
+    this.iframeRef.querySelector('iframe')?.remove();
+    const iframe = document.createElement('iframe');
+    iframe.className = 'code-sandbox-iframe';
+    this.iframeRef.append(iframe);
 
-    const iframeWindow = this.iframeRef.contentWindow as IframeWindow;
-
+    const iframeDoc = iframe.contentDocument as Document;
+    const iframeWindow = iframe.contentWindow as IframeWindow;
     iframeWindow.process = { env: {} };
     iframeWindow[modulesKey] = {};
     iframeWindow[exportKey] = (mod: Object, key: string, get: () => any) => {
@@ -70,6 +88,30 @@ export class IframeSandbox extends LitElement {
       return Promise.resolve(iframeWindow[modulesKey][key]);
     };
 
+    iframeDoc.open();
+    iframeDoc.write(`<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Code Sandbox</title>
+        <style id="__sfc-styles"></style>
+        <script
+          async
+          rel"modulepreload"
+          src="https://unpkg.com/es-module-shims@1.5.18/dist/es-module-shims.wasm.js"
+        ></script>
+        <script type="importmap">
+          ${JSON.stringify(this.getImportMap())}
+        </script>
+      </head>
+      <body>
+  
+      </body>
+    </html>
+    `);
+
     const codeToEval = [
       `window.__modules__ = {}\nwindow.__css__ = ''\n` +
         `if (window.__app__) window.__app__.unmount()\n` +
@@ -79,70 +121,50 @@ export class IframeSandbox extends LitElement {
     ];
 
     // if main file is a vue file, mount it.
-    if (this.store.state.mainFile.endsWith('.vue')) {
+    if (this.mainFile.endsWith('.vue')) {
       codeToEval.push(
         `import { createApp as _createApp } from "vue"
-          const _mount = () => {
-              const AppComponent = __modules__["${this.store.state.mainFile}"].default
-              AppComponent.name = 'Repl'
-              const app = window.__app__ = _createApp(AppComponent)
-              app.config.unwrapInjectedRef = true
-              app.config.errorHandler = e => console.error(e)
-              app.mount('#app')
-            };
-          _mount();`
+        const _mount = () => {
+            const AppComponent = __modules__["${this.mainFile}"].default
+            AppComponent.name = 'Repl'
+            const app = window.__app__ = _createApp(AppComponent)
+            app.config.unwrapInjectedRef = true
+            app.config.errorHandler = e => console.error(e)
+            app.mount('#app')
+          };
+        _mount();`
       );
     }
 
-    this.scripts = [];
     for (let script of codeToEval) {
-      // const scriptEl = document.createElement('script');
-      // scriptEl.setAttribute('type', 'module');
+      const scriptEl = document.createElement('script');
+      scriptEl.setAttribute('type', 'module');
       const done = new Promise((resolve) => {
         iframeWindow[nextKey] = resolve;
       });
-      const scriptEL = html`<script type="module">
-        ${script + `\nwindow.${nextKey}()`};
-      </script>`;
-      this.scripts.push(scriptEL);
+      // send ok in the module script to ensure sequential evaluation
+      // of multiple proxy.eval() calls
+      scriptEl.innerHTML = script + `\nwindow.${nextKey}()`;
+      iframeDoc.head.appendChild(scriptEl);
       await done;
     }
+
+    iframeDoc.close();
   }
 
   render() {
     return html`
-      <iframe class="code-sandbox-iframe" id="code-sandbox-iframe">
-        <!DOCTYPE html>
-        <html lang="en">
-          <head>
-            <meta charset="UTF-8" />
-            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-            <meta
-              name="viewport"
-              content="width=device-width, initial-scale=1.0"
-            />
-            <title>Code Sandbox Preview</title>
-            <style id="__sfc-styles"></style>
-            <script
-              async
-              src="https://unpkg.com/es-module-shims@1.5.18/dist/es-module-shims.wasm.js"
-            ></script>
-            <script type="importmap">
-              ${this.store.getImportMap()}
-            </script>
-            ${this.scripts}
-          </head>
-          <body></body>
-        </html>
-      </iframe>
+      <div class="code-sandbox-iframe-container" id="iframe-container"></div>
     `;
   }
 
-  static styles = style;
+  static styles = css`
+    ${unsafeCSS(style)}
+  `;
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'iframe-sandbox': IframeSandbox;
+    'code-sandbox-iframe': IframeSandbox;
   }
 }

@@ -1,27 +1,51 @@
-import { LitElement, html } from 'lit';
+import { LitElement, html, PropertyValueMap, unsafeCSS, css } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { Editor } from 'codemirror';
-import { createCodeMirror } from '../codemirror';
-import { ReplStore } from '../../utils';
-import { style } from './style';
+import { createCodeMirror } from '@/components/codemirror';
+import { getMode, File } from '@/utils';
+import style from './style.less?inline';
 
 @customElement('code-editor')
 export class CodeSandbox extends LitElement {
   editor: Editor;
 
   @property()
-  store: ReplStore;
+  activeFile: File;
 
   @query('#code-mirror-container')
   _codeEditor: HTMLDivElement;
 
-  updated() {
+  firstUpdated() {
     this.createEditor();
+  }
+
+  protected willUpdate(
+    _changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>
+  ): void {
+    this.updateActive();
+  }
+
+  updateActive() {
+    if (!this.activeFile) {
+      return;
+    }
+    const { code, filename } = this.activeFile;
+    if (this.editor && this.editor.getValue() !== code) {
+      this.editor.setValue(code);
+      this.editor.setOption('mode', getMode(filename));
+    }
   }
 
   createEditor() {
     this.editor = createCodeMirror(this._codeEditor, {
-      store: this.store,
+      activeFile: this.activeFile,
+    });
+    this.editor.on('change', (instance) => {
+      this.dispatchEvent(
+        new CustomEvent('emitMethod', {
+          detail: ['setCode', instance.getValue()],
+        })
+      );
     });
   }
 
@@ -31,5 +55,7 @@ export class CodeSandbox extends LitElement {
     `;
   }
 
-  static styles = style;
+  static styles = css`
+    ${unsafeCSS(style)}
+  `;
 }

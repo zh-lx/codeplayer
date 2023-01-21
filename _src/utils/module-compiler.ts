@@ -1,4 +1,3 @@
-import { Store } from './store';
 import { File } from './file';
 import {
   babelParse,
@@ -19,15 +18,18 @@ import {
   scriptModuleRE,
 } from '../constant';
 
-export function compileModulesForPreview(store: Store) {
+export function compileModulesForPreview(
+  files: Record<string, File>,
+  mainFile: string
+) {
   const seen = new Set<File>();
   const processed: string[] = [];
-  processFile(store, store.state.files[store.state.mainFile], processed, seen);
+  processFile(files, files[mainFile], processed, seen);
 
   // also add css files that are not imported
-  for (const filename in store.state.files) {
+  for (const filename in files) {
     if (filename.endsWith('.css')) {
-      const file = store.state.files[filename];
+      const file = files[filename];
       if (!seen.has(file)) {
         processed.push(
           `\nwindow.__css__ += ${JSON.stringify(file.compiled.css)}`
@@ -41,7 +43,7 @@ export function compileModulesForPreview(store: Store) {
 
 // similar logic with Vite's SSR transform, except this is targeting the browser
 function processFile(
-  store: Store,
+  files: Record<string, File>,
   file: File,
   processed: string[],
   seen: Set<File>
@@ -52,11 +54,11 @@ function processFile(
   seen.add(file);
 
   if (file.filename.endsWith('.html')) {
-    return processHtmlFile(store, file.code, file.filename, processed, seen);
+    return processHtmlFile(files, file.code, file.filename, processed, seen);
   }
 
   let [js, importedFiles] = processModule(
-    store,
+    files,
     file.compiled.js,
     file.filename
   );
@@ -67,7 +69,7 @@ function processFile(
   // crawl child imports
   if (importedFiles.size) {
     for (const imported of importedFiles) {
-      processFile(store, store.state.files[imported], processed, seen);
+      processFile(files, files[imported], processed, seen);
     }
   }
   // push self
@@ -75,7 +77,7 @@ function processFile(
 }
 
 function processModule(
-  store: Store,
+  files: Record<string, File>,
   src: string,
   filename: string
 ): [string, Set<string>] {
@@ -93,7 +95,7 @@ function processModule(
 
   function defineImport(node: Node, source: string) {
     const filename = source.replace(/^\.\/+/, '');
-    if (!(filename in store.state.files)) {
+    if (!(filename in files)) {
       throw new Error(`File "${filename}" does not exist.`);
     }
     if (importedFiles.has(filename)) {
@@ -270,7 +272,7 @@ function processModule(
 }
 
 function processHtmlFile(
-  store: Store,
+  files: Record<string, File>,
   src: string,
   filename: string,
   processed: string[],
@@ -280,10 +282,10 @@ function processHtmlFile(
   let jsCode = '';
   const html = src
     .replace(scriptModuleRE, (_, content) => {
-      const [code, importedFiles] = processModule(store, content, filename);
+      const [code, importedFiles] = processModule(files, content, filename);
       if (importedFiles.size) {
         for (const imported of importedFiles) {
-          processFile(store, store.state.files[imported], deps, seen);
+          processFile(files, files[imported], deps, seen);
         }
       }
       jsCode += '\n' + code;

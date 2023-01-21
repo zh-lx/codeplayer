@@ -1,25 +1,29 @@
-import { Store } from '../core/store';
-import { File } from '../core/file';
+import { File } from '../utils';
 import hashId from 'hash-sum';
 import { COMP_IDENTIFIER } from '../constant';
 import {
   SFCDescriptor,
   BindingMetadata,
   CompilerOptions,
+  parse,
+  compileStyleAsync,
+  compileScript,
+  compileTemplate,
+  rewriteDefault,
 } from '@vue/compiler-sfc';
 import { transformTS } from './transform-ts';
 
 export const transformVue3 = async (
-  store: Store,
+  result: { errors: (string | Error)[] },
   { filename, code, compiled }: File
 ) => {
   const id = hashId(filename);
-  const { errors, descriptor } = store.compiler.parse(code, {
+  const { errors, descriptor } = parse(code, {
     filename,
     sourceMap: true,
   });
   if (errors.length) {
-    store.state.errors = errors;
+    result.errors = errors;
     return;
   }
 
@@ -27,7 +31,7 @@ export const transformVue3 = async (
     descriptor.styles.some((s) => s.lang) ||
     (descriptor.template && descriptor.template.lang)
   ) {
-    store.state.errors = [
+    result.errors = [
       `lang="x" pre-processors for <template> or <style> are currently not ` +
         `supported.`,
     ];
@@ -39,7 +43,7 @@ export const transformVue3 = async (
     (descriptor.scriptSetup && descriptor.scriptSetup.lang);
   const isTS = scriptLang === 'ts';
   if (scriptLang && !isTS) {
-    store.state.errors = [`Only lang="ts" is supported for <script> blocks.`];
+    result.errors = [`Only lang="ts" is supported for <script> blocks.`];
     return;
   }
 
@@ -50,7 +54,12 @@ export const transformVue3 = async (
     clientCode += code;
   };
 
-  const clientScriptResult = await doCompileScript(store, descriptor, id, isTS);
+  const clientScriptResult = await doCompileScript(
+    result,
+    descriptor,
+    id,
+    isTS
+  );
   if (!clientScriptResult) {
     return;
   }
@@ -59,11 +68,11 @@ export const transformVue3 = async (
 
   if (
     descriptor.template &&
-    (!descriptor.scriptSetup ||
-      store.vue3SFCOptions?.script?.inlineTemplate === false)
+    !descriptor.scriptSetup
+    // || vue3SFCOptions?.script?.inlineTemplate === false
   ) {
     const clientTemplateResult = await doCompileTemplate(
-      store,
+      result,
       descriptor,
       id,
       bindings,
@@ -93,14 +102,12 @@ export const transformVue3 = async (
   let css = '';
   for (const style of descriptor.styles) {
     if (style.module) {
-      store.state.errors = [
-        `<style module> is not supported in the playground.`,
-      ];
+      result.errors = [`<style module> is not supported in the playground.`];
       return;
     }
 
-    const styleResult = await store.compiler.compileStyleAsync({
-      ...store.vue3SFCOptions?.style,
+    const styleResult = await compileStyleAsync({
+      // ...vue3SFCOptions?.style,
       source: style.content,
       filename,
       id,
@@ -111,7 +118,7 @@ export const transformVue3 = async (
       // postcss uses pathToFileURL which isn't polyfilled in the browser
       // ignore these errors for now
       if (!styleResult.errors[0].message.includes('pathToFileURL')) {
-        store.state.errors = styleResult.errors;
+        result.errors = styleResult.errors;
       }
       // proceed even if css compile errors
     } else {
@@ -125,11 +132,11 @@ export const transformVue3 = async (
   }
 
   // clear errors
-  store.state.errors = [];
+  result.errors = [];
 };
 
 async function doCompileScript(
-  store: Store,
+  result: { errors: (string | Error)[] },
   descriptor: SFCDescriptor,
   id: string,
   isTS: boolean
@@ -139,15 +146,15 @@ async function doCompileScript(
       const expressionPlugins: CompilerOptions['expressionPlugins'] = isTS
         ? ['typescript', 'jsx']
         : undefined;
-      const compiledScript = store.compiler.compileScript(descriptor, {
+      const compiledScript = compileScript(descriptor, {
         inlineTemplate: true,
-        ...store.vue3SFCOptions?.script,
+        // ...vue3SFCOptions?.script,
         id,
         templateOptions: {
-          ...store.vue3SFCOptions?.template,
+          // ...vue3SFCOptions?.template,
           ssr: false,
           compilerOptions: {
-            ...store.vue3SFCOptions?.template?.compilerOptions,
+            // ...vue3SFCOptions?.template?.compilerOptions,
             expressionPlugins,
           },
         },
@@ -162,7 +169,7 @@ async function doCompileScript(
       }
       code +=
         `\n` +
-        store.compiler.rewriteDefault(
+        rewriteDefault(
           compiledScript.content,
           COMP_IDENTIFIER,
           expressionPlugins
@@ -174,7 +181,7 @@ async function doCompileScript(
 
       return [code, compiledScript.bindings];
     } catch (e: any) {
-      store.state.errors = [e.stack.split('\n').slice(0, 12).join('\n')];
+      result.errors = [e.stack.split('\n').slice(0, 12).join('\n')];
       return;
     }
   } else {
@@ -183,14 +190,14 @@ async function doCompileScript(
 }
 
 async function doCompileTemplate(
-  store: Store,
+  result: { errors: (string | Error)[] },
   descriptor: SFCDescriptor,
   id: string,
   bindingMetadata: BindingMetadata | undefined,
   isTS: boolean
 ) {
-  const templateResult = store.compiler.compileTemplate({
-    ...store.vue3SFCOptions?.template,
+  const templateResult = compileTemplate({
+    // ...vue3SFCOptions?.template,
     source: descriptor.template!.content,
     filename: descriptor.filename,
     id,
@@ -199,13 +206,13 @@ async function doCompileTemplate(
     ssr: false,
     isProd: false,
     compilerOptions: {
-      ...store.vue3SFCOptions?.template?.compilerOptions,
+      // ...vue3SFCOptions?.template?.compilerOptions,
       bindingMetadata,
       expressionPlugins: isTS ? ['typescript'] : undefined,
     },
   });
   if (templateResult.errors.length) {
-    store.state.errors = templateResult.errors;
+    result.errors = templateResult.errors;
     return;
   }
 
