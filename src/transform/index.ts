@@ -1,23 +1,22 @@
-import { Store } from '../core/store';
-import { File } from '../core/file';
+import { File } from '../utils/file';
 import { shouldTransformRef, transformRef } from '@vue/compiler-sfc';
 import { transformTS } from './transform-ts';
 import { transformVue3 } from './transform-vue3';
 
 // transform vue sfc code
 export const compileFile = async (
-  store: Store,
+  result: { errors: (string | Error)[] },
   { filename, code, compiled }: File
 ) => {
   if (!code.trim()) {
-    store.state.errors = [];
+    result.errors = [];
     return;
   }
 
   // compile css
   if (filename.endsWith('.css')) {
     compiled.css = code;
-    store.state.errors = [];
+    result.errors = [];
     return;
   }
 
@@ -30,13 +29,13 @@ export const compileFile = async (
       code = await transformTS(code);
     }
     compiled.js = code;
-    store.state.errors = [];
+    result.errors = [];
     return;
   }
 
   // vue3
   if (filename.endsWith('.vue')) {
-    const _code = await transformVue3(store, {
+    const _code = await transformVue3(result, {
       filename,
       code,
       compiled,
@@ -44,6 +43,6 @@ export const compileFile = async (
     return _code;
   }
 
-  store.state.errors = [];
+  result.errors = [];
   return;
 };

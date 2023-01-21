@@ -1,7 +1,5 @@
 import CodeMirror from 'codemirror';
-import './index.css';
-import { ReplStore } from '../../core/store';
-import { getMode } from '../../utils';
+import { getMode, File } from '@/utils';
 
 // modes
 import 'codemirror/mode/javascript/javascript.js';
@@ -21,12 +19,12 @@ import 'codemirror/addon/fold/comment-fold.js';
 interface CodeMirrorOptions {
   mode?: string;
   readonly?: boolean;
-  store: ReplStore;
+  activeFile: File;
 }
 
 export const createCodeMirror = (
   el: HTMLElement,
-  { readonly, store }: CodeMirrorOptions
+  { readonly, activeFile }: CodeMirrorOptions
 ) => {
   const addonOptions = {
     autoCloseBrackets: true,
@@ -36,8 +34,8 @@ export const createCodeMirror = (
   };
 
   const editor = CodeMirror(el!, {
-    value: store.state.activeFile.code || '',
-    mode: getMode(store.state.activeFile.filename),
+    value: activeFile.code || '',
+    mode: getMode(activeFile.filename),
     readOnly: readonly,
     tabSize: 2,
     lineWrapping: true,
