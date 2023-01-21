@@ -136,6 +136,18 @@ export class IframeSandbox extends LitElement {
       );
     }
 
+    if (this.mainFile.endsWith('.jsx') || this.mainFile.endsWith('.tsx')) {
+      codeToEval.push(
+        `import React from "react";
+        import ReactDOM from "react-dom";
+        const App = __modules__["${this.mainFile}"].default;
+        ReactDOM.render(
+          React.createElement(App, null),
+          document.getElementById('app')
+        );`
+      );
+    }
+
     for (let script of codeToEval) {
       const scriptEl = document.createElement('script');
       scriptEl.setAttribute('type', 'module');

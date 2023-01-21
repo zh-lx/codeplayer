@@ -1,3 +1,10 @@
+import {
+  HtmlTemplate,
+  JavascriptTemplate,
+  ReactTemplate,
+  TypescriptTemplate,
+  Vue3Template,
+} from '@/constant/templates';
 export class File {
   filename: string;
   code: string;
@@ -13,3 +20,17 @@ export class File {
     this.hidden = hidden;
   }
 }
+
+export const getTemplate = (appType: string) => {
+  if (appType === 'vue') {
+    return Vue3Template;
+  } else if (appType === 'react') {
+    return ReactTemplate;
+  } else if (appType === 'html') {
+    return HtmlTemplate;
+  } else if (appType === 'javascript') {
+    return JavascriptTemplate;
+  } else {
+    return TypescriptTemplate;
+  }
+};

@@ -5,6 +5,8 @@ import { File } from '@/utils';
 import { MapFile, fileTypes } from '@/constant';
 import JsSVG from '@/assets/js.svg';
 import TsSVG from '@/assets/ts.svg';
+import JsxSVG from '@/assets/jsx.svg';
+import TsxSVG from '@/assets/tsx.svg';
 import CssSVG from '@/assets/css.svg';
 import HtmlSVG from '@/assets/html.svg';
 import VueSVG from '@/assets/vue.svg';
@@ -108,6 +110,10 @@ export class CodeSandboxFiles extends LitElement {
       return HtmlSVG;
     } else if (suffix === 'vue') {
       return VueSVG;
+    } else if (suffix === 'jsx') {
+      return JsxSVG;
+    } else if (suffix === 'tsx') {
+      return TsxSVG;
     } else {
       return DefaultFileSVG;
     }

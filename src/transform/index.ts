@@ -2,6 +2,7 @@ import { File } from '../utils/file';
 import { shouldTransformRef, transformRef } from '@vue/compiler-sfc';
 import { transformTS } from './transform-ts';
 import { transformVue3 } from './transform-vue3';
+import { transformReact } from './transform-react';
 
 // transform vue sfc code
 export const compileFile = async (
@@ -41,6 +42,14 @@ export const compileFile = async (
       compiled,
     } as File);
     return _code;
+  }
+
+  // react
+  if (filename.endsWith('tsx') || filename.endsWith('.jsx')) {
+    code = await transformReact(code);
+    compiled.js = code;
+    result.errors = [];
+    return;
   }
 
   result.errors = [];

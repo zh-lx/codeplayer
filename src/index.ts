@@ -4,7 +4,7 @@ import '@/components/editor';
 import '@/components/iframe';
 import '@/components/splitter';
 import '@/components/files';
-import { File, atou } from '@/utils';
+import { File, atou, getTemplate } from '@/utils';
 import { MapFile } from '@/constant';
 import style from './style.less?inline';
 
@@ -13,6 +13,7 @@ interface CodeSandboxOptions {
   serializedState?: string;
   initFiles?: Record<string, string>;
   imports?: Record<string, string>;
+  appType?: 'vue' | 'react' | 'html' | 'javascript' | 'typescript';
 }
 
 @customElement('code-sandbox')
@@ -37,7 +38,9 @@ export class CodeSandbox extends LitElement {
   codeSandboxIframeRef: any;
 
   _initializeOptions() {
-    const { initFiles, serializedState, mainFile, imports } = this.options;
+    let { initFiles, serializedState, mainFile, imports, appType } =
+      this.options;
+    initFiles = initFiles || getTemplate(appType || '');
 
     // 初始化 files
     let files: Record<string, File> = {};

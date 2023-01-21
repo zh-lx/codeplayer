@@ -20,11 +20,7 @@
     } from './file.ts';
 
     document.querySelector('code-sandbox').options = {
-      initFiles: {
-        [defaultMainFile]: welcomeCode,
-        [ifile]: ifileCode,
-        [map]: mapCode,
-      },
+      appType: 'react',
     };
   </script>
 </html>
