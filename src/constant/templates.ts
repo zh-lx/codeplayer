@@ -33,7 +33,7 @@ export default function App() {
     </div>
   );
 }
-  `,
+  `.trim(),
   [MapFile]: `
 {
   "imports": {
@@ -43,7 +43,7 @@ export default function App() {
     "scheduler": "https://ga.jspm.io/npm:scheduler@0.23.0/index.js"
   }
 }
-  `,
+  `.trim(),
 };
 
 export const HtmlTemplate = {
@@ -62,12 +62,12 @@ export const HtmlTemplate = {
     </div>
   </body>
 </html>
-  `,
+  `.trim(),
   [MapFile]: `
 {
   "imports": {}
 }
-  `,
+  `.trim(),
 };
 
 export const JavascriptTemplate = {
@@ -79,7 +79,7 @@ console.log(msg)
   {
     "imports": {}
   }
-    `,
+    `.trim(),
 };
 
 export const TypescriptTemplate = {
@@ -91,5 +91,5 @@ console.log(msg)
   {
     "imports": {}
   }
-    `,
+    `.trim(),
 };

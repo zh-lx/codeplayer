@@ -13,11 +13,12 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: 'src/my-element.ts',
-      formats: ['es'],
+      entry: 'src/index.ts',
+      formats: ['es', 'umd'],
+      name: 'CodeSandbox',
     },
     rollupOptions: {
-      external: /^lit/,
+      // external: /^lit/,
     },
   },
 });

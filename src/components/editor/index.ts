@@ -6,7 +6,7 @@ import { getMode, File } from '@/utils';
 import style from './style.less?inline';
 
 @customElement('code-editor')
-export class CodeSandbox extends LitElement {
+export class CodeEditor extends LitElement {
   editor: Editor;
 
   @property()

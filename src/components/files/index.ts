@@ -1,4 +1,4 @@
-import { LitElement, html, css, unsafeCSS, svg } from 'lit';
+import { LitElement, html, css, unsafeCSS } from 'lit';
 import { customElement, property, state, queryAsync } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { File } from '@/utils';

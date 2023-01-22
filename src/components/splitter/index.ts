@@ -77,8 +77,8 @@ export class CodeSandboxSplitter extends LitElement {
     this.startSplit = this.computedSplitBound();
     this.splitterContainer.style.userSelect = 'none';
     this.splitterContainer.style.cursor = this.vertical
-      ? 'ns-resize'
-      : 'ew-resize';
+      ? 'row-resize'
+      : 'col-resize';
     this.showMask = true;
   };
 

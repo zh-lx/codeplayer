@@ -20,7 +20,7 @@ interface IframeWindow extends Window {
 }
 
 @customElement('code-sandbox-iframe')
-export class IframeSandbox extends LitElement {
+export class CodeSandboxIframe extends LitElement {
   @property()
   files: Record<string, File>;
   @property()
@@ -177,6 +177,6 @@ export class IframeSandbox extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'code-sandbox-iframe': IframeSandbox;
+    'code-sandbox-iframe': CodeSandboxIframe;
   }
 }

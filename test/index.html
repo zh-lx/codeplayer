@@ -6,21 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
-    <code-sandbox height="500"></code-sandbox>
+    <div id="container"></div>
   </body>
   <script type="module">
-    import '../src/index.ts';
-    import {
-      defaultMainFile,
-      ifile,
-      ifileCode,
-      welcomeCode,
-      map,
-      mapCode,
-    } from './file.ts';
+    import CodeSandbox from '../src/index.ts';
+    new CodeSandbox('#container', { appType: 'react' });
+    // import {
+    //   defaultMainFile,
+    //   ifile,
+    //   ifileCode,
+    //   welcomeCode,
+    //   map,
+    //   mapCode,
+    // } from './file.ts';
 
-    document.querySelector('code-sandbox').options = {
-      appType: 'react',
-    };
+    // document.querySelector('code-sandbox').options = {
+    //   appType: 'react',
+    // };
   </script>
 </html>
