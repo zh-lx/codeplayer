@@ -4,6 +4,7 @@ import '@/components/editor';
 import '@/components/iframe';
 import '@/components/splitter';
 import '@/components/files';
+import '@/components/header';
 import { File, atou, getTemplate } from '@/utils';
 import { MapFile } from '@/constant';
 import style from './style.less?inline';
@@ -26,6 +27,8 @@ export class CodeSandbox extends LitElement {
   height: number; // 默认高度
   @property()
   options: Options = {};
+  @property()
+  customStyle: string;
 
   @state()
   mainFile: string; // 主入口文件名
@@ -33,6 +36,12 @@ export class CodeSandbox extends LitElement {
   files: Record<string, File>; // 文件集合
   @state()
   activeFile: File; // 当前文件
+  @state()
+  _showFiles = true;
+  @state()
+  _showCode = true;
+  @state()
+  _showPreview = true;
 
   @query('#code-sandbox-iframe')
   codeSandboxIframeRef: any;
@@ -75,6 +84,10 @@ export class CodeSandbox extends LitElement {
         JSON.stringify({ imports }, null, 2)
       );
     }
+  }
+
+  toggle(show: '_showFiles' | '_showCode' | '_showPreview') {
+    this[show] = !this[show];
   }
 
   setActive(filename: string) {
@@ -151,44 +164,55 @@ export class CodeSandbox extends LitElement {
           ? this.height + 'px'
           : 'auto'}"
       >
-        <code-sandbox-splitter
-          initialSplit="124px"
-          min="124px"
-          max="240px"
-          .closable=${true}
-        >
-          <code-sandbox-files
-            slot="code-sandbox-splitter-left"
-            .files=${this.files}
-            .activeFile=${this.activeFile}
-            .mainFile=${this.mainFile}
-            @emitMethod=${this.emitMethod}
-          ></code-sandbox-files>
+        <code-sandbox-header
+          @emitMethod=${this.emitMethod}
+          .showFiles=${this._showFiles}
+          .showCode=${this._showCode}
+          .showPreview=${this._showPreview}
+        ></code-sandbox-header>
+        <div class="code-sandbox-content">
           <code-sandbox-splitter
-            slot="code-sandbox-splitter-right"
-            min="30%"
-            max="70%"
+            initialSplit="124px"
+            min="124px"
+            max="240px"
             .closable=${true}
+            .showLeft=${this._showFiles}
           >
-            <div class="split-left" slot="code-sandbox-splitter-left">
-              <div class="code-editor-container">
-                <div id="__file-selector"></div>
-                <code-editor
-                  .activeFile=${this.activeFile}
-                  @emitMethod=${this.emitMethod}
-                ></code-editor>
+            <code-sandbox-files
+              slot="code-sandbox-splitter-left"
+              .files=${this.files}
+              .activeFile=${this.activeFile}
+              .mainFile=${this.mainFile}
+              @emitMethod=${this.emitMethod}
+            ></code-sandbox-files>
+            <code-sandbox-splitter
+              slot="code-sandbox-splitter-right"
+              min="30%"
+              max="70%"
+              .closable=${true}
+              .showLeft=${this._showCode}
+              .showRight=${this._showPreview}
+            >
+              <div class="split-left" slot="code-sandbox-splitter-left">
+                <div class="code-editor-container">
+                  <div id="__file-selector"></div>
+                  <code-editor
+                    .activeFile=${this.activeFile}
+                    @emitMethod=${this.emitMethod}
+                  ></code-editor>
+                </div>
+                <div class="code-sandbox-dragger" id="__dragger"></div>
               </div>
-              <div class="code-sandbox-dragger" id="__dragger"></div>
-            </div>
-            <div class="split-right" slot="code-sandbox-splitter-right">
-              <code-sandbox-iframe
-                id="code-sandbox-iframe"
-                .mainFile=${this.mainFile}
-                .files=${this.files}
-              ></code-sandbox-iframe>
-            </div>
+              <div class="split-right" slot="code-sandbox-splitter-right">
+                <code-sandbox-iframe
+                  id="code-sandbox-iframe"
+                  .mainFile=${this.mainFile}
+                  .files=${this.files}
+                ></code-sandbox-iframe>
+              </div>
+            </code-sandbox-splitter>
           </code-sandbox-splitter>
-        </code-sandbox-splitter>
+        </div>
       </div>
     `;
   }

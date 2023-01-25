@@ -11,3 +11,4 @@ export const MapFile = 'import-map.json';
 export const version = '3.2.45';
 export const defaultMainFile = 'App.vue';
 export const fileTypes = ['.html', '.js', '.css', '.vue', '.ts', 'jsx', 'tsx'];
+export * from './tooltip';

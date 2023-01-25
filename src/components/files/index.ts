@@ -2,7 +2,7 @@ import { LitElement, html, css, unsafeCSS } from 'lit';
 import { customElement, property, state, queryAsync } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { File } from '@/utils';
-import { MapFile, fileTypes } from '@/constant';
+import { MapFile, fileTypes, TooltipText } from '@/constant';
 import JsSVG from '@/assets/js.svg';
 import TsSVG from '@/assets/ts.svg';
 import JsxSVG from '@/assets/jsx.svg';
@@ -82,6 +82,12 @@ export class CodeSandboxFiles extends LitElement {
     this.newFilename = target.value;
   }
 
+  editFileKeyDown({ key, target }: { key: string; target: HTMLInputElement }) {
+    if (key === 'Enter') {
+      target.blur();
+    }
+  }
+
   validateFilenameError(filename: string) {
     if (!filename || filename === this.originFilename) {
       return '';
@@ -156,6 +162,7 @@ export class CodeSandboxFiles extends LitElement {
             id="new-filename-input"
             class="new-file-input"
             @input=${this.editFileName}
+            @keydown=${this.editFileKeyDown}
             @blur=${this.addFile}
           />
           ${newFileError &&
@@ -165,12 +172,16 @@ export class CodeSandboxFiles extends LitElement {
   };
 
   renderAddFileBtn = () => html`
-    <div data-toggle="tooltip" title="新增文件" class="operate-btn">
+    <div
+      data-toggle="tooltip"
+      title="${TooltipText.AddFile}"
+      class="operate-btn"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
-        height="1em"
-        width="1em"
+        height="14"
+        width="14"
         class="file-option-button"
         @click=${() => this.handleClickRenameFile('')}
       >
@@ -183,7 +194,11 @@ export class CodeSandboxFiles extends LitElement {
   `;
 
   renderRenameFileBtn = (filename: string) => html`
-    <div data-toggle="tooltip" title="重命名" class="operate-btn">
+    <div
+      data-toggle="tooltip"
+      title="${TooltipText.RenameFile}"
+      class="operate-btn"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -203,7 +218,7 @@ export class CodeSandboxFiles extends LitElement {
   renderDeleteFileBtn = (filename: string) => html`
     <div
       data-toggle="tooltip"
-      title="删除文件"
+      title="${TooltipText.DeleteFile}"
       class="operate-btn delete-operate ${this.mainFile === filename
         ? 'hide-file-operate'
         : ''}"
@@ -231,8 +246,8 @@ export class CodeSandboxFiles extends LitElement {
     <div
       data-toggle="tooltip"
       title="${this.mainFile === filename
-        ? '当前为入口文件'
-        : '设置为入口文件'}"
+        ? TooltipText.isEntry
+        : TooltipText.SetEntry}"
       class="operate-btn home-operate"
     >
       <svg
@@ -261,7 +276,7 @@ export class CodeSandboxFiles extends LitElement {
       <div class="code-sandbox-files-container">
         <div class="files-container">
           <div class="files-head">
-            <div class="files-head-left">Files</div>
+            <div class="files-head-left">FILES</div>
             <div class="files-head-right">${this.renderAddFileBtn()}</div>
           </div>
           ${!this.originFilename ? this.renderFilenameInput() : ''}

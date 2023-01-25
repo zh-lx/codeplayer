@@ -16,6 +16,10 @@ export class CodeSandboxSplitter extends LitElement {
   max = '80%';
   @property()
   closable: boolean = false;
+  @property()
+  showLeft = true;
+  @property()
+  showRight = true;
 
   @state()
   split = '0'; // 左侧所占百分比
@@ -28,33 +32,47 @@ export class CodeSandboxSplitter extends LitElement {
   @state()
   showMask = false;
   @state()
-  maps = { left: {}, right: {} };
+  leftStyle = {};
+  @state()
+  rightStyle = {};
 
   @query('#code-sandbox-splitter')
-  splitterContainer: HTMLDivElement;
+  splitterRef: HTMLDivElement;
+  @query('#dragger')
+  draggerRef: HTMLDivElement;
 
   firstUpdated() {
     this.split = this.initialSplit;
   }
 
   protected willUpdate(
-    _changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>
+    changes: PropertyValueMap<any> | Map<PropertyKey, unknown>
   ): void {
-    if (_changedProperties.has('split') && this.hasUpdated) {
+    if (
+      (changes.has('split') ||
+        changes.has('showLeft') ||
+        changes.has('showRight')) &&
+      this.hasUpdated
+    ) {
       const attr = this.vertical ? 'height' : 'width';
-      this.maps = {
-        left: { [attr]: `${this.computedSplitBound()}px` },
-        right: {
-          [attr]: `${this.getContainerLength() - this.computedSplitBound()}px`,
-        },
+      this.leftStyle = {
+        [attr]: `${this.computedSplitBound()}px`,
+        'border-right':
+          this.computedSplitBound() && this.showRight
+            ? '1px solid var(--border-common-color)'
+            : 'none',
+        display: this.showLeft ? 'block' : 'none',
+      };
+      this.rightStyle = {
+        display: this.showRight ? 'block' : 'none',
       };
     }
   }
 
   getContainerLength() {
     return this.vertical
-      ? this.splitterContainer?.offsetHeight
-      : this.splitterContainer?.offsetWidth;
+      ? this.splitterRef?.offsetHeight
+      : this.splitterRef?.offsetWidth;
   }
 
   computedSplitBound() {
@@ -62,10 +80,12 @@ export class CodeSandboxSplitter extends LitElement {
     const min = convertToNumber(this.min, total);
     const max = convertToNumber(this.max, total);
     const split = convertToNumber(this.split, total);
+    if (!this.showRight) {
+      return total;
+    }
     return split < min
-      ? split < min / 2 && this.closable
-        ? 0
-        : min
+      ? // split < min / 2 && this.closable ? 0:
+        min
       : split > max
       ? max
       : split;
@@ -75,10 +95,10 @@ export class CodeSandboxSplitter extends LitElement {
     this.isDrag = true;
     this.startPosition = this.vertical ? e.pageY : e.pageX;
     this.startSplit = this.computedSplitBound();
-    this.splitterContainer.style.userSelect = 'none';
-    this.splitterContainer.style.cursor = this.vertical
-      ? 'row-resize'
-      : 'col-resize';
+    this.splitterRef.style.userSelect = 'none';
+    this.splitterRef.style.cursor = this.vertical ? 'row-resize' : 'col-resize';
+    this.draggerRef.style.backgroundColor =
+      'var(--border-brand-secondary-color)';
     this.showMask = true;
   };
 
@@ -92,16 +112,13 @@ export class CodeSandboxSplitter extends LitElement {
 
   dragEnd = () => {
     this.isDrag = false;
-    this.splitterContainer.style.userSelect = 'initial';
-    this.splitterContainer.style.cursor = 'initial';
+    this.splitterRef.style.userSelect = 'initial';
+    this.splitterRef.style.cursor = 'initial';
+    this.draggerRef.style.backgroundColor = 'transparent';
     this.showMask = false;
   };
 
   render() {
-    const leftStyle = styleMap(this.maps.left);
-
-    const rightStyle = styleMap(this.maps.right);
-
     return html`
       <div
         class="code-sandbox-splitter"
@@ -110,14 +127,20 @@ export class CodeSandboxSplitter extends LitElement {
         @mouseup=${this.dragEnd}
         @mouseleave=${this.dragEnd}
       >
-        <div class="code-sandbox-splitter-left" style=${leftStyle}>
+        <div
+          class="code-sandbox-splitter-left"
+          style=${styleMap(this.leftStyle)}
+        >
           <slot name="code-sandbox-splitter-left"></slot>
-          <div class="dragger" @mousedown=${this.dragStart}></div>
+          <div id="dragger" class="dragger" @mousedown=${this.dragStart}></div>
           <div
             class="split-mask ${this.showMask ? '' : 'split-mask-hidden'}"
           ></div>
         </div>
-        <div class="code-sandbox-splitter-right" style=${rightStyle}>
+        <div
+          class="code-sandbox-splitter-right"
+          style=${styleMap(this.rightStyle)}
+        >
           <slot name="code-sandbox-splitter-right"></slot>
           <div
             class="split-mask ${this.showMask ? '' : 'split-mask-hidden'}"

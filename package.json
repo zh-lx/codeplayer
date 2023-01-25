@@ -24,6 +24,7 @@
     "vite": "^4.0.4"
   },
   "dependencies": {
+    "@right-menu/core": "^0.0.9",
     "lit": "^2.6.0"
   }
 }

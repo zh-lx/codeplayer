@@ -3,13 +3,20 @@
 :host {
   --border-color: @border-common-color;
 }
-.code-sandbox {
-  display: flex;
-  position: relative;
-  height: 100%;
-  width: 100%;
-  border: 1px solid var(--border-color);
+* {
+  box-sizing: border-box;
 }
+.code-sandbox {
+  border: 1px solid @border-common-color;
+  border-radius: 4px;
+  .code-sandbox-content {
+    display: flex;
+    position: relative;
+    height: 100%;
+    width: 100%;
+  }
+}
+
 code-sandbox-splitter {
   width: 100%;
 }
@@ -35,4 +42,7 @@ code-sandbox-iframe {
 code-editor {
   flex: 1;
   overflow: hidden;
+}
+.hidden-item {
+  display: none;
 }
