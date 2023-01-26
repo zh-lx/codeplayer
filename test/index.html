@@ -10,7 +10,11 @@
   </body>
   <script type="module">
     import CodeSandbox from '../src/index.ts';
-    new CodeSandbox('#container', { appType: 'react' });
+    new CodeSandbox('#container', {
+      appType: 'react',
+      showFiles: false,
+      excludeControls: ['refresh'],
+    });
     // import {
     //   defaultMainFile,
     //   ifile,

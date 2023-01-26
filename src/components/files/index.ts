@@ -10,6 +10,7 @@ import TsxSVG from '@/assets/tsx.svg';
 import CssSVG from '@/assets/css.svg';
 import HtmlSVG from '@/assets/html.svg';
 import VueSVG from '@/assets/vue.svg';
+import JsonSVG from '@/assets/json.svg';
 import DefaultFileSVG from '@/assets/default_file.svg';
 import style from './style.less?inline';
 
@@ -120,6 +121,8 @@ export class CodeSandboxFiles extends LitElement {
       return JsxSVG;
     } else if (suffix === 'tsx') {
       return TsxSVG;
+    } else if (suffix === 'json') {
+      return JsonSVG;
     } else {
       return DefaultFileSVG;
     }

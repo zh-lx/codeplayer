@@ -4,9 +4,8 @@ export const TooltipText = {
   DeleteFile: 'Delete',
   isEntry: 'Entry File',
   SetEntry: 'Set to entry',
-  ToggleFiles: (show: boolean) => `${show ? 'Hide' : 'Show'} Toggle Files`,
-  ToggleCode: (show: boolean) => `${show ? 'Hide' : 'Show'} Toggle Code`,
-  ToggleHeader: 'Toggle Header',
-  ToggleWebPreview: (show: boolean) =>
-    `${show ? 'Hide' : 'Show'} Toggle Web Preview`,
+  ToggleFiles: (show: boolean) => `${show ? 'Hide' : 'Show'} Files`,
+  ToggleCode: (show: boolean) => `${show ? 'Hide' : 'Show'} Code Editor`,
+  ToggleHeader: (show: boolean) => `${show ? 'Hide' : 'Show'} Header`,
+  ToggleWebPreview: (show: boolean) => `${show ? 'Hide' : 'Show'} Web Preview`,
 };

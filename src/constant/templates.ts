@@ -29,7 +29,7 @@ export default function App() {
   return (
     <div>
       <h1>{msg}</h1>
-      <input value={msg} onInput={(e) => setMsg(e.target.value)}></input>
+      <input value={msg} onInput={(e) => setMsg(e.target.value)} />
     </div>
   );
 }

@@ -7,15 +7,8 @@ import '@/components/files';
 import '@/components/header';
 import { File, atou, getTemplate } from '@/utils';
 import { MapFile } from '@/constant';
+import { CodeSandboxOptions } from '../index';
 import style from './style.less?inline';
-
-export interface Options {
-  mainFile?: string;
-  serializedState?: string;
-  initFiles?: Record<string, string>;
-  imports?: Record<string, string>;
-  appType?: 'vue' | 'react' | 'html' | 'javascript' | 'typescript';
-}
 
 @customElement('code-sandbox')
 export class CodeSandbox extends LitElement {
@@ -26,7 +19,7 @@ export class CodeSandbox extends LitElement {
   @property()
   height: number; // 默认高度
   @property()
-  options: Options = {};
+  options: CodeSandboxOptions = {};
   @property()
   customStyle: string;
 
@@ -42,18 +35,28 @@ export class CodeSandbox extends LitElement {
   _showCode = true;
   @state()
   _showPreview = true;
+  @state()
+  _showHeader = true;
 
   @query('#code-sandbox-iframe')
   codeSandboxIframeRef: any;
 
+  // firstUpdated() {
+  //   document.addEventListener('keydown', (e) => console.log(e, 111));
+  // }
+
   _initializeOptions() {
     let {
       initFiles,
-      serializedState = new URLSearchParams(location.search).get('_code'),
       mainFile,
       imports,
       appType,
+      showCodeEditor = true,
+      showFiles = true,
+      showHeader = true,
+      showWebPreview = true,
     } = this.options;
+    const serializedState = new URLSearchParams(location.search).get('_code');
     if (serializedState) {
       initFiles = JSON.parse(atou(serializedState));
     }
@@ -84,9 +87,15 @@ export class CodeSandbox extends LitElement {
         JSON.stringify({ imports }, null, 2)
       );
     }
+
+    // 初始化可视区
+    this._showFiles = showFiles;
+    this._showCode = showCodeEditor;
+    this._showPreview = showWebPreview;
+    this._showHeader = showHeader;
   }
 
-  toggle(show: '_showFiles' | '_showCode' | '_showPreview') {
+  toggle(show: '_showFiles' | '_showCode' | '_showPreview' | '_showHeader') {
     this[show] = !this[show];
   }
 
@@ -164,12 +173,16 @@ export class CodeSandbox extends LitElement {
           ? this.height + 'px'
           : 'auto'}"
       >
-        <code-sandbox-header
-          @emitMethod=${this.emitMethod}
-          .showFiles=${this._showFiles}
-          .showCode=${this._showCode}
-          .showPreview=${this._showPreview}
-        ></code-sandbox-header>
+        ${this._showHeader
+          ? html`<code-sandbox-header
+              @emitMethod=${this.emitMethod}
+              .showFiles=${this._showFiles}
+              .showCode=${this._showCode}
+              .showPreview=${this._showPreview}
+              .showHeader=${this._showHeader}
+              .excludes=${this.options?.excludeControls || []}
+            ></code-sandbox-header>`
+          : null}
         <div class="code-sandbox-content">
           <code-sandbox-splitter
             initialSplit="124px"
