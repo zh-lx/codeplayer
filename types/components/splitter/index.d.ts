@@ -5,18 +5,19 @@ export declare class CodeSandboxSplitter extends LitElement {
     min: string;
     max: string;
     closable: boolean;
+    showLeft: boolean;
+    showRight: boolean;
     split: string;
     isDrag: boolean;
     startPosition: number;
     startSplit: number;
     showMask: boolean;
-    maps: {
-        left: {};
-        right: {};
-    };
-    splitterContainer: HTMLDivElement;
+    leftStyle: {};
+    rightStyle: {};
+    splitterRef: HTMLDivElement;
+    draggerRef: HTMLDivElement;
     firstUpdated(): void;
-    protected willUpdate(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void;
+    protected willUpdate(changes: PropertyValueMap<any> | Map<PropertyKey, unknown>): void;
     getContainerLength(): number;
     computedSplitBound(): number;
     dragStart: (e: MouseEvent) => void;

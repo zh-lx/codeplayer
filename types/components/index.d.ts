@@ -3,23 +3,24 @@ import '@/components/editor';
 import '@/components/iframe';
 import '@/components/splitter';
 import '@/components/files';
+import '@/components/header';
 import { File } from '@/utils';
-export interface Options {
-    mainFile?: string;
-    serializedState?: string;
-    initFiles?: Record<string, string>;
-    imports?: Record<string, string>;
-    appType?: 'vue' | 'react' | 'html' | 'javascript' | 'typescript';
-}
+import { CodeSandboxOptions } from '../index';
 export declare class CodeSandbox extends LitElement {
     constructor();
     height: number;
-    options: Options;
+    options: CodeSandboxOptions;
+    customStyle: string;
     mainFile: string;
     files: Record<string, File>;
     activeFile: File;
+    _showFiles: boolean;
+    _showCode: boolean;
+    _showPreview: boolean;
+    _showHeader: boolean;
     codeSandboxIframeRef: any;
     _initializeOptions(): void;
+    toggle(show: '_showFiles' | '_showCode' | '_showPreview' | '_showHeader'): void;
     setActive(filename: string): void;
     setCode(code: string): void;
     editFilename(newFilename: string, oldFilename: string): void;

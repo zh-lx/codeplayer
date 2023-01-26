@@ -16,6 +16,10 @@ export declare class CodeSandboxFiles extends LitElement {
     editFileName({ target }: {
         target: HTMLInputElement;
     }): void;
+    editFileKeyDown({ key, target }: {
+        key: string;
+        target: HTMLInputElement;
+    }): void;
     validateFilenameError(filename: string): string | null;
     getIcon(filename: string): any;
     renderFileList: () => unknown;

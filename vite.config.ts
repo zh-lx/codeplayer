@@ -16,6 +16,7 @@ export default defineConfig({
       entry: 'src/index.ts',
       formats: ['es', 'umd'],
       name: 'CodeSandbox',
+      fileName: 'index',
     },
     rollupOptions: {
       // external: /^lit/,

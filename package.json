@@ -1,7 +1,9 @@
 {
-  "name": "sandbox-coding",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "code-sandbox-web",
+  "version": "0.0.1-beta.2",
+  "main": "./dist/index.umd.js",
+  "module": "./dist/index.mjs",
+  "typings": "./types/index.d.ts",
   "repository": "git@github.com:zh-lx/sandbox-coding.git",
   "author": "zh-lx <18366276315@163.com>",
   "license": "MIT",
@@ -9,6 +11,10 @@
     "dev": "vite",
     "build": "tsc && vite build"
   },
+  "files": [
+    "dist",
+    "types"
+  ],
   "devDependencies": {
     "@babel/standalone": "^7.20.11",
     "@babel/types": "^7.20.7",
