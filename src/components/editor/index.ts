@@ -25,6 +25,10 @@ export class CodeEditor extends LitElement {
     this.updateActive();
   }
 
+  getCode() {
+    return this.editor.getValue();
+  }
+
   updateActive() {
     if (!this.activeFile) {
       return;

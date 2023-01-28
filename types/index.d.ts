@@ -1,5 +1,5 @@
 import './components';
-export declare type Controls = 'header' | 'files' | 'codeEditor' | 'webPreview' | 'refresh';
+export declare type Controls = 'header' | 'files' | 'codeEditor' | 'webPreview' | 'refresh' | 'layout';
 export interface CodeSandboxOptions {
     /**
      * @description_en The fixed height of the component. When this item is not set, the component height automatically changes with the content
@@ -25,7 +25,7 @@ export interface CodeSandboxOptions {
      * @description_en Whether to display the header, default value is true
      * @description_zh 是否展示顶栏控制区，默认为 true
      */
-    showHeader?: boolean;
+    showToolbar?: boolean;
     /**
      * @description_en Entry file name
      * @description_zh 入口文件名称
@@ -45,12 +45,12 @@ export interface CodeSandboxOptions {
      * @description_en Application type. If initFiles is not configured, the initial file will be automatically generated according to the appType; If initFiles is configured, this item is invalid
      * @description_zh 应用类型。若未配置 initFiles，会根据 appType 自动生成初始文件；若配置了 initFiles，此项失效
      */
-    appType?: 'vue' | 'react' | 'html' | 'javascript' | 'typescript';
+    appType?: 'vue3' | 'react' | 'html' | 'javascript' | 'typescript';
     /**
-     * @description_en Control buttons to be removed from the top header
-     * @description_zh 顶部控制区要移除的控制按钮
+     * @description_en Control buttons to be removed from the toolbar
+     * @description_zh 工具栏要移除的工具按钮
      */
-    excludeControls?: Controls[];
+    excludeTools?: Controls[];
 }
 export default class CodeSandbox {
     constructor(el: HTMLElement | string, options: CodeSandboxOptions);

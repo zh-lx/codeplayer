@@ -9,11 +9,27 @@
 .code-sandbox {
   border: 1px solid @border-common-color;
   border-radius: 4px;
+  display: flex;
+  flex-direction: column;
   .code-sandbox-content {
     display: flex;
     position: relative;
-    height: 100%;
+    height: calc(100% - 28px);
     width: 100%;
+  }
+  .header-top {
+    order: 1;
+    border-bottom: 1px solid @border-common-color;
+  }
+  .header-bottom {
+    order: 2;
+    border-top: 1px solid @border-common-color;
+  }
+  .content-top {
+    order: 1;
+  }
+  .content-bottom {
+    order: 2;
   }
 }
 

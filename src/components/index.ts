@@ -5,10 +5,11 @@ import '@/components/iframe';
 import '@/components/splitter';
 import '@/components/files';
 import '@/components/header';
-import { File, atou, getTemplate } from '@/utils';
-import { MapFile } from '@/constant';
-import { CodeSandboxOptions } from '../index';
+import { File, atou, getTemplate, utoa } from '@/utils';
+import { MapFile, URLCodeKey } from '@/constant';
+import { CodeSandboxOptions, ToolbarPosition } from '../index';
 import style from './style.less?inline';
+import { styleMap } from 'lit/directives/style-map';
 
 @customElement('code-sandbox')
 export class CodeSandbox extends LitElement {
@@ -36,10 +37,16 @@ export class CodeSandbox extends LitElement {
   @state()
   _showPreview = true;
   @state()
-  _showHeader = true;
+  _showToolbar = true;
+  @state()
+  _toolbarPosition: ToolbarPosition = 'top';
+  @state()
+  _vertical = false;
 
   @query('#code-sandbox-iframe')
   codeSandboxIframeRef: any;
+  @query('#code-editor')
+  codeEditorRef: any;
 
   // firstUpdated() {
   //   document.addEventListener('keydown', (e) => console.log(e, 111));
@@ -53,10 +60,12 @@ export class CodeSandbox extends LitElement {
       appType,
       showCodeEditor = true,
       showFiles = true,
-      showHeader = true,
+      showToolbar = true,
       showWebPreview = true,
     } = this.options;
-    const serializedState = new URLSearchParams(location.search).get('_code');
+    const serializedState = new URLSearchParams(location.search).get(
+      URLCodeKey
+    );
     if (serializedState) {
       initFiles = JSON.parse(atou(serializedState));
     }
@@ -92,10 +101,10 @@ export class CodeSandbox extends LitElement {
     this._showFiles = showFiles;
     this._showCode = showCodeEditor;
     this._showPreview = showWebPreview;
-    this._showHeader = showHeader;
+    this._showToolbar = showToolbar;
   }
 
-  toggle(show: '_showFiles' | '_showCode' | '_showPreview' | '_showHeader') {
+  toggle(show: '_showFiles' | '_showCode' | '_showPreview' | '_showToolbar') {
     this[show] = !this[show];
   }
 
@@ -105,7 +114,29 @@ export class CodeSandbox extends LitElement {
 
   setCode(code: string) {
     this.activeFile.code = code;
+    this.changeSerializedState();
     this.renderSandbox();
+  }
+
+  changeSerializedState() {
+    const _files: Record<string, string> = {};
+    Object.keys(this.files).forEach((filename) => {
+      _files[filename] = this.files[filename].code;
+    });
+    const str = utoa(JSON.stringify(_files));
+    const params = new URLSearchParams(location.search);
+    params.set(URLCodeKey, str);
+    history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
+  }
+
+  copyCode() {
+    try {
+      const code = this.codeEditorRef.getCode();
+      navigator.clipboard.writeText(code);
+      window.alert('代码已复制至剪切板');
+    } catch (error) {
+      window.alert('复制失败: ' + String(error));
+    }
   }
 
   editFilename(newFilename: string, oldFilename: string) {
@@ -159,6 +190,10 @@ export class CodeSandbox extends LitElement {
     this.codeSandboxIframeRef.renderSandbox();
   }
 
+  setState(state: '_toolbarPosition', value: any) {
+    this[state] = value;
+  }
+
   protected async willUpdate(_changedProperties: PropertyValueMap<this>) {
     if (_changedProperties.has('options')) {
       this._initializeOptions();
@@ -173,17 +208,27 @@ export class CodeSandbox extends LitElement {
           ? this.height + 'px'
           : 'auto'}"
       >
-        ${this._showHeader
+        ${this._showToolbar
           ? html`<code-sandbox-header
+              class="${this._toolbarPosition === 'top'
+                ? 'header-top'
+                : 'header-bottom'}"
               @emitMethod=${this.emitMethod}
+              .editor=${this.codeEditorRef}
               .showFiles=${this._showFiles}
               .showCode=${this._showCode}
               .showPreview=${this._showPreview}
-              .showHeader=${this._showHeader}
-              .excludes=${this.options?.excludeControls || []}
+              .showToolbar=${this._showToolbar}
+              .excludes=${this.options?.excludeTools || []}
+              .toolbarPosition=${this._toolbarPosition}
+              .vertical=${this._vertical}
             ></code-sandbox-header>`
           : null}
-        <div class="code-sandbox-content">
+        <div
+          class="code-sandbox-content ${this._toolbarPosition === 'top'
+            ? 'content-bottom'
+            : 'content-top'}"
+        >
           <code-sandbox-splitter
             initialSplit="124px"
             min="124px"
@@ -202,6 +247,7 @@ export class CodeSandbox extends LitElement {
               slot="code-sandbox-splitter-right"
               min="30%"
               max="70%"
+              .vertical=${this._vertical}
               .closable=${true}
               .showLeft=${this._showCode}
               .showRight=${this._showPreview}
@@ -210,11 +256,11 @@ export class CodeSandbox extends LitElement {
                 <div class="code-editor-container">
                   <div id="__file-selector"></div>
                   <code-editor
+                    id="code-editor"
                     .activeFile=${this.activeFile}
                     @emitMethod=${this.emitMethod}
                   ></code-editor>
                 </div>
-                <div class="code-sandbox-dragger" id="__dragger"></div>
               </div>
               <div class="split-right" slot="code-sandbox-splitter-right">
                 <code-sandbox-iframe

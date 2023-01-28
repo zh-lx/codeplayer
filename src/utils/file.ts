@@ -22,7 +22,7 @@ export class File {
 }
 
 export const getTemplate = (appType: string) => {
-  if (appType === 'vue') {
+  if (appType === 'vue3') {
     return Vue3Template;
   } else if (appType === 'react') {
     return ReactTemplate;

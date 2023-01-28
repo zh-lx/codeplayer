@@ -10,4 +10,5 @@ export declare const MapFile = "import-map.json";
 export declare const version = "3.2.45";
 export declare const defaultMainFile = "App.vue";
 export declare const fileTypes: string[];
+export declare const URLCodeKey = "_codesandbox_code";
 export * from './tooltip';

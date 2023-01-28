@@ -51,26 +51,41 @@ export class CodeSandboxSplitter extends LitElement {
     if (
       (changes.has('split') ||
         changes.has('showLeft') ||
-        changes.has('showRight')) &&
+        changes.has('showRight') ||
+        changes.has('vertical')) &&
       this.hasUpdated
     ) {
-      const attr = this.vertical ? 'height' : 'width';
-      this.leftStyle = {
-        [attr]: `${this.computedSplitBound()}px`,
-        'border-right':
-          this.computedSplitBound() && this.showRight
-            ? '1px solid var(--border-common-color)'
-            : 'none',
-        display: this.showLeft ? 'block' : 'none',
-      };
+      if (this.vertical) {
+        this.leftStyle = {
+          height: `${this.computedSplitBound()}px`,
+          'border-bottom':
+            this.computedSplitBound() && this.showRight
+              ? '1px solid var(--border-common-color)'
+              : 'none',
+          width: '100%',
+          'border-right': 'none',
+          display: this.showLeft ? 'block' : 'none',
+        };
+      } else {
+        this.leftStyle = {
+          height: `100%`,
+          'border-right':
+            this.computedSplitBound() && this.showRight
+              ? '1px solid var(--border-common-color)'
+              : 'none',
+          width: `${this.computedSplitBound()}px`,
+          'border-bottom': 'none',
+          display: this.showLeft ? 'block' : 'none',
+        };
+      }
       this.rightStyle = {
         display: this.showRight ? 'block' : 'none',
       };
     }
   }
 
-  getContainerLength() {
-    return this.vertical
+  getContainerLength(vertical?: boolean) {
+    return vertical ?? this.vertical
       ? this.splitterRef?.offsetHeight
       : this.splitterRef?.offsetWidth;
   }
@@ -123,6 +138,9 @@ export class CodeSandboxSplitter extends LitElement {
       <div
         class="code-sandbox-splitter"
         id="code-sandbox-splitter"
+        style=${styleMap({
+          'flex-direction': this.vertical ? 'column' : 'row',
+        })}
         @mousemove=${this.dragMove}
         @mouseup=${this.dragEnd}
         @mouseleave=${this.dragEnd}
@@ -132,7 +150,11 @@ export class CodeSandboxSplitter extends LitElement {
           style=${styleMap(this.leftStyle)}
         >
           <slot name="code-sandbox-splitter-left"></slot>
-          <div id="dragger" class="dragger" @mousedown=${this.dragStart}></div>
+          <div
+            id="dragger"
+            class="${this.vertical ? 'vertical-dragger' : 'dragger'}"
+            @mousedown=${this.dragStart}
+          ></div>
           <div
             class="split-mask ${this.showMask ? '' : 'split-mask-hidden'}"
           ></div>

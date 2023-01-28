@@ -17,12 +17,15 @@ export declare class CodeSandbox extends LitElement {
     _showFiles: boolean;
     _showCode: boolean;
     _showPreview: boolean;
-    _showHeader: boolean;
+    _showToolbar: boolean;
     codeSandboxIframeRef: any;
+    codeEditorRef: any;
     _initializeOptions(): void;
-    toggle(show: '_showFiles' | '_showCode' | '_showPreview' | '_showHeader'): void;
+    toggle(show: '_showFiles' | '_showCode' | '_showPreview' | '_showToolbar'): void;
     setActive(filename: string): void;
     setCode(code: string): void;
+    changeSerializedState(): void;
+    copyCode(): void;
     editFilename(newFilename: string, oldFilename: string): void;
     deleteFile(filename: string): void;
     resetHomeFile(filename: string): void;

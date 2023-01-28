@@ -8,4 +8,7 @@ export declare const TooltipText: {
     ToggleCode: (show: boolean) => string;
     ToggleHeader: (show: boolean) => string;
     ToggleWebPreview: (show: boolean) => string;
+    RefreshWebPreview: string;
+    SwapLayout: string;
+    CopyCode: string;
 };
