@@ -4,7 +4,7 @@ CodeSandbox 是一个在线代码编辑及实时预览的 UI 组件，支持浏�
 
 [![NPM version](https://img.shields.io/npm/v/@code-sandbox/core.svg)](https://www.npmjs.com/package/code-sandbox-web)
 [![GITHUB star](https://img.shields.io/github/stars/zh-lx/code-sandbox.svg)](https://github.com/zh-lx/code-sandbox)
-[![MIT-license](https://img.shields.io/npm/l/code-sandbox.svg)](https://opensource.org/licenses/MIT)
+[![MIT-license](https://img.shields.io/npm/l/@code-sandbox/core.svg)](https://opensource.org/licenses/MIT)
 [![GITHUB-language](https://img.shields.io/github/languages/top/zh-lx/code-sandbox.svg)](https://github.com/zh-lx/code-sandbox)
 
 ![image](https://user-images.githubusercontent.com/73059627/215324998-9a82eef4-ec30-450f-8fdf-b54ab818defc.png)
