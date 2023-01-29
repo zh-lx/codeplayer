@@ -11,6 +11,8 @@ export class CodeEditor extends LitElement {
 
   @property()
   activeFile: File;
+  @property()
+  customStyle: string = '';
 
   @query('#code-mirror-container')
   _codeEditor: HTMLDivElement;
@@ -55,6 +57,9 @@ export class CodeEditor extends LitElement {
 
   render() {
     return html`
+      <style>
+        ${this.customStyle}
+      </style>
       <div class="code-mirror-container" id="code-mirror-container"></div>
     `;
   }

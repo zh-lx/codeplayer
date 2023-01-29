@@ -22,6 +22,8 @@ export class CodeSandboxFiles extends LitElement {
   activeFile: File;
   @property()
   mainFile: string;
+  @property()
+  customStyle: string = '';
 
   @state()
   showNewFile: boolean = false;
@@ -276,6 +278,9 @@ export class CodeSandboxFiles extends LitElement {
 
   render() {
     return html`
+      <style>
+        ${this.customStyle}
+      </style>
       <div class="code-sandbox-files-container">
         <div class="files-container">
           <div class="files-head">

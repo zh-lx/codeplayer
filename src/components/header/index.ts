@@ -2,6 +2,7 @@ import { LitElement, html, css, unsafeCSS } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { TooltipText } from '@/constant';
 import type { Controls, ToolbarPosition } from '@/index';
+import { message } from '@/utils';
 import style from './style.less?inline';
 import RightMenu from '@right-menu/core';
 
@@ -23,6 +24,8 @@ export class CodeSandboxHeader extends LitElement {
   toolbarPosition: ToolbarPosition;
   @property()
   vertical: boolean;
+  @property()
+  customStyle: string = '';
 
   @query('#setting-icon')
   settingRef: HTMLDivElement;
@@ -39,7 +42,7 @@ export class CodeSandboxHeader extends LitElement {
               type: 'li', // type为li是普通按钮
               text: '顶部', // 按钮的名称
               class: this.toolbarPosition === 'top' ? 'active-menu-item' : '',
-              callback: () => this.changeParentState('_toolbarPosition', 'top'),
+              callback: () => this.changeParentState('toolbarPosition', 'top'),
             },
             {
               type: 'li', // type为li是普通按钮
@@ -47,7 +50,7 @@ export class CodeSandboxHeader extends LitElement {
               class:
                 this.toolbarPosition === 'bottom' ? 'active-menu-item' : '',
               callback: () =>
-                this.changeParentState('_toolbarPosition', 'bottom'),
+                this.changeParentState('toolbarPosition', 'bottom'),
             },
           ],
         },
@@ -59,13 +62,13 @@ export class CodeSandboxHeader extends LitElement {
               type: 'li', // type为li是普通按钮
               text: '左右布局', // 按钮的名称
               class: this.vertical === false ? 'active-menu-item' : '',
-              callback: () => this.changeParentState('_vertical', false),
+              callback: () => this.changeParentState('vertical', false),
             },
             {
               type: 'li', // type为li是普通按钮
               text: '上下布局', // 按钮的名称
               class: this.vertical === true ? 'active-menu-item' : '',
-              callback: () => this.changeParentState('_vertical', true),
+              callback: () => this.changeParentState('vertical', true),
             },
           ],
         },
@@ -101,7 +104,15 @@ export class CodeSandboxHeader extends LitElement {
     );
   }
 
-  toggle(show: '_showFiles' | '_showCode' | '_showPreview' | '_showToolbar') {
+  sharePage() {
+    const link = location.href;
+    navigator.clipboard.writeText(link);
+    message('已复制链接至剪切板', { type: 'success' });
+  }
+
+  toggle(
+    show: 'showFiles' | 'showCode' | 'showPreview' | 'showToolbar' | 'reverse'
+  ) {
     this.dispatchEvent(
       new CustomEvent('emitMethod', {
         detail: ['toggle', show],
@@ -119,7 +130,7 @@ export class CodeSandboxHeader extends LitElement {
               this.showToolbar
             )}"
             data-toggle="tooltip"
-            title="${TooltipText.ToggleHeader(this.showToolbar)}"
+            title="${TooltipText.Settings}"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -129,7 +140,7 @@ export class CodeSandboxHeader extends LitElement {
             >
               <path
                 fill="currentColor"
-                d="M2 18h7v2H2v-2zm0-7h9v2H2v-2zm0-7h20v2H2V4zm18.674 9.025l1.156-.391 1 1.732-.916.805a4.017 4.017 0 0 1 0 1.658l.916.805-1 1.732-1.156-.391c-.41.37-.898.655-1.435.83L19 21h-2l-.24-1.196a3.996 3.996 0 0 1-1.434-.83l-1.156.392-1-1.732.916-.805a4.017 4.017 0 0 1 0-1.658l-.916-.805 1-1.732 1.156.391c.41-.37.898-.655 1.435-.83L17 11h2l.24 1.196c.536.174 1.024.46 1.434.83zM18 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"
+                d="M2 12c0-.865.11-1.703.316-2.504A3 3 0 0 0 4.99 4.867a9.99 9.99 0 0 1 4.335-2.505 3 3 0 0 0 5.348 0 9.99 9.99 0 0 1 4.335 2.505 3 3 0 0 0 2.675 4.63c.206.8.316 1.638.316 2.503 0 .865-.11 1.703-.316 2.504a3 3 0 0 0-2.675 4.629 9.99 9.99 0 0 1-4.335 2.505 3 3 0 0 0-5.348 0 9.99 9.99 0 0 1-4.335-2.505 3 3 0 0 0-2.675-4.63C2.11 13.704 2 12.866 2 12zm4.804 3c.63 1.091.81 2.346.564 3.524.408.29.842.541 1.297.75A4.993 4.993 0 0 1 12 18c1.26 0 2.438.471 3.335 1.274.455-.209.889-.46 1.297-.75A4.993 4.993 0 0 1 17.196 15a4.993 4.993 0 0 1 2.77-2.25 8.126 8.126 0 0 0 0-1.5A4.993 4.993 0 0 1 17.195 9a4.993 4.993 0 0 1-.564-3.524 7.989 7.989 0 0 0-1.297-.75A4.993 4.993 0 0 1 12 6a4.993 4.993 0 0 1-3.335-1.274 7.99 7.99 0 0 0-1.297.75A4.993 4.993 0 0 1 6.804 9a4.993 4.993 0 0 1-2.77 2.25 8.126 8.126 0 0 0 0 1.5A4.993 4.993 0 0 1 6.805 15zM12 15a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-2a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"
               />
             </svg>
           </div>
@@ -143,7 +154,7 @@ export class CodeSandboxHeader extends LitElement {
             class="header-icon files-toggle-icon ${this.active(this.showFiles)}"
             data-toggle="tooltip"
             title="${TooltipText.ToggleFiles(this.showFiles)}"
-            @click=${() => this.toggle('_showFiles')}
+            @click=${() => this.toggle('showFiles')}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -167,7 +178,7 @@ export class CodeSandboxHeader extends LitElement {
             class="header-icon code-toggle-icon ${this.active(this.showCode)}"
             data-toggle="tooltip"
             title="${TooltipText.ToggleCode(this.showCode)}"
-            @click=${() => this.toggle('_showCode')}
+            @click=${() => this.toggle('showCode')}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -207,14 +218,39 @@ export class CodeSandboxHeader extends LitElement {
           </div>
         `;
 
+  renderShareIcon = () =>
+    this.excludes.includes('share')
+      ? null
+      : html`
+          <div
+            class="header-icon refresh-icon"
+            data-toggle="tooltip"
+            title=${TooltipText.Share}
+            @click=${this.sharePage}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="16"
+              height="16"
+            >
+              <path
+                fill="currentColor"
+                d="M10 3v2H5v14h14v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6zm7.586 2H13V3h8v8h-2V6.414l-7 7L10.586 12l7-7z"
+              />
+            </svg>
+          </div>
+        `;
+
   renderLayoutIcon = () =>
     this.excludes.includes('layout')
       ? null
       : html`
           <div
-            class="header-icon"
+            class="header-icon swap-icon"
             data-toggle="tooltip"
             title=${TooltipText.SwapLayout}
+            @click=${() => this.toggle('reverse')}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -264,7 +300,7 @@ export class CodeSandboxHeader extends LitElement {
             )}"
             data-toggle="tooltip"
             title="${TooltipText.ToggleWebPreview(this.showPreview)}"
-            @click=${() => this.toggle('_showPreview')}
+            @click=${() => this.toggle('showPreview')}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -282,13 +318,14 @@ export class CodeSandboxHeader extends LitElement {
 
   render() {
     return html`
+      <style>
+        ${this.customStyle}
+      </style>
       <div class="code-sandbox-header">
-        <div class="header-left">
-          ${this.renderSettingToggle()}${this.renderLayoutIcon()}
-        </div>
+        <div class="header-left">${this.renderSettingToggle()}</div>
         <div class="header-right">
           ${this.renderFilesToggle()}${this.renderCodeToggle()}
-          ${this.renderPreviewToggle()}${this.renderCopyIcon()}${this.renderRefreshIcon()}
+          ${this.renderPreviewToggle()}${this.renderLayoutIcon()}${this.renderCopyIcon()}${this.renderRefreshIcon()}${this.renderShareIcon()}
         </div>
       </div>
     `;

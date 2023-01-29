@@ -20,6 +20,8 @@ export class CodeSandboxSplitter extends LitElement {
   showLeft = true;
   @property()
   showRight = true;
+  @property()
+  customStyle: string = '';
 
   @state()
   split = '0'; // 左侧所占百分比
@@ -84,12 +86,21 @@ export class CodeSandboxSplitter extends LitElement {
     }
   }
 
+  // 左右交换所占比例
+  swap() {
+    const _split =
+      (1 - this.computedSplitBound() / this.getContainerLength()) * 100 + '%';
+    this.split = _split;
+  }
+
+  // 获取 container 总宽(高)度
   getContainerLength(vertical?: boolean) {
     return vertical ?? this.vertical
       ? this.splitterRef?.offsetHeight
       : this.splitterRef?.offsetWidth;
   }
 
+  // 计算 left 的宽(高)度
   computedSplitBound() {
     const total = this.getContainerLength();
     const min = convertToNumber(this.min, total);
@@ -135,6 +146,9 @@ export class CodeSandboxSplitter extends LitElement {
 
   render() {
     return html`
+      <style>
+        ${this.customStyle}
+      </style>
       <div
         class="code-sandbox-splitter"
         id="code-sandbox-splitter"

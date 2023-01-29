@@ -25,6 +25,8 @@ export class CodeSandboxIframe extends LitElement {
   files: Record<string, File>;
   @property()
   mainFile: string;
+  @property()
+  customStyle: string = '';
 
   @state()
   errors: (string | Error)[]; // 编译错误
@@ -166,6 +168,9 @@ export class CodeSandboxIframe extends LitElement {
 
   render() {
     return html`
+      <style>
+        ${this.customStyle}
+      </style>
       <div class="code-sandbox-iframe-container" id="iframe-container"></div>
     `;
   }

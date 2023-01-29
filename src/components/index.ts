@@ -5,11 +5,10 @@ import '@/components/iframe';
 import '@/components/splitter';
 import '@/components/files';
 import '@/components/header';
-import { File, atou, getTemplate, utoa } from '@/utils';
+import { File, atou, getTemplate, utoa, message } from '@/utils';
 import { MapFile, URLCodeKey } from '@/constant';
 import { CodeSandboxOptions, ToolbarPosition } from '../index';
 import style from './style.less?inline';
-import { styleMap } from 'lit/directives/style-map';
 
 @customElement('code-sandbox')
 export class CodeSandbox extends LitElement {
@@ -21,9 +20,9 @@ export class CodeSandbox extends LitElement {
   height: number; // 默认高度
   @property()
   options: CodeSandboxOptions = {};
-  @property()
-  customStyle: string;
 
+  @state()
+  customStyle: string = '';
   @state()
   mainFile: string; // 主入口文件名
   @state()
@@ -31,26 +30,26 @@ export class CodeSandbox extends LitElement {
   @state()
   activeFile: File; // 当前文件
   @state()
-  _showFiles = true;
+  showFiles = true; // 显示文件栏
   @state()
-  _showCode = true;
+  showCode = true; // 显示代码
   @state()
-  _showPreview = true;
+  showPreview = true; // 是否展示 web preview
   @state()
-  _showToolbar = true;
+  showToolbar = true; // 是否展示工具栏
   @state()
-  _toolbarPosition: ToolbarPosition = 'top';
+  toolbarPosition: ToolbarPosition = 'top'; // 工具栏位置
   @state()
-  _vertical = false;
+  vertical = false; // 是否垂直布局
+  @state()
+  reverse = false; // 是否翻转 code editor 和 web preview 的位置
 
   @query('#code-sandbox-iframe')
   codeSandboxIframeRef: any;
   @query('#code-editor')
   codeEditorRef: any;
-
-  // firstUpdated() {
-  //   document.addEventListener('keydown', (e) => console.log(e, 111));
-  // }
+  @query('#code-preview-splitter')
+  swapRef: any;
 
   _initializeOptions() {
     let {
@@ -62,6 +61,9 @@ export class CodeSandbox extends LitElement {
       showFiles = true,
       showToolbar = true,
       showWebPreview = true,
+      toolbarPosition = 'top',
+      vertical = false,
+      reverse = false,
     } = this.options;
     const serializedState = new URLSearchParams(location.search).get(
       URLCodeKey
@@ -98,14 +100,24 @@ export class CodeSandbox extends LitElement {
     }
 
     // 初始化可视区
-    this._showFiles = showFiles;
-    this._showCode = showCodeEditor;
-    this._showPreview = showWebPreview;
-    this._showToolbar = showToolbar;
+    this.showFiles = showFiles;
+    this.showCode = showCodeEditor;
+    this.showPreview = showWebPreview;
+    this.showToolbar = showToolbar;
+    this.vertical = vertical;
+    this.toolbarPosition = toolbarPosition;
+    this.reverse = reverse;
+    this.customStyle = this.options?.customStyle || '';
   }
 
-  toggle(show: '_showFiles' | '_showCode' | '_showPreview' | '_showToolbar') {
+  toggle(
+    show: 'showFiles' | 'showCode' | 'showPreview' | 'showToolbar' | 'reverse'
+  ) {
     this[show] = !this[show];
+    // 交换 code editor 和 web preview 位置的宽度
+    if (show === 'reverse') {
+      this.swapRef.swap();
+    }
   }
 
   setActive(filename: string) {
@@ -133,9 +145,9 @@ export class CodeSandbox extends LitElement {
     try {
       const code = this.codeEditorRef.getCode();
       navigator.clipboard.writeText(code);
-      window.alert('代码已复制至剪切板');
+      message('代码已复制至剪切板', { type: 'success' });
     } catch (error) {
-      window.alert('复制失败: ' + String(error));
+      message('复制失败: ' + String(error), { type: 'danger' });
     }
   }
 
@@ -190,7 +202,7 @@ export class CodeSandbox extends LitElement {
     this.codeSandboxIframeRef.renderSandbox();
   }
 
-  setState(state: '_toolbarPosition', value: any) {
+  setState(state: 'toolbarPosition', value: any) {
     this[state] = value;
   }
 
@@ -202,30 +214,34 @@ export class CodeSandbox extends LitElement {
 
   render() {
     return html`
+      <style>
+        ${this.customStyle}
+      </style>
       <div
         class="code-sandbox"
         style="height: ${this.height !== undefined
           ? this.height + 'px'
           : 'auto'}"
       >
-        ${this._showToolbar
+        ${this.showToolbar
           ? html`<code-sandbox-header
-              class="${this._toolbarPosition === 'top'
+              class="${this.toolbarPosition === 'top'
                 ? 'header-top'
                 : 'header-bottom'}"
               @emitMethod=${this.emitMethod}
               .editor=${this.codeEditorRef}
-              .showFiles=${this._showFiles}
-              .showCode=${this._showCode}
-              .showPreview=${this._showPreview}
-              .showToolbar=${this._showToolbar}
+              .showFiles=${this.showFiles}
+              .showCode=${this.showCode}
+              .showPreview=${this.showPreview}
+              .showToolbar=${this.showToolbar}
               .excludes=${this.options?.excludeTools || []}
-              .toolbarPosition=${this._toolbarPosition}
-              .vertical=${this._vertical}
+              .toolbarPosition=${this.toolbarPosition}
+              .vertical=${this.vertical}
+              .customStyle=${this.customStyle}
             ></code-sandbox-header>`
           : null}
         <div
-          class="code-sandbox-content ${this._toolbarPosition === 'top'
+          class="code-sandbox-content ${this.toolbarPosition === 'top'
             ? 'content-bottom'
             : 'content-top'}"
         >
@@ -234,7 +250,8 @@ export class CodeSandbox extends LitElement {
             min="124px"
             max="240px"
             .closable=${true}
-            .showLeft=${this._showFiles}
+            .showLeft=${this.showFiles}
+            .customStyle=${this.customStyle}
           >
             <code-sandbox-files
               slot="code-sandbox-splitter-left"
@@ -242,31 +259,42 @@ export class CodeSandbox extends LitElement {
               .activeFile=${this.activeFile}
               .mainFile=${this.mainFile}
               @emitMethod=${this.emitMethod}
+              .customStyle=${this.customStyle}
             ></code-sandbox-files>
             <code-sandbox-splitter
+              id="code-preview-splitter"
               slot="code-sandbox-splitter-right"
               min="30%"
               max="70%"
-              .vertical=${this._vertical}
+              .vertical=${this.vertical}
               .closable=${true}
-              .showLeft=${this._showCode}
-              .showRight=${this._showPreview}
+              .showLeft=${this.reverse ? this.showPreview : this.showCode}
+              .showRight=${this.reverse ? this.showCode : this.showPreview}
+              .customStyle=${this.customStyle}
             >
-              <div class="split-left" slot="code-sandbox-splitter-left">
+              <div
+                class="split-left"
+                slot="code-sandbox-splitter-${this.reverse ? 'right' : 'left'}"
+              >
                 <div class="code-editor-container">
                   <div id="__file-selector"></div>
                   <code-editor
                     id="code-editor"
                     .activeFile=${this.activeFile}
                     @emitMethod=${this.emitMethod}
+                    .customStyle=${this.customStyle}
                   ></code-editor>
                 </div>
               </div>
-              <div class="split-right" slot="code-sandbox-splitter-right">
+              <div
+                class="split-right"
+                slot="code-sandbox-splitter-${this.reverse ? 'left' : 'right'}"
+              >
                 <code-sandbox-iframe
                   id="code-sandbox-iframe"
                   .mainFile=${this.mainFile}
                   .files=${this.files}
+                  .customStyle=${this.customStyle}
                 ></code-sandbox-iframe>
               </div>
             </code-sandbox-splitter>

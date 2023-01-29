@@ -7,7 +7,8 @@ export type Controls =
   | 'codeEditor'
   | 'webPreview'
   | 'refresh'
-  | 'layout';
+  | 'layout'
+  | 'share';
 
 export type ToolbarPosition = 'top' | 'bottom';
 
@@ -33,8 +34,8 @@ export interface CodeSandboxOptions {
    */
   showWebPreview?: boolean;
   /**
-   * @description_en Whether to display the header, default value is true
-   * @description_zh 是否展示顶栏控制区，默认为 true
+   * @description_en Whether to display the toolbar, default value is true
+   * @description_zh 是否展示工具栏，默认为 true
    */
   showToolbar?: boolean;
   /**
@@ -62,6 +63,26 @@ export interface CodeSandboxOptions {
    * @description_zh 工具栏要移除的工具按钮
    */
   excludeTools?: Controls[];
+  /**
+   * @description_en Whether or not CodeEditor and WebPreview's layout are vertical. Default value is false
+   * @description_zh 代码编辑区-web预览区是否垂直布局。默认值为左右布局
+   */
+  vertical?: boolean;
+  /**
+   * @description_en Whether or not reversing CodeEditor and WebPreview's position. Default value is false
+   * @description_zh 代码编辑区-web预览区是否位置翻转。默认值为不翻转
+   */
+  reverse?: boolean;
+  /**
+   * @description_en Toolbar's position. Default value is top
+   * @description_zh 工具栏位置，默认值为 top
+   */
+  toolbarPosition?: ToolbarPosition;
+  /**
+   * @description_en string of styleSheet
+   * @description_zh Css styleSheet 字符串
+   */
+  customStyle?: string;
 }
 
 export default class CodeSandbox {
