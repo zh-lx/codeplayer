@@ -2,7 +2,7 @@
 
 CodeSandbox 是一个在线代码编辑及实时预览的 UI 组件，支持浏览器环境下编写 `html/js/css/ts/vue/react` 等类型的代码并在沙盒环境下实时运行预览。
 
-[![NPM version](https://img.shields.io/npm/v/@code-sandbox/core.svg)](https://www.npmjs.com/package/code-sandbox-web)
+[![NPM version](https://img.shields.io/npm/v/@code-sandbox/core.svg)](https://www.npmjs.com/package/@code-sandbox/core)
 [![GITHUB star](https://img.shields.io/github/stars/zh-lx/code-sandbox.svg)](https://github.com/zh-lx/code-sandbox)
 [![MIT-license](https://img.shields.io/npm/l/@code-sandbox/core.svg)](https://opensource.org/licenses/MIT)
 [![GITHUB-language](https://img.shields.io/github/languages/top/zh-lx/code-sandbox.svg)](https://github.com/zh-lx/code-sandbox)
@@ -22,15 +22,15 @@ CodeSandbox 是一个在线代码编辑及实时预览的 UI 组件，支持浏�
 浏览器 `script` 引入:
 
 ```html
-<script src="https://unpkg.com/@code-sandbox"></script>
+<script src="https://unpkg.com/@code-sandbox/core"></script>
 ```
 
 使用 `npm` 或者 `yarn` 安装:
 
 ```perl
-npm install code-sandbox-web
+npm install @code-sandbox/core
 # or
-yarn add code-sandbox-web
+yarn add @code-sandbox/core
 ```
 
 ## Example
@@ -38,7 +38,7 @@ yarn add code-sandbox-web
 浏览器 script 使用：
 
 ```html
-<script src="https://unpkg.com/@code-sandbox"></script>
+<script src="https://unpkg.com/@code-sandbox/core"></script>
 <script>
   new CodeSandbox('#container', {
     appType: 'react',
