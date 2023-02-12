@@ -181,6 +181,13 @@ export class CodeSandbox extends LitElement {
       const tempFiles = { ...this.files };
       delete tempFiles[filename];
       this.files = tempFiles;
+    } if (confirm(`确定要删除 ${filename} 吗?`)) {
+      if (this.activeFile.filename === filename) {
+        this.activeFile = this.files[this.mainFile];
+      }
+      const tempFiles = { ...this.files };
+      delete tempFiles[filename];
+      this.files = tempFiles;
     }
   }
 

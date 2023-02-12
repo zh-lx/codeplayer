@@ -1,0 +1,32 @@
+@import './icons/common.less';
+
+.code-sandbox-toolbar {
+  height: 28px;
+  box-sizing: border-box;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .toolbar-left {
+    display: flex;
+    align-items: center;
+  }
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    .toolbar-icon {
+      margin-left: 4px;
+      &:first-of-type {
+        margin-left: 0;
+      }
+    }
+  }
+}
+.code-sandbox-toolbar-top {
+  order: 1;
+  border-bottom: 1px solid @border-common-color;
+}
+.code-sandbox-toolbar-bottom {
+  order: 2;
+  border-top: 1px solid @border-common-color;
+}

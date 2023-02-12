@@ -1,0 +1,22 @@
+@import './components/toolbar/index.less';
+@import './components/splitter/index.less';
+@import './components/file-bar/index.less';
+@import './components/code-editor/index.less';
+@import './components/preview/index.less';
+
+.code-sandbox-container {
+  border: 1px solid @border-common-color;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  .main-content {
+    display: flex;
+    position: relative;
+    height: calc(100% - 28px);
+    width: 100%;
+    order: 2;
+  }
+  .main-content-top {
+    order: 1;
+  }
+}
