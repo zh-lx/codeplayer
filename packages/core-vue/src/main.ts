@@ -1,11 +1,19 @@
 import { defineCustomElement } from 'vue';
 import CodeSandboxVue from './components/index.ce.vue';
-import '@/style/global.ts';
+import globalStyle from '@/style/global.less?inline';
 import { CodeSandboxOptions, HTMLCodeSandboxElement } from './type';
 
 const CodeSandboxClass = defineCustomElement(CodeSandboxVue);
 
 customElements.define('code-sandbox', CodeSandboxClass);
+
+// 添加全局样式
+(function () {
+  const style = document.createElement('style');
+  style.setAttribute('type', 'text/css');
+  style.innerText = globalStyle;
+  document.body.append(style);
+})();
 
 export default class CodeSandbox {
   constructor(el: HTMLElement | string, options: CodeSandboxOptions) {
