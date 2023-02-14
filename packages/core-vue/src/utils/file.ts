@@ -21,7 +21,7 @@ export class File {
   }
 }
 
-export const getTemplate = (appType: string) => {
+export const getTemplate = (appType: string = 'vue3') => {
   if (appType === 'vue3' || appType === 'vue') {
     return Vue3Template;
   } else if (appType === 'react') {

@@ -1,7 +1,7 @@
 import { reactive } from 'vue';
 import type { File } from '@/utils';
 import { type Editor } from 'codemirror';
-import type { ToolbarPosition, AppType, Control } from '../main';
+import type { ToolbarPosition, Control } from '@/type';
 
 export interface Store {
   mainFile: string;
@@ -14,15 +14,13 @@ export interface Store {
   toolbarPosition: ToolbarPosition;
   vertical: boolean;
   reverse: boolean;
-  appType: AppType;
-  initFiles: Record<string, File>;
   excludeTools: Control[];
   imports: Record<string, string>;
   serializedState: string;
-  editor: Editor | null;
+  editor: Editor | null; // code Mirror 编辑器
   refreshID: number; // 用于 preview 刷新的标识，当点击刷新按钮该值 +1 触发刷新
   reverseID: number; // code 和 preview 交换的标识
-  sharePath: string;
+  sharePath: string; // 分享按钮的路径
 }
 
 export const store = reactive<Store>({
@@ -41,8 +39,6 @@ export const store = reactive<Store>({
   toolbarPosition: 'top',
   vertical: false,
   reverse: false,
-  appType: 'vue3',
-  initFiles: {},
   excludeTools: [],
   imports: {},
   serializedState: '',

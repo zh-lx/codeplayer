@@ -1,3 +1,9 @@
+import { onMounted } from 'vue';
+
+onMounted(() => {
+  const style = document.createElement('style');
+  style.setAttribute('type', 'text/css');
+  style.innerText = `
 .code-sandbox-active-menu-item {
   color: #3491fa;
   &:hover {
@@ -35,3 +41,6 @@
   border: 1px solid #e1f3d8;
   background-color: #f0f9eb;
 }
+`;
+  document.head.append(style);
+});
