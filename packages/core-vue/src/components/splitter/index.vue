@@ -69,7 +69,6 @@ const dragStart = (e: MouseEvent) => {
   isDrag.value = true;
   startPosition.value = props.vertical ? e.pageY : e.pageX;
   startSplit.value = computedSplitBound();
-  splitterDOM.value.style.userSelect = 'none';
   splitterDOM.value.style.cursor = props.vertical ? 'row-resize' : 'col-resize';
   draggerDOM.value.style.backgroundColor =
     'var(--border-brand-secondary-color)';
@@ -86,7 +85,6 @@ const dragMove = (e: MouseEvent) => {
 
 const dragEnd = () => {
   isDrag.value = false;
-  splitterDOM.value.style.userSelect = 'initial';
   splitterDOM.value.style.cursor = 'initial';
   draggerDOM.value.style.backgroundColor = 'transparent';
   showMask.value = false;

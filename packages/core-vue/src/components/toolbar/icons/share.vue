@@ -1,13 +1,23 @@
 <script lang="ts" setup>
 import { store } from '@/store';
 import { TooltipText } from '@/constant';
+import { utoa } from '@/utils';
 
 function share() {
   // Todo: share link
   const url = new URL(store.sharePath);
-  url.searchParams.set('_cs_code_', store.serializedState);
+  const serializedState = getSerializedState();
+  url.searchParams.set('_cs_code_', serializedState);
   window.open(url.href, '_blank');
 }
+
+const getSerializedState = () => {
+  const _files: Record<string, string> = {};
+  Object.keys(store.files).forEach((filename) => {
+    _files[filename] = store.files[filename].code;
+  });
+  return utoa(JSON.stringify(_files));
+};
 </script>
 
 <template>

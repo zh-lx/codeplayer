@@ -116,10 +116,10 @@ watch(
             :showRight="store.reverse ? store.showCode : store.showPreview"
             :reverseID="store.reverseID"
           >
-            <template v-slot:[CodeSlotName]>
+            <template #[CodeSlotName]>
               <CodeEditor />
             </template>
-            <template v-slot:[PreviewSlotName]>
+            <template #[PreviewSlotName]>
               <Preview />
             </template>
           </Splitter>
