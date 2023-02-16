@@ -11,6 +11,7 @@ const props = withDefaults(
     showRight?: boolean;
     reverseID?: number;
     vertical?: boolean;
+    fixedHeight?: number;
   }>(),
   {
     min: '0%',
@@ -25,6 +26,7 @@ const split = ref('50%'); // 左侧所占百分比
 const isDrag = ref(false);
 const startPosition = ref(0);
 const startSplit = ref(0);
+const startHeight = ref(0);
 const showMask = ref(false);
 const leftDOM = ref<HTMLDivElement>() as Ref<HTMLDivElement>;
 const rightDOM = ref<HTMLDivElement>() as Ref<HTMLDivElement>;
@@ -37,13 +39,14 @@ onMounted(() => {
 
 // 左右交换所占比例
 function swap() {
+  // 锁定 splitterDOM 的高度
   const _split = (1 - computedSplitBound() / getContainerLength()) * 100 + '%';
   split.value = _split;
 }
 
 // 获取 container 总宽(高)度
-const getContainerLength = () => {
-  return props.vertical
+const getContainerLength = (vertical?: boolean) => {
+  return vertical || props.vertical
     ? splitterDOM.value.offsetHeight
     : splitterDOM.value.offsetWidth;
 };
@@ -69,6 +72,7 @@ const dragStart = (e: MouseEvent) => {
   isDrag.value = true;
   startPosition.value = props.vertical ? e.pageY : e.pageX;
   startSplit.value = computedSplitBound();
+  startHeight.value = leftDOM.value.getBoundingClientRect().height;
   splitterDOM.value.style.cursor = props.vertical ? 'row-resize' : 'col-resize';
   draggerDOM.value.style.backgroundColor =
     'var(--border-brand-secondary-color)';
@@ -77,9 +81,16 @@ const dragStart = (e: MouseEvent) => {
 
 const dragMove = (e: MouseEvent) => {
   if (isDrag.value) {
-    const position = props.vertical ? e.pageY : e.pageX;
-    const dp = position - startPosition.value;
-    split.value = String(startSplit.value + dp);
+    if (!props.vertical || props.fixedHeight !== undefined) {
+      const position = props.vertical ? e.pageY : e.pageX;
+      const dp = position - startPosition.value;
+      split.value = String(startSplit.value + dp);
+    } else {
+      // 自由高度下，拖拽只调整前一个元素的高度比例，不调整 split
+      const position = e.pageY;
+      const dp = position - startPosition.value;
+      leftDOM.value.style.height = startHeight.value + dp + 'px';
+    }
   }
 };
 
@@ -92,7 +103,9 @@ const dragEnd = () => {
 
 const changeStyle = () => {
   if (props.vertical) {
-    leftDOM.value.style.height = computedSplitBound() + 'px';
+    if (props.fixedHeight !== undefined) {
+      leftDOM.value.style.height = computedSplitBound() + 'px';
+    }
     leftDOM.value.style.width = '100%';
     leftDOM.value.style.borderBottom =
       computedSplitBound() && props.showRight

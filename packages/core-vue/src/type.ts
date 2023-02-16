@@ -96,6 +96,6 @@ export interface CodeSandboxOptions {
   css?: string;
 }
 
-export interface HTMLCodeSandboxElement
-  extends HTMLDivElement,
-    CodeSandboxOptions {}
+export interface HTMLCodeSandboxElement extends HTMLDivElement {
+  options: CodeSandboxOptions;
+}
