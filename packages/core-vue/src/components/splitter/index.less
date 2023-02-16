@@ -6,6 +6,10 @@
   height: 100%;
   width: 100%;
   box-sizing: border-box;
+  user-select: none;
+  &:hover {
+    user-select: initial;
+  }
   .splitter-left {
     border-right: 1px solid @border-common-color;
     position: relative;

@@ -16,7 +16,6 @@ export interface Store {
   reverse: boolean;
   excludeTools: Control[];
   imports: Record<string, string>;
-  serializedState: string;
   editor: Editor | null; // code Mirror 编辑器
   refreshID: number; // 用于 preview 刷新的标识，当点击刷新按钮该值 +1 触发刷新
   reverseID: number; // code 和 preview 交换的标识
@@ -41,7 +40,6 @@ export const store = reactive<Store>({
   reverse: false,
   excludeTools: [],
   imports: {},
-  serializedState: '',
   editor: null,
   refreshID: 0,
   reverseID: 0,

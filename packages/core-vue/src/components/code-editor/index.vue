@@ -3,7 +3,7 @@ import { ref, Ref, onMounted, watch, nextTick } from 'vue';
 import { store } from '@/store';
 import { type Editor } from 'codemirror';
 import { createCodeMirror } from './code-mirror';
-import { getMode, utoa } from '@/utils';
+import { getMode } from '@/utils';
 
 const codeEditorDOM = ref() as Ref<HTMLDivElement>;
 let editor: Editor;
@@ -18,16 +18,7 @@ const createEditor = () => {
   });
   editor.on('change', () => {
     store.activeFile.code = (editor as Editor).getValue();
-    changeSerializedState();
   });
-};
-
-const changeSerializedState = () => {
-  const _files: Record<string, string> = {};
-  Object.keys(store.files).forEach((filename) => {
-    _files[filename] = store.files[filename].code;
-  });
-  store.serializedState = utoa(JSON.stringify(_files));
 };
 
 watch(

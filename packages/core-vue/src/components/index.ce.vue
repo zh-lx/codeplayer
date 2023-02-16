@@ -3,48 +3,25 @@ import { defineProps, watch, computed, withDefaults } from 'vue';
 import { store } from '@/store';
 import { MapFile } from '@/constant';
 import { atou, getTemplate, File } from '@/utils';
-import { type Control, ToolbarPosition } from '@/type';
+import { type Control, ToolbarPosition, CodeSandboxOptions } from '@/type';
 import Toolbar from './toolbar/index.vue';
 import Splitter from './splitter/index.vue';
 import FileBar from './file-bar/index.vue';
 import CodeEditor from './code-editor/index.vue';
 import Preview from './preview/index.vue';
 
-type Props = {
-  height?: number;
-  showFileBar?: boolean;
-  showCode?: boolean;
-  showPreview?: boolean;
-  showToolbar?: boolean;
-  mainFile?: string;
-  initFiles?: Record<string, string>;
-  imports?: Record<string, string>;
-  appType?: 'vue' | 'vue3' | 'react' | 'html' | 'javascript' | 'typescript';
-  excludeTools?: Control[];
-  vertical?: boolean;
-  reverse?: boolean;
-  toolbarPosition?: ToolbarPosition;
-  serializedState?: string;
-  css?: string;
-};
-
-const props = withDefaults(defineProps<Props>(), {
-  showFileBar: true,
-  showCode: true,
-  showPreview: true,
-  showToolbar: true,
-  appType: 'vue3',
-});
+const props = defineProps<{ options?: CodeSandboxOptions }>();
 
 const CodeSlotName = computed(() => (store.reverse ? 'right' : 'left'));
 const PreviewSlotName = computed(() => (store.reverse ? 'left' : 'right'));
 
 const init = () => {
-  let _files = getTemplate(props.appType || '') as Record<string, string>;
-  if (props.serializedState) {
-    _files = JSON.parse(atou(props.serializedState));
-  } else if (props.initFiles) {
-    _files = props.initFiles;
+  const options = props.options || {};
+  let _files = getTemplate(options.appType || '') as Record<string, string>;
+  if (options.serializedState) {
+    _files = JSON.parse(atou(options.serializedState));
+  } else if (options.initFiles) {
+    _files = options.initFiles;
   }
 
   const files: Record<string, File> = {};
@@ -54,43 +31,48 @@ const init = () => {
 
   store.files = files;
 
-  for (let key in props) {
-    if (key in store && props[key as keyof Props] !== undefined) {
+  for (let key in options) {
+    if (
+      key in store &&
+      options[key as keyof CodeSandboxOptions] !== undefined
+    ) {
       // @ts-ignore
-      store[key] = props[key];
+      store[key] = options[key];
     }
   }
 
-  if (!store.mainFile) {
+  store.mainFile = options.mainFile || '';
+  if (!files[store.mainFile]) {
     store.mainFile = Object.keys(files)[0];
   }
   store.activeFile = files[store.mainFile];
 
-  if (props.imports) {
+  if (options.imports) {
     store.files[MapFile] = new File(
       MapFile,
-      JSON.stringify({ imports: props.imports }, null, 2)
+      JSON.stringify({ imports: options.imports }, null, 2)
     );
   }
 };
 
 watch(
-  () => props,
+  () => props.options,
   () => {
     init();
   },
   {
     immediate: true,
+    deep: true,
   }
 );
 </script>
 
 <template>
-  <component is="style">{{ props.css || '' }}</component>
+  <component is="style">{{ props.options?.css || '' }}</component>
   <div
     class="code-sandbox-container"
     :style="{
-      height: props?.height ? `${props?.height}px` : '',
+      height: props.options?.height ? `${props.options?.height}px` : '',
     }"
   >
     <Toolbar v-if="store.showToolbar" />
@@ -111,6 +93,7 @@ watch(
           <Splitter
             min="0%"
             max="100%"
+            :fixedHeight="props.options?.height"
             :vertical="store.vertical"
             :showLeft="store.reverse ? store.showPreview : store.showCode"
             :showRight="store.reverse ? store.showCode : store.showPreview"

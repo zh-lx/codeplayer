@@ -1,5 +1,5 @@
 .code-sandbox-active-menu-item {
-  color: #3491fa;
+  color: @brand-color;
   &:hover {
     color: #fff;
   }
@@ -12,14 +12,14 @@
   transform: translateX(-50%);
   padding: 4px 12px;
   font-size: 12px;
-  color: #409eff;
+  color: @brand-color;
   background-color: #ecf5ff;
   border: 1px solid #d9ecff;
   border-radius: 4px;
 }
 
 .code-sandbox-message-info {
-  color: #409eff;
+  color: @brand-color;
   background-color: #ecf5ff;
   border: 1px solid #d9ecff;
 }
@@ -34,4 +34,56 @@
   color: #67c23a;
   border: 1px solid #e1f3d8;
   background-color: #f0f9eb;
+}
+
+.code-sandbox-dialog-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: fade(#000, 50);
+  z-index: 9999;
+  .code-sandbox-dialog {
+    position: absolute;
+    min-width: 300px;
+    max-width: 600px;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 16px;
+    .code-sandbox-dialog-title {
+      margin: 0 0 12px 0;
+      line-height: 24px;
+    }
+    .code-sandbox-dialog-close {
+      color: @text-secondary-color;
+      cursor: pointer;
+      position: absolute;
+      height: 24px;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &:hover {
+        color: @brand-color;
+      }
+    }
+    .code-sandbox-dialog-content {
+      font-size: 13px;
+    }
+    .code-sandbox-dialog-buttons {
+      display: flex;
+      justify-content: flex-end;
+      .code-sandbox-dialog-button-cancel {
+        margin-right: 8px;
+      }
+      button {
+        cursor: pointer;
+      }
+    }
+  }
 }
