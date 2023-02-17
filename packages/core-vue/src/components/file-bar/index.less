@@ -18,7 +18,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 4px;
-      color: @text-main-color;
+      color: @text-primary;
       font-weight: 600;
       font-size: 12px;
       user-select: none;
@@ -33,7 +33,7 @@
         width: 100%;
         box-sizing: border-box;
         outline: none;
-        border: 1px solid @border-brand-color;
+        border: 1px solid @border-brand;
         height: 22px;
         box-sizing: border-box;
         font-size: 12px;
@@ -43,9 +43,9 @@
         width: 100%;
         top: 52px;
         font-size: 12px;
-        color: @danger-color;
-        border: 1px solid @border-danger-color;
-        background-color: @bg-danger-secondary-color;
+        color: @text-danger;
+        border: 1px solid @border-danger-light;
+        background-color: @bg-danger-light;
         text-align: center;
         padding: 3px;
         box-sizing: border-box;
@@ -83,19 +83,19 @@
             white-space: nowrap;
           }
           &:hover {
-            color: @brand-color;
+            color: @text-brand;
           }
         }
         .file-right {
           display: flex;
           align-items: center;
-          color: @text-secondary-color;
+          color: @text-secondary;
           .file-option-button {
             display: none;
           }
         }
         &:hover {
-          background-color: @bg-brand-secondary-color;
+          background-color: @bg-brand-light;
           .file-right {
             .file-option-button {
               display: block;
@@ -107,7 +107,7 @@
           margin-left: 2px;
         }
         .current-home-operate {
-          color: @danger-color !important;
+          color: @text-danger !important;
           display: block !important;
         }
         .hide-file-operate {
@@ -116,11 +116,11 @@
       }
       .active-file-item {
         .file-left {
-          color: @brand-color;
+          color: @text-brand;
         }
-        border-left: 2px solid @brand-color;
+        border-left: 2px solid @border-brand;
         padding-left: 2px;
-        background-color: @bg-brand-secondary-color;
+        background-color: @bg-brand-light;
       }
     }
   }
@@ -130,11 +130,11 @@
     .file-option-button {
       cursor: pointer;
       &:hover {
-        color: @brand-color;
+        color: @text-brand;
       }
     }
   }
   .import-map-container {
-    border-top: 1px solid @border-common-color;
+    border-top: 1px solid @border-primary;
   }
 }

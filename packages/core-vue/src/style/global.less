@@ -1,7 +1,7 @@
 .code-sandbox-active-menu-item {
-  color: @brand-color;
+  color: @text-brand;
   &:hover {
-    color: #fff;
+    color: @text-white;
   }
 }
 
@@ -12,28 +12,28 @@
   transform: translateX(-50%);
   padding: 4px 12px;
   font-size: 12px;
-  color: @brand-color;
-  background-color: #ecf5ff;
-  border: 1px solid #d9ecff;
+  color: @text-brand;
+  background-color: @bg-brand-light;
+  border: 1px solid @border-brand-light;
   border-radius: 4px;
 }
 
 .code-sandbox-message-info {
-  color: @brand-color;
-  background-color: #ecf5ff;
-  border: 1px solid #d9ecff;
+  color: @text-info;
+  background-color: @bg-info-light;
+  border: 1px solid @border-info-light;
 }
 
 .code-sandbox-message-danger {
-  color: #f56c6c;
-  border: 1px solid #fde2e2;
-  background-color: #fef0f0;
+  color: @text-danger;
+  border: 1px solid @border-danger-light;
+  background-color: @bg-danger-light;
 }
 
 .code-sandbox-message-success {
-  color: #67c23a;
-  border: 1px solid #e1f3d8;
-  background-color: #f0f9eb;
+  color: @text-success;
+  border: 1px solid @border-success-light;
+  background-color: @bg-success-light;
 }
 
 .code-sandbox-dialog-mask {
@@ -42,7 +42,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: fade(#000, 50);
+  background-color: @bg-mask;
   z-index: 9999;
   .code-sandbox-dialog {
     position: absolute;
@@ -51,7 +51,7 @@
     top: 100px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #fff;
+    background-color: @bg-white;
     border-radius: 4px;
     padding: 16px;
     .code-sandbox-dialog-title {
@@ -59,7 +59,7 @@
       line-height: 24px;
     }
     .code-sandbox-dialog-close {
-      color: @text-secondary-color;
+      color: @text-secondary;
       cursor: pointer;
       position: absolute;
       height: 24px;
@@ -69,7 +69,7 @@
       align-items: center;
       justify-content: center;
       &:hover {
-        color: @brand-color;
+        color: @text-brand;
       }
     }
     .code-sandbox-dialog-content {
@@ -80,9 +80,14 @@
       justify-content: flex-end;
       .code-sandbox-dialog-button-cancel {
         margin-right: 8px;
+        background-color: @bg-white;
+        border: 1px solid @border-primary;
+        border-radius: 4px;
       }
       button {
+        box-sizing: border-box;
         cursor: pointer;
+        padding: 4px 12px;
       }
     }
   }

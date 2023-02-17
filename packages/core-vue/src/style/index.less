@@ -1,14 +1,220 @@
-@brand-color: #3491fa;
-@danger-color: #f56c6c;
+@import url('./variable.less');
 
-@border-common-color: #dcdfe6;
-@border-brand-color: #409eff;
-@border-danger-color: #fde2e2;
-@border-brand-secondary-color: #d9ecff;
+// TextColor => 字体颜色
+@text-primary: @neutral-10;
+@text-secondary: @neutral-8;
+@text-tertiary: @neutral-6;
+@text-disable: @neutral-4;
+@text-white: @neutral-white;
 
-@bg-brand-secondary-color: #f5f8ff;
-@bg-danger-secondary-color: #fef0f0;
+@text-brand: @blue-6;
+@text-brand-hover: @blue-5;
+@text-brand-active: @blue-7;
+@text-brand-disable: @blue-2;
 
-@text-main-color: #333;
-@text-secondary-color: #555;
-@disable-color: #c0c4cc;
+@text-success: @green-6;
+@text-success-hover: @green-5;
+@text-success-active: @green-7;
+@text-success-disable: @green-2;
+
+@text-warn: @orange-6;
+@text-warn-hover: @orange-5;
+@text-warn-active: @orange-7;
+@text-warn-disable: @orange-2;
+
+@text-danger: @red-6;
+@text-danger-hover: @red-5;
+@text-danger-active: @red-7;
+@text-danger-disable: @red-2;
+
+@text-info: @cyan-6;
+@text-info-hover: @cyan-5;
+@text-info-active: @cyan-7;
+@text-info-disable: @cyan-2;
+
+// FillColor => 填充颜色
+@fill-primary: @neutral-2;
+@fill-deep: @neutral-3;
+@fill-heavy: @neutral-4;
+@fill-disable: @neutral-1;
+@fill-white: @neutral-white;
+
+@fill-brand: @blue-6;
+@fill-brand-hover: @blue-5;
+@fill-brand-active: @blue-7;
+@fill-brand-disable: @blue-3;
+
+@fill-success: @green-6;
+@fill-success-hover: @green-5;
+@fill-success-active: @green-7;
+@fill-success-disable: @green-3;
+
+@fill-warn: @orange-6;
+@fill-warn-hover: @orange-5;
+@fill-warn-active: @orange-7;
+@fill-warn-disable: @orange-3;
+
+@fill-danger: @red-6;
+@fill-danger-hover: @red-4;
+@fill-danger-active: @red-7;
+@fill-danger-disable: @red-3;
+
+@fill-info: @cyan-6;
+@fill-info-hover: @cyan-5;
+@fill-info-active: @cyan-7;
+@fill-info-disable: @cyan-3;
+
+// StrokeColor => 边框颜色
+@border-deep: @neutral-6;
+@border-hover: @neutral-4;
+@border-primary: @neutral-3;
+@border-disable: @neutral-2;
+@border-deep-disable: @neutral-4;
+@border-white: @neutral-white;
+
+@border-brand: @blue-6;
+@border-brand-hover: @blue-5;
+@border-brand-active: @blue-7;
+@border-brand-disable: @blue-3;
+@border-brand-light: @blue-2;
+
+@border-success: @green-6;
+@border-success-hover: @green-5;
+@border-success-active: @green-7;
+@border-success-disable: @green-3;
+@border-success-light: @green-2;
+
+@border-warn: @orange-6;
+@border-warn-hover: @orange-5;
+@border-warn-active: @orange-7;
+@border-warn-disable: @orange-3;
+@border-warn-light: @orange-2;
+
+@border-danger: @red-6;
+@border-danger-hover: @red-5;
+@border-danger-active: @red-7;
+@border-danger-disable: @red-3;
+@border-danger-light: @red-2;
+
+@border-info: @cyan-6;
+@border-info-hover: @cyan-5;
+@border-info-active: @cyan-7;
+@border-info-disable: @cyan-3;
+@border-info-light: @cyan-2;
+
+// BackgroundColor => 背景颜色
+@bg-mask: fade(@neutral-black, 20%);
+@bg-tooltips: @neutral-10;
+@bg-hover: @neutral-3;
+@bg-active: @neutral-1;
+@bg-disable: @neutral-3;
+
+@bg-layout: @neutral-2;
+@bg-contain: @neutral-1;
+@bg-white: @neutral-white;
+
+@bg-brand: @blue-6;
+@bg-brand-hover: @blue-5;
+@bg-brand-active: @blue-7;
+@bg-brand-disable: @blue-3;
+@bg-brand-light: @blue-1;
+
+@bg-success: @green-6;
+@bg-success-hover: @green-5;
+@bg-success-active: @green-7;
+@bg-success-disable: @green-3;
+@bg-success-light: @green-1;
+
+@bg-warn: @orange-6;
+@bg-warn-hover: @orange-5;
+@bg-warn-active: @orange-7;
+@bg-warn-disable: @orange-3;
+@bg-warn-light: @orange-1;
+
+@bg-danger: @red-6;
+@bg-danger-hover: @red-5;
+@bg-danger-active: @red-7;
+@bg-danger-disable: @red-3;
+@bg-danger-light: @red-1;
+
+@bg-info: @cyan-6;
+@bg-info-hover: @cyan-5;
+@bg-info-active: @cyan-7;
+@bg-info-disable: @cyan-3;
+@bg-info-light: @cyan-1;
+
+// Font => 字体大小
+@font-size-title: 20px;
+@font-size-title-large: 24px;
+@font-size-title-small: 16px;
+
+@font-size-default: 14px;
+@font-size-secondary: 13px;
+@font-size-mini: 12px;
+
+@font-size-display: 48px;
+@font-size-display-large: 56px;
+@font-size-display-small: 36px;
+
+@font-size-caption: 12px;
+
+// Radius => 边框半径
+@radius-circle: 999px;
+@radius-small: 2px;
+@radius-normal: 4px;
+@radius-default: 8px;
+@radius-none: 0px;
+
+// Shadow => 阴影
+/* 阴影 */
+/* 阴影向下：主要应用于组件内部或组件本身，是比较常规场景的用法 */
+/* 阴影向上：主要应用于底部导航或工具栏等 */
+/* 阴影向左：主要应用于右边导航栏、抽屉组件或固定表格栏 */
+/* 阴影向右：主要应用于左边导航栏、抽屉组件或固定表格栏 */
+/* 第1层: 用于物体被操作(悬停、点击等)触发为悬浮状态, 如卡片 hover */
+@shadow-1-up: 0px -1px 2px -2px rgba(0, 0, 0, 0.16),
+  0px -3px 6px 0px rgba(0, 0, 0, 0.12), 0px -5px 12px 4px rgba(0, 0, 0, 0.09);
+@shadow-1-down: 0px 1px 2px -2px rgba(0, 0, 0, 0.16),
+  0px 3px 6px 0px rgba(0, 0, 0, 0.12), 0px 5px 12px 4px rgba(0, 0, 0, 0.09);
+@shadow-1-left: -1px 0px 2px -2px rgba(0, 0, 0, 0.16),
+  -3px 0px 6px 0px rgba(0, 0, 0, 0.12), -5px 0px 12px 4px rgba(0, 0, 0, 0.09);
+@shadow-1-right: 1px 0px 2px -2px rgba(0, 0, 0, 0.16),
+  3px 0px 6px 0px rgba(0, 0, 0, 0.12), 5px 0px 12px 4px rgba(0, 0, 0, 0.09);
+/* 第2层: 用于物体与基准面的关系是展开并跟随，物体由地面上的元素展开产生，如下拉面板等 */
+@shadow-2-up: 0px -3px 6px -4px rgba(0, 0, 0, 0.12),
+  0px -6px 16px 0px rgba(0, 0, 0, 0.08), 0px -9px 28px 8px rgba(0, 0, 0, 0.05);
+@shadow-2-down: 0px 3px 6px -4px rgba(0, 0, 0, 0.12),
+  0px 6px 16px 0px rgba(0, 0, 0, 0.08), 0px 9px 28px 8px rgba(0, 0, 0, 0.05);
+@shadow-2-left: -3px 0px 6px -4px rgba(0, 0, 0, 0.12),
+  -6px 0px 16px 0px rgba(0, 0, 0, 0.08), -9px 0px 28px 8px rgba(0, 0, 0, 0.05);
+@shadow-2-right: 3px 0px 6px -4px rgba(0, 0, 0, 0.12),
+  6px 0px 16px 0px rgba(0, 0, 0, 0.08), 9px 0px 28px 8px rgba(0, 0, 0, 0.05);
+/* 第3层: 用于物体位于高层级，该物体的运动和其他层级没有关联，如对话框等 */
+@shadow-3-up: 0px -6px 16px -8px rgba(0, 0, 0, 0.08),
+  0px -9px 28px 0px rgba(0, 0, 0, 0.05), 0px -12px 48px 16px rgba(0, 0, 0, 0.03);
+@shadow-3-down: 0px 6px 16px -8px rgba(0, 0, 0, 0.08),
+  0px 9px 28px 0px rgba(0, 0, 0, 0.05), 0px 12px 48px 16px rgba(0, 0, 0, 0.03);
+@shadow-3-left: -6px 0px 16px -8px rgba(0, 0, 0, 0.08),
+  -9px 0px 28px 0px rgba(0, 0, 0, 0.05), -12px 0px 48px 16px rgba(0, 0, 0, 0.03);
+@shadow-3-right: 6px 0px 16px -8px rgba(0, 0, 0, 0.08),
+  9px 0px 28px 0px rgba(0, 0, 0, 0.05), 12px 0px 48px 16px rgba(0, 0, 0, 0.03);
+
+// Spacing => 间距
+@size-1: 4px;
+@size-2: 8px;
+@size-3: 12px;
+@size-4: 16px;
+@size-5: 20px;
+@size-6: 24px;
+@size-7: 28px;
+@size-8: 32px;
+
+// Component-size 组件尺寸
+@component-size-default: 32px;
+@component-size-small: 28px;
+@component-size-mini: 24px;
+@component-size-large: 36px;
+
+@font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+  'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',
+  'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';

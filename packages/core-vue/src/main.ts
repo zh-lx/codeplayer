@@ -3,10 +3,10 @@ import CodeSandboxVue from './components/index.ce.vue';
 import globalStyle from '@/style/global.less?inline';
 import { CodeSandboxOptions, HTMLCodeSandboxElement } from './type';
 import { dialog } from './utils';
-dialog({
-  title: '提示',
-  content: '确认要删除该文件吗',
-});
+// dialog({
+//   title: '提示',
+//   content: '确认要删除该文件吗',
+// });
 
 const CodeSandboxClass = defineCustomElement(CodeSandboxVue);
 

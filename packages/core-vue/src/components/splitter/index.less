@@ -1,6 +1,6 @@
 .code-sandbox-splitter {
-  --border-common-color: @border-common-color;
-  --border-brand-secondary-color: @border-brand-secondary-color;
+  --border-primary: @border-primary;
+  --border-brand-disable: @border-brand-disable;
   display: flex;
   position: relative;
   height: 100%;
@@ -11,7 +11,7 @@
     user-select: initial;
   }
   .splitter-left {
-    border-right: 1px solid @border-common-color;
+    border-right: 1px solid @border-primary;
     position: relative;
   }
   .splitter-right {
@@ -39,7 +39,7 @@
     width: 6px;
     cursor: col-resize;
     &:hover {
-      background-color: @border-brand-secondary-color !important;
+      background-color: @bg-brand-disable !important;
     }
   }
   .vertical-dragger {
@@ -52,7 +52,7 @@
     width: 100%;
     cursor: row-resize;
     &:hover {
-      background-color: @border-brand-secondary-color !important;
+      background-color: @bg-brand-disable !important;
     }
   }
 }
