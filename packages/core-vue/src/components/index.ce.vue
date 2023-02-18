@@ -97,7 +97,6 @@ watch(
             :vertical="store.vertical"
             :showLeft="store.reverse ? store.showPreview : store.showCode"
             :showRight="store.reverse ? store.showCode : store.showPreview"
-            :reverseID="store.reverseID"
           >
             <template v-slot:[CodeSlotName]>
               <CodeEditor />

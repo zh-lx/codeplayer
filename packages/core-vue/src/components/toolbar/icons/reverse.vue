@@ -4,7 +4,6 @@ import { TooltipText } from '@/constant';
 
 function reverse() {
   store.reverse = !store.reverse;
-  store.reverseID++;
 }
 </script>
 

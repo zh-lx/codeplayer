@@ -9,7 +9,6 @@ const props = withDefaults(
     initSplit?: string;
     showLeft?: boolean;
     showRight?: boolean;
-    reverseID?: number;
     vertical?: boolean;
     fixedHeight?: number;
   }>(),
@@ -36,13 +35,6 @@ const draggerDOM = ref<HTMLDivElement>() as Ref<HTMLDivElement>;
 onMounted(() => {
   changeStyle();
 });
-
-// 左右交换所占比例
-function swap() {
-  // 锁定 splitterDOM 的高度
-  const _split = (1 - computedSplitBound() / getContainerLength()) * 100 + '%';
-  split.value = _split;
-}
 
 // 获取 container 总宽(高)度
 const getContainerLength = (vertical?: boolean) => {
@@ -143,8 +135,6 @@ watch(
   },
   { immediate: true }
 );
-
-watch(() => props.reverseID, swap);
 </script>
 
 <template>
