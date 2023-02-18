@@ -10,7 +10,6 @@ import { TooltipText } from '@/constant';
     :title="TooltipText.ToggleWebPreview(store.showPreview)"
     @click="() => (store.showPreview = !store.showPreview)"
     class="toolbar-icon"
-    :class="{ 'toolbar-disable-icon': !store.showPreview }"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"

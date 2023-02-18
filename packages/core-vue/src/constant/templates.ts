@@ -5,7 +5,7 @@ export const Vue3Template = {
 <script setup>
 import { ref } from 'vue'
 
-const msg = ref('Hello World!')
+const msg = ref('Hello CodeSandbox!')
 </script>
 
 <template>
@@ -26,12 +26,10 @@ import React, { useState } from 'react';
 
 export default function App() {
   const [msg, setMsg] = useState('Hello CodeSandbox!');
-  return (
-    <div>
-      <h1>{msg}</h1>
-      <input value={msg} onInput={(e) => setMsg(e.target.value)} />
-    </div>
-  );
+  return <div>
+    <h1>{msg}</h1>
+    <input value={msg} onInput={(e) => setMsg(e.target.value)} />
+  </div>
 }
   `.trim(),
   [MapFile]: `

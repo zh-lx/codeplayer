@@ -1,16 +1,12 @@
 .toolbar-icon {
-  color: @text-color;
+  color: @text-color-secondary;
   cursor: pointer;
   display: flex;
   align-items: center;
   &:hover {
-    background-color: @brand-light-bg;
-  }
-  &:active {
-    background-color: @brand-light-bg;
     color: @brand;
   }
-}
-.toolbar-disable-icon {
-  color: @text-color-disable;
+  &:active {
+    color: @brand-active;
+  }
 }

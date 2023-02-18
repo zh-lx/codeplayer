@@ -37,6 +37,8 @@ watch(() => store.files, refreshPreview, {
   deep: true,
 });
 
+watch(() => store.mainFile, refreshPreview);
+
 watch(() => store.refreshID, refreshPreview);
 
 const compileFiles = async () => {

@@ -10,7 +10,6 @@ import { TooltipText } from '@/constant';
     :title="TooltipText.ToggleCode(store.showCode)"
     @click="() => (store.showCode = !store.showCode)"
     class="toolbar-icon"
-    :class="{ 'toolbar-disable-icon': !store.showCode }"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"

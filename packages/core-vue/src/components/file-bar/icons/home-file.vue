@@ -2,14 +2,17 @@
 import { defineProps } from 'vue';
 import { TooltipText } from '@/constant';
 import { store } from '@/store';
+import { dialog } from '@/utils';
 
 const props = defineProps<{ filename: string }>();
 
 const resetHomeFile = (e: Event) => {
   e.stopPropagation();
-  if (confirm(`确定要将 ${props.filename} 设置为入口文件吗?`)) {
-    store.mainFile = props.filename;
-  }
+  dialog({
+    title: '提示',
+    content: `确定要将 ${props.filename} 设置为入口文件吗?`,
+    confirm: () => (store.mainFile = props.filename),
+  });
 };
 </script>
 <template>

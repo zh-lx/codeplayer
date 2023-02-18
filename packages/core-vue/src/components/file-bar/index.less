@@ -10,16 +10,20 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+
     .files-head {
       height: 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 4px;
-      color: @text-color;
+      color: @text-color-secondary;
       font-weight: 600;
       font-size: 12px;
       user-select: none;
+      .files-head-left {
+        font-size: @font-size-default;
+      }
       .files-head-right {
         display: flex;
         align-items: center;
@@ -83,6 +87,9 @@
           &:hover {
             color: @brand;
           }
+          &:active {
+            color: @brand-active;
+          }
         }
         .file-right {
           display: flex;
@@ -93,7 +100,7 @@
           }
         }
         &:hover {
-          background-color: @brand-light-bg;
+          color: @brand;
           .file-right {
             .file-option-button {
               display: block;
@@ -113,9 +120,6 @@
         }
       }
       .active-file-item {
-        .file-left {
-          color: @brand;
-        }
         border-left: 2px solid @brand;
         padding-left: 2px;
         background-color: @brand-light-bg;
@@ -129,6 +133,9 @@
       cursor: pointer;
       &:hover {
         color: @brand;
+      }
+      &:active {
+        color: @brand-active;
       }
     }
   }

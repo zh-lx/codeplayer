@@ -37,6 +37,7 @@
 }
 
 .code-sandbox-dialog-mask {
+  font-family: @font-family;
   position: fixed;
   top: 0;
   left: 0;
@@ -71,6 +72,9 @@
       &:hover {
         color: @brand;
       }
+      &:active {
+        color: @brand-active;
+      }
     }
     .code-sandbox-dialog-content {
       font-size: 13px;
@@ -78,17 +82,44 @@
     .code-sandbox-dialog-buttons {
       display: flex;
       justify-content: flex-end;
-      .code-sandbox-dialog-button-cancel {
-        margin-right: 8px;
-        background-color: @bg-white;
-        border: 1px solid @border-color;
-        border-radius: 4px;
-      }
       button {
         box-sizing: border-box;
         cursor: pointer;
-        padding: 4px 12px;
+        padding: @gap-1 @gap-3;
+      }
+      .code-sandbox-dialog-button-cancel {
+        margin-right: 8px;
+        background-color: @fill;
+        border-radius: 4px;
+        border: none;
+        &:hover {
+          background-color: @fill-hover;
+        }
+        &:active {
+          background-color: @fill-active;
+        }
+      }
+      .code-sandbox-dialog-button-confirm {
+        margin-right: 8px;
+        background-color: @brand;
+        border-radius: 4px;
+        color: @text-color-white;
+        border: none;
+        &:hover {
+          background-color: @brand-hover;
+        }
+        &:active {
+          background-color: @brand-active;
+        }
       }
     }
   }
+}
+.theme-mac {
+  border: 1px solid @border-color;
+  background-color: @fill-gray-float;
+}
+.theme-mac li:hover {
+  background-color: @brand;
+  cursor: pointer;
 }
