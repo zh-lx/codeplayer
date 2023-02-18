@@ -74,7 +74,7 @@ const dragStart = (e: MouseEvent) => {
   startSplit.value = computedSplitBound();
   startHeight.value = leftDOM.value.getBoundingClientRect().height;
   splitterDOM.value.style.cursor = props.vertical ? 'row-resize' : 'col-resize';
-  draggerDOM.value.style.backgroundColor = 'var(--border-brand-disable)';
+  draggerDOM.value.style.backgroundColor = 'var(--border-brand)';
   showMask.value = true;
 };
 

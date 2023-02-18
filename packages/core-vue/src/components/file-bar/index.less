@@ -4,9 +4,7 @@
   justify-content: space-between;
   position: relative;
   height: 100%;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, PingFang SC,
-    Hiragino Sans GB, noto sans, Microsoft YaHei, Helvetica Neue, Helvetica,
-    Arial, sans-serif;
+  font-family: @font-family;
   .files-container {
     width: 100%;
     overflow: hidden;
@@ -18,7 +16,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 4px;
-      color: @text-primary;
+      color: @text-color;
       font-weight: 600;
       font-size: 12px;
       user-select: none;
@@ -33,7 +31,7 @@
         width: 100%;
         box-sizing: border-box;
         outline: none;
-        border: 1px solid @border-brand;
+        border: 1px solid @brand;
         height: 22px;
         box-sizing: border-box;
         font-size: 12px;
@@ -43,9 +41,9 @@
         width: 100%;
         top: 52px;
         font-size: 12px;
-        color: @text-danger;
-        border: 1px solid @border-danger-light;
-        background-color: @bg-danger-light;
+        color: @danger;
+        border: 1px solid @danger-light-border;
+        background-color: @danger-light-bg;
         text-align: center;
         padding: 3px;
         box-sizing: border-box;
@@ -83,19 +81,19 @@
             white-space: nowrap;
           }
           &:hover {
-            color: @text-brand;
+            color: @brand;
           }
         }
         .file-right {
           display: flex;
           align-items: center;
-          color: @text-secondary;
+          color: @text-color-secondary;
           .file-option-button {
             display: none;
           }
         }
         &:hover {
-          background-color: @bg-brand-light;
+          background-color: @brand-light-bg;
           .file-right {
             .file-option-button {
               display: block;
@@ -107,7 +105,7 @@
           margin-left: 2px;
         }
         .current-home-operate {
-          color: @text-danger !important;
+          color: @danger !important;
           display: block !important;
         }
         .hide-file-operate {
@@ -116,11 +114,11 @@
       }
       .active-file-item {
         .file-left {
-          color: @text-brand;
+          color: @brand;
         }
-        border-left: 2px solid @border-brand;
+        border-left: 2px solid @brand;
         padding-left: 2px;
-        background-color: @bg-brand-light;
+        background-color: @brand-light-bg;
       }
     }
   }
@@ -130,11 +128,11 @@
     .file-option-button {
       cursor: pointer;
       &:hover {
-        color: @text-brand;
+        color: @brand;
       }
     }
   }
   .import-map-container {
-    border-top: 1px solid @border-primary;
+    border-top: 1px solid @border-color;
   }
 }

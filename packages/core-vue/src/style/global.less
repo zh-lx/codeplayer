@@ -1,7 +1,7 @@
 .code-sandbox-active-menu-item {
-  color: @text-brand;
+  color: @brand;
   &:hover {
-    color: @text-white;
+    color: @text-color-white;
   }
 }
 
@@ -12,28 +12,28 @@
   transform: translateX(-50%);
   padding: 4px 12px;
   font-size: 12px;
-  color: @text-brand;
-  background-color: @bg-brand-light;
-  border: 1px solid @border-brand-light;
+  color: @brand;
+  background-color: @brand-light-bg;
+  border: 1px solid @brand-light-border;
   border-radius: 4px;
 }
 
 .code-sandbox-message-info {
-  color: @text-info;
-  background-color: @bg-info-light;
-  border: 1px solid @border-info-light;
+  color: @info;
+  background-color: @info-light-bg;
+  border: 1px solid @info-light-border;
 }
 
 .code-sandbox-message-danger {
-  color: @text-danger;
-  border: 1px solid @border-danger-light;
-  background-color: @bg-danger-light;
+  color: @danger;
+  border: 1px solid @danger-light-border;
+  background-color: @danger-light-bg;
 }
 
 .code-sandbox-message-success {
-  color: @text-success;
-  border: 1px solid @border-success-light;
-  background-color: @bg-success-light;
+  color: @success;
+  border: 1px solid @success-light-border;
+  background-color: @success-light-bg;
 }
 
 .code-sandbox-dialog-mask {
@@ -59,7 +59,7 @@
       line-height: 24px;
     }
     .code-sandbox-dialog-close {
-      color: @text-secondary;
+      color: @text-color-secondary;
       cursor: pointer;
       position: absolute;
       height: 24px;
@@ -69,7 +69,7 @@
       align-items: center;
       justify-content: center;
       &:hover {
-        color: @text-brand;
+        color: @brand;
       }
     }
     .code-sandbox-dialog-content {
@@ -81,7 +81,7 @@
       .code-sandbox-dialog-button-cancel {
         margin-right: 8px;
         background-color: @bg-white;
-        border: 1px solid @border-primary;
+        border: 1px solid @border-color;
         border-radius: 4px;
       }
       button {

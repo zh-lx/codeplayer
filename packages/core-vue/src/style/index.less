@@ -1,149 +1,78 @@
-@import url('./variable.less');
+@import url('./base.less');
 
-// TextColor => 字体颜色
-@text-primary: @neutral-10;
-@text-secondary: @neutral-8;
-@text-tertiary: @neutral-6;
-@text-disable: @neutral-4;
-@text-white: @neutral-white;
+// 主题色
+@brand: @brand-6; // 主色
+@brand-active: @brand-7; // active
+@brand-hover: @brand-5; // hover
+@brand-disable: @brand-3; // 禁用
+@brand-text-disable: @brand-2; // 文字禁用
+@brand-light-border: @brand-2; // 浅色描边
+@brand-light-bg: @brand-1; // 浅色/白底悬浮
 
-@text-brand: @blue-6;
-@text-brand-hover: @blue-5;
-@text-brand-active: @blue-7;
-@text-brand-disable: @blue-2;
+// 信息色
+@info: @brand-6;
+@info-active: @brand-7;
+@info-hover: @brand-5;
+@info-disable: @brand-3;
+@info-text-disable: @brand-2;
+@info-light-border: @brand-2;
+@info-light-bg: @brand-1;
 
-@text-success: @green-6;
-@text-success-hover: @green-5;
-@text-success-active: @green-7;
-@text-success-disable: @green-2;
+// 成功色
+@success: @green-6;
+@success-active: @green-7;
+@success-hover: @green-5;
+@success-disable: @green-3;
+@success-text-disable: @green-2;
+@success-light-border: @green-2;
+@success-light-bg: @green-1;
 
-@text-warn: @orange-6;
-@text-warn-hover: @orange-5;
-@text-warn-active: @orange-7;
-@text-warn-disable: @orange-2;
+// 警告色
+@warning: @orange-6;
+@warning-active: @orange-7;
+@warning-hover: @orange-5;
+@warning-disable: @orange-3;
+@warning-text-disable: @orange-2;
+@warning-light-border: @orange-2;
+@warning-light-bg: @orange-1;
 
-@text-danger: @red-6;
-@text-danger-hover: @red-5;
-@text-danger-active: @red-7;
-@text-danger-disable: @red-2;
+// 危险色
+@danger: @red-6;
+@danger-active: @red-7;
+@danger-hover: @red-5;
+@danger-disable: @red-3;
+@danger-text-disable: @red-2;
+@danger-light-border: @red-2;
+@danger-light-bg: @red-1;
 
-@text-info: @cyan-6;
-@text-info-hover: @cyan-5;
-@text-info-active: @cyan-7;
-@text-info-disable: @cyan-2;
+// 文字颜色
+@text-color: @neutral-10;
+@text-color-secondary: @neutral-8;
+@text-color-tertiary: @neutral-6;
+@text-color-disable: @neutral-4;
+@text-color-white: @neutral-white;
 
-// FillColor => 填充颜色
-@fill-primary: @neutral-2;
-@fill-deep: @neutral-3;
-@fill-heavy: @neutral-4;
+// 边框颜色
+@border-color: @neutral-3;
+@border-color-secondary: @neutral-2;
+@border-color-hover: @neutral-4;
+
+// 填充色
+@fill: @neutral-2;
 @fill-disable: @neutral-1;
-@fill-white: @neutral-white;
+@fill-hover: @neutral-3;
+@fill-gray-float: @neutral-3;
+@fill-heavy: @neutral-4;
 
-@fill-brand: @blue-6;
-@fill-brand-hover: @blue-5;
-@fill-brand-active: @blue-7;
-@fill-brand-disable: @blue-3;
-
-@fill-success: @green-6;
-@fill-success-hover: @green-5;
-@fill-success-active: @green-7;
-@fill-success-disable: @green-3;
-
-@fill-warn: @orange-6;
-@fill-warn-hover: @orange-5;
-@fill-warn-active: @orange-7;
-@fill-warn-disable: @orange-3;
-
-@fill-danger: @red-6;
-@fill-danger-hover: @red-4;
-@fill-danger-active: @red-7;
-@fill-danger-disable: @red-3;
-
-@fill-info: @cyan-6;
-@fill-info-hover: @cyan-5;
-@fill-info-active: @cyan-7;
-@fill-info-disable: @cyan-3;
-
-// StrokeColor => 边框颜色
-@border-deep: @neutral-6;
-@border-hover: @neutral-4;
-@border-primary: @neutral-3;
-@border-disable: @neutral-2;
-@border-deep-disable: @neutral-4;
-@border-white: @neutral-white;
-
-@border-brand: @blue-6;
-@border-brand-hover: @blue-5;
-@border-brand-active: @blue-7;
-@border-brand-disable: @blue-3;
-@border-brand-light: @blue-2;
-
-@border-success: @green-6;
-@border-success-hover: @green-5;
-@border-success-active: @green-7;
-@border-success-disable: @green-3;
-@border-success-light: @green-2;
-
-@border-warn: @orange-6;
-@border-warn-hover: @orange-5;
-@border-warn-active: @orange-7;
-@border-warn-disable: @orange-3;
-@border-warn-light: @orange-2;
-
-@border-danger: @red-6;
-@border-danger-hover: @red-5;
-@border-danger-active: @red-7;
-@border-danger-disable: @red-3;
-@border-danger-light: @red-2;
-
-@border-info: @cyan-6;
-@border-info-hover: @cyan-5;
-@border-info-active: @cyan-7;
-@border-info-disable: @cyan-3;
-@border-info-light: @cyan-2;
-
-// BackgroundColor => 背景颜色
-@bg-mask: fade(@neutral-black, 20%);
-@bg-tooltips: @neutral-10;
-@bg-hover: @neutral-3;
-@bg-active: @neutral-1;
-@bg-disable: @neutral-3;
-
-@bg-layout: @neutral-2;
-@bg-contain: @neutral-1;
+// 背景色
+@bg-container: @neutral-white;
+@bg-float: @neutral-white;
+@bg-layout: @neutral-1;
 @bg-white: @neutral-white;
+@bg-mask: fade(@neutral-black, 40);
+@bg-tooltip: fade(@neutral-black, 85);
 
-@bg-brand: @blue-6;
-@bg-brand-hover: @blue-5;
-@bg-brand-active: @blue-7;
-@bg-brand-disable: @blue-3;
-@bg-brand-light: @blue-1;
-
-@bg-success: @green-6;
-@bg-success-hover: @green-5;
-@bg-success-active: @green-7;
-@bg-success-disable: @green-3;
-@bg-success-light: @green-1;
-
-@bg-warn: @orange-6;
-@bg-warn-hover: @orange-5;
-@bg-warn-active: @orange-7;
-@bg-warn-disable: @orange-3;
-@bg-warn-light: @orange-1;
-
-@bg-danger: @red-6;
-@bg-danger-hover: @red-5;
-@bg-danger-active: @red-7;
-@bg-danger-disable: @red-3;
-@bg-danger-light: @red-1;
-
-@bg-info: @cyan-6;
-@bg-info-hover: @cyan-5;
-@bg-info-active: @cyan-7;
-@bg-info-disable: @cyan-3;
-@bg-info-light: @cyan-1;
-
-// Font => 字体大小
+// 字体大小
 @font-size-title: 20px;
 @font-size-title-large: 24px;
 @font-size-title-small: 16px;
@@ -151,21 +80,35 @@
 @font-size-default: 14px;
 @font-size-secondary: 13px;
 @font-size-mini: 12px;
+@font-size-caption: 12px; // 水印/说明文字
 
 @font-size-display: 48px;
 @font-size-display-large: 56px;
 @font-size-display-small: 36px;
 
-@font-size-caption: 12px;
+// 边框圆角
+@border-radius-circle: 999px;
+@border-radius-small: 2px;
+@border-radius-normal: 4px;
+@border-radius-default: 8px;
+@border-radius-none: 0px;
 
-// Radius => 边框半径
-@radius-circle: 999px;
-@radius-small: 2px;
-@radius-normal: 4px;
-@radius-default: 8px;
-@radius-none: 0px;
+// 组件尺寸
+@size-default: 32px;
+@size-small: 28px;
+@size-mini: 24px;
+@size-large: 36px;
 
-// Shadow => 阴影
+// 间距
+@gap-1: 4px;
+@gap-2: 8px;
+@gap-3: 12px;
+@gap-4: 16px;
+@gap-5: 20px;
+@gap-6: 24px;
+@gap-7: 28px;
+@gap-8: 32px;
+
 /* 阴影 */
 /* 阴影向下：主要应用于组件内部或组件本身，是比较常规场景的用法 */
 /* 阴影向上：主要应用于底部导航或工具栏等 */
@@ -199,22 +142,6 @@
 @shadow-3-right: 6px 0px 16px -8px rgba(0, 0, 0, 0.08),
   9px 0px 28px 0px rgba(0, 0, 0, 0.05), 12px 0px 48px 16px rgba(0, 0, 0, 0.03);
 
-// Spacing => 间距
-@size-1: 4px;
-@size-2: 8px;
-@size-3: 12px;
-@size-4: 16px;
-@size-5: 20px;
-@size-6: 24px;
-@size-7: 28px;
-@size-8: 32px;
-
-// Component-size 组件尺寸
-@component-size-default: 32px;
-@component-size-small: 28px;
-@component-size-mini: 24px;
-@component-size-large: 36px;
-
-@font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-  'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',
-  'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+@font-family: Inter, -apple-system, BlinkMacSystemFont, PingFang SC,
+  Hiragino Sans GB, noto sans, Microsoft YaHei, Helvetica Neue, Helvetica, Arial,
+  sans-serif;
