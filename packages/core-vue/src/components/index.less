@@ -5,10 +5,26 @@
 @import './preview/index.less';
 
 .code-sandbox-container {
-  border: 1px solid @border-common-color;
+  border: 1px solid @border-color;
   border-radius: 4px;
   display: flex;
   flex-direction: column;
+  ::-webkit-scrollbar {
+    background-color: @bg-layout;
+    width: 8px;
+    height: 8px;
+    // width: 36px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: @border-color;
+    border-radius: @border-radius-circle;
+    &:hover {
+      background-color: @border-color-hover;
+    }
+    &:active {
+      background-color: @border-color-active;
+    }
+  }
   .main-content {
     display: flex;
     position: relative;

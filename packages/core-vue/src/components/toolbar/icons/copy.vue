@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { toRaw } from 'vue';
-import { type Editor } from 'codemirror';
+import { EditorView } from 'codemirror';
 import { store } from '@/store';
 import { TooltipText } from '@/constant';
 import { message } from '@/utils';
 
 function copyCode() {
   try {
-    const code = (toRaw(store.editor) as Editor).getValue();
+    const code = store.editor?.state.doc.toString() || '';
     navigator.clipboard.writeText(code);
     message('代码已复制至剪切板', { type: 'success' });
   } catch (error) {

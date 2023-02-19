@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, Ref, computed } from 'vue';
-import { File } from '@/utils';
+import { File, dialog } from '@/utils';
 import { store } from '@/store';
 import { MapFile, fileTypes, TooltipText } from '@/constant';
 import AddFile from './icons/add-file.vue';
@@ -49,28 +49,6 @@ const handleFilenameChange = () => {
   newFilename.value = '';
   originFilename.value = '';
   showNewFile.value = false;
-};
-
-// 删除文件
-const deleteFile = (filename: string) => {
-  // Todo: 确认删除框样式优化
-  if (confirm(`确定要删除 ${filename} 吗?`)) {
-    if (store.activeFile.filename === filename) {
-      store.activeFile = store.files[store.mainFile];
-    }
-    const tempFiles = { ...store.files };
-    delete tempFiles[filename];
-    store.files = tempFiles;
-  }
-};
-
-// 重新设置入口文件
-const resetEntryFile = (filename: string) => {
-  // Todo: 确认删除框样式优化
-  if (confirm(`是否要将入口文件修改为 ${filename}?`)) {
-    store.mainFile = filename;
-    store.activeFile = store.files[filename];
-  }
 };
 
 // 点击重命名文件

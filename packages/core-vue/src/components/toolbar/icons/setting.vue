@@ -54,6 +54,19 @@ const initSettingMenu = () => {
             class: store.vertical ? activeClass : '',
             callback: () => (store.vertical = true),
           },
+          { type: 'hr' },
+          {
+            type: 'li',
+            text: '不翻转',
+            class: store.reverse ? '' : activeClass,
+            callback: () => (store.reverse = false),
+          },
+          {
+            type: 'li',
+            text: '翻转',
+            class: !store.reverse ? '' : activeClass,
+            callback: () => (store.reverse = true),
+          },
         ],
       },
     ]

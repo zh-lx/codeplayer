@@ -1,16 +1,15 @@
 import { MapFile } from './index';
 
 export const Vue3Template = {
-  'App.vue': `
-<script setup>
+  'App.vue': `<script setup>
 import { ref } from 'vue'
 
-const msg = ref('Hello World!')
+const msg = ref('Hello CodeSandbox!')
 </script>
 
 <template>
   <h1>{{ msg }}</h1>
-  <input v-model="msg">
+  <input v-model="msg" />
 </template>`.trim(),
   [MapFile]: `
 {
@@ -21,17 +20,14 @@ const msg = ref('Hello World!')
 };
 
 export const ReactTemplate = {
-  'App.tsx': `
-import React, { useState } from 'react';
+  'App.tsx': `import React, { useState } from 'react';
 
 export default function App() {
   const [msg, setMsg] = useState('Hello CodeSandbox!');
-  return (
-    <div>
-      <h1>{msg}</h1>
-      <input value={msg} onInput={(e) => setMsg(e.target.value)} />
-    </div>
-  );
+  return <div>
+    <h1>{msg}</h1>
+    <input value={msg} onInput={(e) => setMsg(e.target.value)} />
+  </div>
 }
   `.trim(),
   [MapFile]: `
@@ -47,8 +43,7 @@ export default function App() {
 };
 
 export const HtmlTemplate = {
-  'index.html': `
-<!DOCTYPE html>
+  'index.html': `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -71,8 +66,7 @@ export const HtmlTemplate = {
 };
 
 export const JavascriptTemplate = {
-  'index.js': `
-const msg = 'Hello CodeSandbox!'
+  'index.js': `const msg = 'Hello CodeSandbox!'
 console.log(msg)
     `,
   [MapFile]: `

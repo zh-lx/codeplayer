@@ -4,24 +4,26 @@
   justify-content: space-between;
   position: relative;
   height: 100%;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, PingFang SC,
-    Hiragino Sans GB, noto sans, Microsoft YaHei, Helvetica Neue, Helvetica,
-    Arial, sans-serif;
+  font-family: @font-family;
   .files-container {
     width: 100%;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+
     .files-head {
       height: 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 4px;
-      color: @text-main-color;
+      color: @text-color-secondary;
       font-weight: 600;
       font-size: 12px;
       user-select: none;
+      .files-head-left {
+        font-size: @font-size-default;
+      }
       .files-head-right {
         display: flex;
         align-items: center;
@@ -33,7 +35,7 @@
         width: 100%;
         box-sizing: border-box;
         outline: none;
-        border: 1px solid @border-brand-color;
+        border: 1px solid @brand;
         height: 22px;
         box-sizing: border-box;
         font-size: 12px;
@@ -43,9 +45,9 @@
         width: 100%;
         top: 52px;
         font-size: 12px;
-        color: @danger-color;
-        border: 1px solid @border-danger-color;
-        background-color: @bg-danger-secondary-color;
+        color: @danger;
+        border: 1px solid @danger-light-border;
+        background-color: @danger-light-bg;
         text-align: center;
         padding: 3px;
         box-sizing: border-box;
@@ -83,19 +85,22 @@
             white-space: nowrap;
           }
           &:hover {
-            color: @brand-color;
+            color: @brand;
+          }
+          &:active {
+            color: @brand-active;
           }
         }
         .file-right {
           display: flex;
           align-items: center;
-          color: @text-secondary-color;
+          color: @text-color-secondary;
           .file-option-button {
             display: none;
           }
         }
         &:hover {
-          background-color: @bg-brand-secondary-color;
+          color: @brand;
           .file-right {
             .file-option-button {
               display: block;
@@ -107,7 +112,7 @@
           margin-left: 2px;
         }
         .current-home-operate {
-          color: @danger-color !important;
+          color: @danger !important;
           display: block !important;
         }
         .hide-file-operate {
@@ -115,12 +120,9 @@
         }
       }
       .active-file-item {
-        .file-left {
-          color: @brand-color;
-        }
-        border-left: 2px solid @brand-color;
+        border-left: 2px solid @brand;
         padding-left: 2px;
-        background-color: @bg-brand-secondary-color;
+        background-color: @brand-light-bg;
       }
     }
   }
@@ -130,11 +132,14 @@
     .file-option-button {
       cursor: pointer;
       &:hover {
-        color: @brand-color;
+        color: @brand;
+      }
+      &:active {
+        color: @brand-active;
       }
     }
   }
   .import-map-container {
-    border-top: 1px solid @border-common-color;
+    border-top: 1px solid @border-color;
   }
 }

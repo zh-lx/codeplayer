@@ -1,14 +1,150 @@
-@brand-color: #3491fa;
-@danger-color: #f56c6c;
+@import url('./base.less');
 
-@border-common-color: #dcdfe6;
-@border-brand-color: #409eff;
-@border-danger-color: #fde2e2;
-@border-brand-secondary-color: #d9ecff;
+// 主题色
+@brand: @brand-6; // 主色
+@brand-active: @brand-7; // active
+@brand-hover: @brand-5; // hover
+@brand-disable: @brand-3; // 禁用
+@brand-text-disable: @brand-2; // 文字禁用
+@brand-light-border: @brand-2; // 浅色描边
+@brand-light-bg: @brand-1; // 浅色/白底悬浮
 
-@bg-brand-secondary-color: #f5f8ff;
-@bg-danger-secondary-color: #fef0f0;
+// 信息色
+@info: @brand-6;
+@info-active: @brand-7;
+@info-hover: @brand-5;
+@info-disable: @brand-3;
+@info-text-disable: @brand-2;
+@info-light-border: @brand-2;
+@info-light-bg: @brand-1;
 
-@text-main-color: #333;
-@text-secondary-color: #555;
-@disable-color: #c0c4cc;
+// 成功色
+@success: @green-6;
+@success-active: @green-7;
+@success-hover: @green-5;
+@success-disable: @green-3;
+@success-text-disable: @green-2;
+@success-light-border: @green-2;
+@success-light-bg: @green-1;
+
+// 警告色
+@warning: @orange-6;
+@warning-active: @orange-7;
+@warning-hover: @orange-5;
+@warning-disable: @orange-3;
+@warning-text-disable: @orange-2;
+@warning-light-border: @orange-2;
+@warning-light-bg: @orange-1;
+
+// 危险色
+@danger: @red-6;
+@danger-active: @red-7;
+@danger-hover: @red-5;
+@danger-disable: @red-3;
+@danger-text-disable: @red-2;
+@danger-light-border: @red-2;
+@danger-light-bg: @red-1;
+
+// 文字颜色
+@text-color: @neutral-10;
+@text-color-secondary: @neutral-8;
+@text-color-tertiary: @neutral-6;
+@text-color-disable: @neutral-4;
+@text-color-white: @neutral-white;
+
+// 边框颜色
+@border-color: @neutral-3;
+@border-color-secondary: @neutral-2;
+@border-color-hover: @neutral-4;
+@border-color-active: @neutral-6;
+@border-color-heavy: @neutral-6;
+
+// 填充色
+@fill: @neutral-2;
+@fill-disable: @neutral-1;
+@fill-hover: @neutral-3;
+@fill-active: @neutral-4;
+@fill-heavy: @neutral-4;
+@fill-gray-float: @neutral-3;
+
+// 背景色
+@bg-container: @neutral-white;
+@bg-float: @neutral-white;
+@bg-layout: @neutral-1;
+@bg-white: @neutral-white;
+@bg-mask: fade(@neutral-black, 40);
+@bg-tooltip: fade(@neutral-black, 85);
+
+// 字体大小
+@font-size-title: 20px;
+@font-size-title-large: 24px;
+@font-size-title-small: 16px;
+
+@font-size-default: 14px;
+@font-size-secondary: 13px;
+@font-size-mini: 12px;
+@font-size-caption: 12px; // 水印/说明文字
+
+@font-size-display: 48px;
+@font-size-display-large: 56px;
+@font-size-display-small: 36px;
+
+// 边框圆角
+@border-radius-circle: 999px;
+@border-radius-small: 2px;
+@border-radius-normal: 4px;
+@border-radius-default: 8px;
+@border-radius-none: 0px;
+
+// 组件尺寸
+@size-default: 32px;
+@size-small: 28px;
+@size-mini: 24px;
+@size-large: 36px;
+
+// 间距
+@gap-1: 4px;
+@gap-2: 8px;
+@gap-3: 12px;
+@gap-4: 16px;
+@gap-5: 20px;
+@gap-6: 24px;
+@gap-7: 28px;
+@gap-8: 32px;
+
+/* 阴影 */
+/* 阴影向下：主要应用于组件内部或组件本身，是比较常规场景的用法 */
+/* 阴影向上：主要应用于底部导航或工具栏等 */
+/* 阴影向左：主要应用于右边导航栏、抽屉组件或固定表格栏 */
+/* 阴影向右：主要应用于左边导航栏、抽屉组件或固定表格栏 */
+/* 第1层: 用于物体被操作(悬停、点击等)触发为悬浮状态, 如卡片 hover */
+@shadow-1-up: 0px -1px 2px -2px rgba(0, 0, 0, 0.16),
+  0px -3px 6px 0px rgba(0, 0, 0, 0.12), 0px -5px 12px 4px rgba(0, 0, 0, 0.09);
+@shadow-1-down: 0px 1px 2px -2px rgba(0, 0, 0, 0.16),
+  0px 3px 6px 0px rgba(0, 0, 0, 0.12), 0px 5px 12px 4px rgba(0, 0, 0, 0.09);
+@shadow-1-left: -1px 0px 2px -2px rgba(0, 0, 0, 0.16),
+  -3px 0px 6px 0px rgba(0, 0, 0, 0.12), -5px 0px 12px 4px rgba(0, 0, 0, 0.09);
+@shadow-1-right: 1px 0px 2px -2px rgba(0, 0, 0, 0.16),
+  3px 0px 6px 0px rgba(0, 0, 0, 0.12), 5px 0px 12px 4px rgba(0, 0, 0, 0.09);
+/* 第2层: 用于物体与基准面的关系是展开并跟随，物体由地面上的元素展开产生，如下拉面板等 */
+@shadow-2-up: 0px -3px 6px -4px rgba(0, 0, 0, 0.12),
+  0px -6px 16px 0px rgba(0, 0, 0, 0.08), 0px -9px 28px 8px rgba(0, 0, 0, 0.05);
+@shadow-2-down: 0px 3px 6px -4px rgba(0, 0, 0, 0.12),
+  0px 6px 16px 0px rgba(0, 0, 0, 0.08), 0px 9px 28px 8px rgba(0, 0, 0, 0.05);
+@shadow-2-left: -3px 0px 6px -4px rgba(0, 0, 0, 0.12),
+  -6px 0px 16px 0px rgba(0, 0, 0, 0.08), -9px 0px 28px 8px rgba(0, 0, 0, 0.05);
+@shadow-2-right: 3px 0px 6px -4px rgba(0, 0, 0, 0.12),
+  6px 0px 16px 0px rgba(0, 0, 0, 0.08), 9px 0px 28px 8px rgba(0, 0, 0, 0.05);
+/* 第3层: 用于物体位于高层级，该物体的运动和其他层级没有关联，如对话框等 */
+@shadow-3-up: 0px -6px 16px -8px rgba(0, 0, 0, 0.08),
+  0px -9px 28px 0px rgba(0, 0, 0, 0.05), 0px -12px 48px 16px rgba(0, 0, 0, 0.03);
+@shadow-3-down: 0px 6px 16px -8px rgba(0, 0, 0, 0.08),
+  0px 9px 28px 0px rgba(0, 0, 0, 0.05), 0px 12px 48px 16px rgba(0, 0, 0, 0.03);
+@shadow-3-left: -6px 0px 16px -8px rgba(0, 0, 0, 0.08),
+  -9px 0px 28px 0px rgba(0, 0, 0, 0.05), -12px 0px 48px 16px rgba(0, 0, 0, 0.03);
+@shadow-3-right: 6px 0px 16px -8px rgba(0, 0, 0, 0.08),
+  9px 0px 28px 0px rgba(0, 0, 0, 0.05), 12px 0px 48px 16px rgba(0, 0, 0, 0.03);
+
+@font-family: Inter, -apple-system, BlinkMacSystemFont, PingFang SC,
+  Hiragino Sans GB, noto sans, Microsoft YaHei, Helvetica Neue, Helvetica, Arial,
+  sans-serif;

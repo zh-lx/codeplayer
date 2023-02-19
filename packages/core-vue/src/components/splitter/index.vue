@@ -9,7 +9,6 @@ const props = withDefaults(
     initSplit?: string;
     showLeft?: boolean;
     showRight?: boolean;
-    reverseID?: number;
     vertical?: boolean;
     fixedHeight?: number;
   }>(),
@@ -36,13 +35,6 @@ const draggerDOM = ref<HTMLDivElement>() as Ref<HTMLDivElement>;
 onMounted(() => {
   changeStyle();
 });
-
-// 左右交换所占比例
-function swap() {
-  // 锁定 splitterDOM 的高度
-  const _split = (1 - computedSplitBound() / getContainerLength()) * 100 + '%';
-  split.value = _split;
-}
 
 // 获取 container 总宽(高)度
 const getContainerLength = (vertical?: boolean) => {
@@ -74,8 +66,7 @@ const dragStart = (e: MouseEvent) => {
   startSplit.value = computedSplitBound();
   startHeight.value = leftDOM.value.getBoundingClientRect().height;
   splitterDOM.value.style.cursor = props.vertical ? 'row-resize' : 'col-resize';
-  draggerDOM.value.style.backgroundColor =
-    'var(--border-brand-secondary-color)';
+  draggerDOM.value.style.backgroundColor = 'var(--border-brand)';
   showMask.value = true;
 };
 
@@ -109,7 +100,7 @@ const changeStyle = () => {
     leftDOM.value.style.width = '100%';
     leftDOM.value.style.borderBottom =
       computedSplitBound() && props.showRight
-        ? '1px solid var(--border-common-color)'
+        ? '1px solid var(--border-primary)'
         : 'none';
     leftDOM.value.style.borderRight = 'none';
   } else {
@@ -117,7 +108,7 @@ const changeStyle = () => {
     leftDOM.value.style.width = computedSplitBound() + 'px';
     leftDOM.value.style.borderRight =
       computedSplitBound() && props.showRight
-        ? '1px solid var(--border-common-color)'
+        ? '1px solid var(--border-primary)'
         : 'none';
     leftDOM.value.style.borderBottom = 'none';
   }
@@ -144,8 +135,6 @@ watch(
   },
   { immediate: true }
 );
-
-watch(() => props.reverseID, swap);
 </script>
 
 <template>
