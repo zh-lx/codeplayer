@@ -1,6 +1,6 @@
 import { reactive } from 'vue';
 import type { File } from '@/utils';
-import { type Editor } from 'codemirror';
+import { type EditorView } from '@codemirror/view';
 import type { ToolbarPosition, Control } from '@/type';
 
 export interface Store {
@@ -16,7 +16,7 @@ export interface Store {
   reverse: boolean;
   excludeTools: Control[];
   imports: Record<string, string>;
-  editor: Editor | null; // code Mirror 编辑器
+  editor: EditorView | null; // code Mirror 编辑器
   refreshID: number; // 用于 preview 刷新的标识，当点击刷新按钮该值 +1 触发刷新
   sharePath: string; // 分享按钮的路径
 }
