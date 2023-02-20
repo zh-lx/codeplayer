@@ -34,3 +34,8 @@ export const getTemplate = (appType: string = 'vue3') => {
     return TypescriptTemplate;
   }
 };
+
+export const getFileExtraName = (filename: string) => {
+  const segments = filename.split('.');
+  return segments[segments.length - 1];
+};

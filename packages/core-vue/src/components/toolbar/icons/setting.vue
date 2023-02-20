@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 import { store } from '@/store';
-import { TooltipText } from '@/constant';
-import RightMenu from '@right-menu/core';
+import { TooltipText, CodeSizes } from '@/constant';
+import RightMenu, { activeClass } from '@/components/menus';
 
 const settingDOM = ref<HTMLDivElement>();
 
@@ -11,7 +11,6 @@ onMounted(() => {
 });
 
 const initSettingMenu = () => {
-  const activeClass = 'code-sandbox-active-menu-item';
   new RightMenu(
     {
       el: settingDOM.value as HTMLElement,
@@ -22,50 +21,85 @@ const initSettingMenu = () => {
     () => [
       {
         type: 'ul',
-        text: '工具栏位置',
+        text: '工具栏',
         children: [
           {
-            type: 'li',
-            text: '顶部',
-            class: store.toolbarPosition === 'top' ? activeClass : '',
-            callback: () => (store.toolbarPosition = 'top'),
-          },
-          {
-            type: 'li',
-            text: '底部',
-            class: store.toolbarPosition === 'bottom' ? activeClass : '',
-            callback: () => (store.toolbarPosition = 'bottom'),
+            type: 'ul',
+            text: '位置',
+            children: [
+              {
+                type: 'li',
+                text: '顶部',
+                class: store.toolbarPosition === 'top' ? activeClass : '',
+                callback: () => (store.toolbarPosition = 'top'),
+                close: true,
+              },
+              {
+                type: 'li',
+                text: '底部',
+                class: store.toolbarPosition === 'bottom' ? activeClass : '',
+                callback: () => (store.toolbarPosition = 'bottom'),
+                close: true,
+              },
+            ],
           },
         ],
       },
       {
         type: 'ul',
-        text: '布局方式',
+        text: '代码与沙盒',
         children: [
           {
-            type: 'li',
-            text: '左右布局',
-            class: store.vertical ? '' : activeClass,
-            callback: () => (store.vertical = false),
+            type: 'ul',
+            text: '布局方式',
+            children: [
+              {
+                type: 'li',
+                text: '左右布局',
+                class: store.vertical ? '' : activeClass,
+                callback: () => (store.vertical = false),
+              },
+              {
+                type: 'li',
+                text: '上下布局',
+                class: store.vertical ? activeClass : '',
+                callback: () => (store.vertical = true),
+              },
+            ],
           },
           {
-            type: 'li',
-            text: '上下布局',
-            class: store.vertical ? activeClass : '',
-            callback: () => (store.vertical = true),
+            type: 'ul',
+            text: '是否翻转',
+            children: [
+              {
+                type: 'li',
+                text: '翻转',
+                class: !store.reverse ? '' : activeClass,
+                callback: () => (store.reverse = true),
+              },
+              {
+                type: 'li',
+                text: '不翻转',
+                class: store.reverse ? '' : activeClass,
+                callback: () => (store.reverse = false),
+              },
+            ],
           },
-          { type: 'hr' },
+        ],
+      },
+      {
+        type: 'ul',
+        text: '代码编辑器',
+        children: [
           {
-            type: 'li',
-            text: '不翻转',
-            class: store.reverse ? '' : activeClass,
-            callback: () => (store.reverse = false),
-          },
-          {
-            type: 'li',
-            text: '翻转',
-            class: !store.reverse ? '' : activeClass,
-            callback: () => (store.reverse = true),
+            type: 'ul',
+            text: '字号',
+            children: CodeSizes.map((size) => ({
+              type: 'li',
+              text: `${size} px`,
+              class: store.codeSize === size ? activeClass : '',
+              callback: () => (store.codeSize = size),
+            })),
           },
         ],
       },

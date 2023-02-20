@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, Ref, computed } from 'vue';
-import { File, dialog } from '@/utils';
+import { ref, computed } from 'vue';
+import { File } from '@/utils';
 import { store } from '@/store';
-import { MapFile, fileTypes, TooltipText } from '@/constant';
+import { fileTypes } from '@/constant';
 import AddFile from './icons/add-file.vue';
 import FileInput from './file-input.vue';
 import FileList from './file-list.vue';

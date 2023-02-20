@@ -1,6 +1,16 @@
 <script setup lang="ts">
-import { ref, Ref, defineProps, withDefaults, watch, onMounted } from 'vue';
+import {
+  ref,
+  Ref,
+  defineProps,
+  withDefaults,
+  watch,
+  onMounted,
+  nextTick,
+  toRaw,
+} from 'vue';
 import { convertToNumber } from '@/utils';
+import { store } from '@/store';
 
 const props = withDefaults(
   defineProps<{
@@ -90,6 +100,9 @@ const dragEnd = () => {
   splitterDOM.value.style.cursor = 'initial';
   draggerDOM.value.style.backgroundColor = 'transparent';
   showMask.value = false;
+  nextTick(() => {
+    store.editor && toRaw(store.editor).refresh();
+  });
 };
 
 const changeStyle = () => {

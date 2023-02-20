@@ -10,6 +10,17 @@ export const scriptModuleRE =
 export const MapFile = 'import-map.json';
 export const version = '3.2.45';
 export const defaultMainFile = 'App.vue';
-export const fileTypes = ['.html', '.js', '.css', '.vue', '.ts', 'jsx', 'tsx'];
+export const fileTypes = [
+  '.html',
+  '.js',
+  '.css',
+  '.vue',
+  '.ts',
+  'jsx',
+  'tsx',
+  'json',
+];
 export const URLCodeKey = '_codesandbox_code';
 export * from './tooltip';
+
+export const CodeSizes = [12, 13, 14, 15, 16, 18];

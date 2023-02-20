@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { defineProps, watch, computed, withDefaults } from 'vue';
+import { defineProps, watch, computed } from 'vue';
 import { store } from '@/store';
 import { MapFile } from '@/constant';
 import { atou, getTemplate, File } from '@/utils';
-import { type Control, ToolbarPosition, CodeSandboxOptions } from '@/type';
+import { CodeSandboxOptions } from '@/type';
 import Toolbar from './toolbar/index.vue';
 import Splitter from './splitter/index.vue';
 import FileBar from './file-bar/index.vue';
@@ -113,4 +113,6 @@ watch(
 
 <style lang="less">
 @import './index.less';
+@import 'codemirror/lib/codemirror.css';
+@import 'codemirror/addon/fold/foldgutter.css';
 </style>

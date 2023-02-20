@@ -57,16 +57,6 @@
     "@codemirror/view" "^6.6.0"
     "@lezer/common" "^1.0.0"
 
-"@codemirror/commands@^6.0.0":
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/@codemirror/commands/-/commands-6.2.1.tgz#ab5e979ad1458bbe395bf69ac601f461ac73cf08"
-  integrity sha512-FFiNKGuHA5O8uC6IJE5apI5rT9gyjlw4whqy4vlcX0wE/myxL6P1s0upwDhY4HtMWLOwzwsp0ap3bjdQhvfDOA==
-  dependencies:
-    "@codemirror/language" "^6.0.0"
-    "@codemirror/state" "^6.2.0"
-    "@codemirror/view" "^6.0.0"
-    "@lezer/common" "^1.0.0"
-
 "@codemirror/lang-css@^6.0.0", "@codemirror/lang-css@^6.0.2":
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/@codemirror/lang-css/-/lang-css-6.0.2.tgz#b286d0226755a751f60599e1e2969d351aebbd4c"
@@ -146,16 +136,7 @@
     "@codemirror/view" "^6.0.0"
     crelt "^1.0.5"
 
-"@codemirror/search@^6.0.0":
-  version "6.2.3"
-  resolved "https://registry.yarnpkg.com/@codemirror/search/-/search-6.2.3.tgz#fab933fef1b1de8ef40cda275c73d9ac7a1ff40f"
-  integrity sha512-V9n9233lopQhB1dyjsBK2Wc1i+8hcCqxl1wQ46c5HWWLePoe4FluV3TGHoZ04rBRlGjNyz9DTmpJErig8UE4jw==
-  dependencies:
-    "@codemirror/state" "^6.0.0"
-    "@codemirror/view" "^6.0.0"
-    crelt "^1.0.5"
-
-"@codemirror/state@^6.0.0", "@codemirror/state@^6.1.4", "@codemirror/state@^6.2.0":
+"@codemirror/state@^6.0.0", "@codemirror/state@^6.1.4":
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/@codemirror/state/-/state-6.2.0.tgz#a0fb08403ced8c2a68d1d0acee926bd20be922f2"
   integrity sha512-69QXtcrsc3RYtOtd+GsvczJ319udtBf1PTrr2KbLWM/e2CXUPnh0Nz9AUo8WfhSQ7GeL8dPVNUmhQVgpmuaNGA==
@@ -1855,18 +1836,10 @@ clone@^1.0.2:
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==
 
-codemirror@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-6.0.1.tgz#62b91142d45904547ee3e0e0e4c1a79158035a29"
-  integrity sha512-J8j+nZ+CdWmIeFIGXEFbFPtpiYacFMDR8GlHK3IyHQJMCaVRfGx9NT+Hxivv1ckLWPvNdZqndbr/7lVhrf/Svg==
-  dependencies:
-    "@codemirror/autocomplete" "^6.0.0"
-    "@codemirror/commands" "^6.0.0"
-    "@codemirror/language" "^6.0.0"
-    "@codemirror/lint" "^6.0.0"
-    "@codemirror/search" "^6.0.0"
-    "@codemirror/state" "^6.0.0"
-    "@codemirror/view" "^6.0.0"
+codemirror@5.65.11:
+  version "5.65.11"
+  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.65.11.tgz#c818edc3274788c008f636520c5490a1f7009b4f"
+  integrity sha512-Gp62g2eKSCHYt10axmGhKq3WoJSvVpvhXmowNq7pZdRVowwtvBR/hi2LSP5srtctKkRT33T6/n8Kv1UGp7JW4A==
 
 color-convert@^1.9.0:
   version "1.9.3"

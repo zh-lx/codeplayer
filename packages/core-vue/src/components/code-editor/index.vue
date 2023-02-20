@@ -1,24 +1,40 @@
 <script setup lang="ts">
-import { ref, Ref, onMounted, watch, nextTick } from 'vue';
+import { ref, Ref, onMounted, watch, nextTick, computed } from 'vue';
+import { Editor } from 'codemirror';
 import { store } from '@/store';
-import { EditorView } from 'codemirror';
-
 import { createCodeMirror } from './code-mirror';
-import { adaptExtensionsByFile, getFilenameExt } from '@/utils';
+import { getFileExtraName } from '@/utils';
+import { getMode } from './mode';
 
 const codeEditorDOM = ref() as Ref<HTMLDivElement>;
-let editor: EditorView;
+let editor: Editor;
 
 onMounted(() => {
   createEditor();
-  adaptExtensionsByFile(store.editor as EditorView, store.activeFile.filename);
 });
 
 const createEditor = () => {
   store.editor = editor = createCodeMirror(codeEditorDOM.value, {
     activeFile: store.activeFile,
   });
+
+  editor.on('change', () => {
+    store.activeFile.code = editor.getValue();
+  });
 };
+
+const styleStr = computed(
+  () => `
+.CodeMirror-line {
+  font-size: ${store.codeSize}px !important;
+}
+.CodeMirror-line,
+.CodeMirror-foldgutter-open,
+.CodeMirror-foldgutter-folded,
+.CodeMirror-linenumber {
+  line-height: ${store.codeSize + 4}px !important;
+}`
+);
 
 watch(
   () => store.activeFile,
@@ -27,19 +43,20 @@ watch(
       return;
     }
     const { code, filename } = file;
-    const currentCode = store.editor?.state.doc.toString();
-    if (code !== currentCode) {
-      store.editor?.dispatch({
-        changes: { from: 0, to: store.editor?.state.doc.length, insert: code },
-      });
+    if (code !== editor.getValue()) {
+      editor.setValue(code);
+      nextTick(() => editor.refresh());
     }
-    if (getFilenameExt(filename) !== getFilenameExt(oldFile.filename)) {
-      adaptExtensionsByFile(store.editor as EditorView, filename);
+    const newType = getFileExtraName(filename);
+    if (newType !== getFileExtraName(oldFile?.filename || '')) {
+      editor.setOption('mode', getMode(filename));
+      nextTick(() => editor.refresh());
     }
   }
 );
 </script>
 
 <template>
+  <component is="style">{{ styleStr }}</component>
   <div class="code-mirror-container" ref="codeEditorDOM"></div>
 </template>
