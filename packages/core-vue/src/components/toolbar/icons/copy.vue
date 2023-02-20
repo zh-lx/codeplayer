@@ -1,11 +1,12 @@
 <script lang="ts" setup>
+import { toRaw } from 'vue';
 import { store } from '@/store';
 import { TooltipText } from '@/constant';
 import { message } from '@/utils';
 
 function copyCode() {
   try {
-    const code = store.editor?.getValue() || '';
+    const code = toRaw(store.editor)?.getValue() || '';
     navigator.clipboard.writeText(code);
     message('代码已复制至剪切板', { type: 'success' });
   } catch (error) {

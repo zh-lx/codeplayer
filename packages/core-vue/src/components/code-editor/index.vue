@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, Ref, onMounted, watch, nextTick } from 'vue';
+import { ref, Ref, onMounted, watch, nextTick, computed } from 'vue';
 import { Editor } from 'codemirror';
 import { store } from '@/store';
 import { createCodeMirror } from './code-mirror';
@@ -23,6 +23,19 @@ const createEditor = () => {
   });
 };
 
+const styleStr = computed(
+  () => `
+.CodeMirror-line {
+  font-size: ${store.codeSize}px !important;
+}
+.CodeMirror-line,
+.CodeMirror-foldgutter-open,
+.CodeMirror-foldgutter-folded,
+.CodeMirror-linenumber {
+  line-height: ${store.codeSize + 4}px !important;
+}`
+);
+
 watch(
   () => store.activeFile,
   (file, oldFile) => {
@@ -44,5 +57,6 @@ watch(
 </script>
 
 <template>
+  <component is="style">{{ styleStr }}</component>
   <div class="code-mirror-container" ref="codeEditorDOM"></div>
 </template>

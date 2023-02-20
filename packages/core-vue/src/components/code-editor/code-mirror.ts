@@ -40,7 +40,7 @@ export const createCodeMirror = (
     tabSize: 2,
     // lineWrapping: true,
     lineNumbers: true,
-    readOnly: false,
+    readOnly: readonly,
     mode: getMode(activeFile.filename),
     ...addonOptions,
   });

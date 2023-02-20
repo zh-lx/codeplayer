@@ -19,6 +19,7 @@ export interface Store {
   editor: Editor | null; // code Mirror 编辑器
   refreshID: number; // 用于 preview 刷新的标识，当点击刷新按钮该值 +1 触发刷新
   sharePath: string; // 分享按钮的路径
+  codeSize: number;
 }
 
 export const store = reactive<Store>({
@@ -42,4 +43,5 @@ export const store = reactive<Store>({
   editor: null,
   refreshID: 0,
   sharePath: 'https://code-sandbox.cn/playground',
+  codeSize: 12,
 });

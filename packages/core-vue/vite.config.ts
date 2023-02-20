@@ -29,7 +29,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: 'src/main.ts',
-      formats: ['umd'],
+      formats: ['umd', 'es'],
       name: 'CodeSandbox',
       fileName: 'index',
     },

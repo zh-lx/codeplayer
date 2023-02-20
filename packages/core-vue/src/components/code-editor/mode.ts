@@ -4,7 +4,7 @@ export const getMode: (
   filename: string
 ) => string | ModeSpec<ModeSpecOptions> = (filename) => {
   if (filename.endsWith('.vue')) {
-    return { name: 'htmlmixed' };
+    return { name: 'vue' };
   }
   if (filename.endsWith('.html')) {
     return 'htmlmixed';
