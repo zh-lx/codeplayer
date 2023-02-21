@@ -1,8 +1,9 @@
 import { defineCustomElement } from 'vue';
 import CodeSandboxVue from './components/index.ce.vue';
 import globalStyle from '@/style/global.less?inline';
+import MenuThemeStyle from '@/components/menus/theme/index.less?inline';
+import MenuThemeMacStyle from '@/components/menus/theme/theme-mac.less?inline';
 import { CodeSandboxOptions, HTMLCodeSandboxElement } from './type';
-import { dialog } from './utils';
 
 const CodeSandboxClass = defineCustomElement(CodeSandboxVue);
 
@@ -12,7 +13,8 @@ customElements.define('code-sandbox', CodeSandboxClass);
 (function () {
   const style = document.createElement('style');
   style.setAttribute('type', 'text/css');
-  style.innerText = globalStyle;
+  style.innerText =
+    globalStyle + '\n' + MenuThemeStyle + '\n' + MenuThemeMacStyle;
   document.body.append(style);
 })();
 

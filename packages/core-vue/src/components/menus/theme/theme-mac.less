@@ -4,46 +4,43 @@
 .code-sandbox-theme-mac {
   min-width: 180px;
   max-width: 300px;
-  color: var(--font-color);
+  color: @text-color;
   font-size: 13px;
   margin: 0;
   padding: 5px 4px;
   border: 0.5px solid @border-color;
   border-radius: 5px;
   background-color: @fill-gray-float;
-  box-shadow: 0 2px 12px 0 var(--shadow-color);
+  box-shadow: @shadow-1-down;
   li {
     padding: 2.5px 26px 2.5px 8px;
     border-radius: 3px;
     &:hover {
-      color: var(--active-font-color);
+      color: @text-color-white;
       background-color: @brand;
       cursor: pointer;
-    }
-    &:active {
-      // background-color: @brand-active;
     }
     &.skeleton {
       padding: 2.5px 8px;
       &::before {
         background-image: linear-gradient(
           -45deg,
-          var(--menu-skeleton-color) 40%,
-          var(--menu-skeleton-acitve-color) 55%,
-          var(--menu-skeleton-color) 63%
+          #4c4c4f 40%,
+          #444 55%,
+          #4c4c4f 63%
         );
       }
     }
     &.menu-hr {
-      border-bottom: 1px solid var(--split-boder-color);
+      border-bottom: 1px solid @border-color-hover;
       padding: 0;
       margin: 5px 8px;
     }
     &.menu-disabled {
-      color: var(--disabled-font-color);
+      color: @text-color-disable;
       &:hover {
-        color: var(--active-disabled-font-color);
-        background-color: var(--active-disabled-bg-color);
+        color: @text-color-disable;
+        background-color: @fill-gray-float;
       }
     }
   }
