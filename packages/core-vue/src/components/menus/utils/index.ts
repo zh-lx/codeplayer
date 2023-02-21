@@ -1,8 +1,16 @@
 // @ts-nocheck
-import { ATTR_LIST, SPLIT_SYMBOL, LayoutMenuDirection } from '../config';
 import { AttrsType, MenuElement } from '../types';
 import { computeRectPosition } from './getInfo';
+export const ATTR_LIST = ['class', 'style'];
 
+export const SPLIT_SYMBOL = {
+  class: ' ',
+  style: ';',
+};
+export const enum LayoutMenuDirection {
+  Left = -1,
+  Right = 1,
+}
 /**
  * 阻止默认事件和冒泡
  * @param { Event } e 事件参数

@@ -23,4 +23,4 @@ export const fileTypes = [
 export const URLCodeKey = '_codesandbox_code';
 export * from './tooltip';
 
-export const CodeSizes = [12, 13, 14, 15, 16, 18];
+export const CodeSizes = [12, 13, 14, 15, 16, 17, 18];

@@ -1,5 +1,3 @@
-import { LayoutMenuDirection } from './config';
-import { OperatSystem } from './theme/index';
 import { ConfigType, OptionsType, ItemType, LiType, AttrsType } from './types';
 import {
   preventDefault,
@@ -7,9 +5,28 @@ import {
   filterAttrs,
   handleStyle,
   getValue,
+  LayoutMenuDirection,
 } from './utils';
 
 export const activeClass = 'code-sandbox-active-menu-item';
+
+// 兼容 chrome e.path 失效
+function composedPath(e: any) {
+  // 存在则直接return
+  if (e.path) {
+    return e.path;
+  }
+  // 不存在则遍历target节点
+  let target = e.target;
+  e.path = [];
+  while (target.parentNode !== null) {
+    e.path.push(target);
+    target = target.parentNode;
+  }
+  // 最后补上document和window
+  e.path.push(document, window);
+  return e.path;
+}
 
 export default class RightMenu {
   private menu: HTMLElement | null = null;
@@ -24,8 +41,7 @@ export default class RightMenu {
   constructor(el: ConfigType, options: OptionsType) {
     const config = (this.config = typeof el === 'string' ? { el } : el);
     // 设置主题
-    config.theme =
-      config.theme || OperatSystem.toLowerCase().replace(/is/, '') || 'mac';
+    config.theme = config.theme || 'mac';
     // 如果用户输入的主题名称里包含了 'theme-' 则删除
     if (config.theme.indexOf('theme-') === 0) {
       config.theme = config.theme.slice(6);
@@ -113,7 +129,8 @@ export default class RightMenu {
     this.addEvent(window, 'resize', this.destroyMenu.bind(this));
     // 页面点击时销毁菜单栏
     this.addEvent(document, 'mousedown', (e: any) => {
-      const hasMenu = e['path']?.some((node: HTMLDivElement) => node === menu);
+      const path = e.path || composedPath(e) || [];
+      const hasMenu = path?.some((node: HTMLDivElement) => node === menu);
       if (!hasMenu) this.destroyMenu();
     });
   }

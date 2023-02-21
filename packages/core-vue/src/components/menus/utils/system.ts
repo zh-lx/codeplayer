@@ -48,8 +48,7 @@ export const getOperatSystem = () => {
     isLinux,
   };
   for (const key in osList) {
-    // @ts-ignore
-    if (osList[key]) {
+    if (osList[key as keyof typeof osList]) {
       return key;
     }
   }
