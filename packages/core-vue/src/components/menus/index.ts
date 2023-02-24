@@ -1,4 +1,4 @@
-import { ConfigType, OptionsType, ItemType, LiType, AttrsType } from './types';
+import { ConfigType, OptionsType, ItemType, LiType, AttrsType } from './type';
 import {
   preventDefault,
   layoutMenuPositionEffect,
