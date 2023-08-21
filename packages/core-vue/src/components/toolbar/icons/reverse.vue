@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { store } from '@/store';
+import { fileStore, store } from '@/store';
 import { TooltipText } from '@/constant';
 
 function reverse() {

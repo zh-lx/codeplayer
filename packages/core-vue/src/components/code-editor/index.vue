@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, Ref, onMounted, watch, nextTick, computed } from 'vue';
 import { Editor } from 'codemirror';
-import { store } from '@/store';
+import { fileStore, store } from '@/store';
 import { createCodeMirror } from './code-mirror';
 import { getFileExtraName } from '@/utils';
 import { getMode } from './mode';
@@ -15,11 +15,11 @@ onMounted(() => {
 
 const createEditor = () => {
   store.editor = editor = createCodeMirror(codeEditorDOM.value, {
-    activeFile: store.activeFile,
+    activeFile: fileStore.activeFile,
   });
 
   editor.on('change', () => {
-    store.activeFile.code = editor.getValue();
+    fileStore.activeFile.code = editor.getValue();
   });
 };
 
@@ -37,7 +37,7 @@ const styleStr = computed(
 );
 
 watch(
-  () => store.activeFile,
+  () => fileStore.activeFile,
   (file, oldFile) => {
     if (!file || !editor) {
       return;

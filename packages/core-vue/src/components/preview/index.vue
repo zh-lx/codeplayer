@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, Ref, onMounted, watch } from 'vue';
-import { store } from '@/store';
+import { fileStore, store } from '@/store';
 import { compileModulesForPreview } from '@/utils';
 import {
   modulesKey,
@@ -33,19 +33,19 @@ const refreshPreview = () => {
   }
 };
 
-watch(() => store.files, refreshPreview, {
+watch(() => fileStore.files, refreshPreview, {
   deep: true,
 });
 
-watch(() => store.mainFile, refreshPreview);
+watch(() => fileStore.mainFile, refreshPreview);
 
 watch(() => store.refreshID, refreshPreview);
 
 const compileFiles = async () => {
   const result = { errors: [] };
   const compileFilePromises = Promise.all(
-    Object.keys(store.files).map((file) =>
-      compileFile(result, store.files[file])
+    Object.keys(fileStore.files).map((file) =>
+      compileFile(result, fileStore.files[file])
     )
   );
   await compileFilePromises;
@@ -54,7 +54,7 @@ const compileFiles = async () => {
 
 const getImportMap = () => {
   try {
-    return JSON.parse(store.files[MapFile].code);
+    return JSON.parse(fileStore.files[MapFile].code);
   } catch (e) {
     errors.value = [`Syntax error in ${MapFile}: ${(e as Error).message}`];
     return {};
@@ -63,7 +63,7 @@ const getImportMap = () => {
 
 const renderSandbox = async () => {
   await compileFiles();
-  const modules = compileModulesForPreview(store.files, store.mainFile);
+  const modules = compileModulesForPreview(fileStore.files, fileStore.mainFile);
   // 建立一个新的 iframe
   previewDOM.value.querySelector('iframe')?.remove();
   const iframe = document.createElement('iframe');
@@ -97,11 +97,11 @@ const renderSandbox = async () => {
   ];
 
   // if main file is a vue file, mount it.
-  if (store.mainFile.endsWith('.vue')) {
+  if (fileStore.mainFile.endsWith('.vue')) {
     codeToEval.push(
       `import { createApp as _createApp } from "vue"
         const _mount = () => {
-            const AppComponent = __modules__["${store.mainFile}"].default
+            const AppComponent = __modules__["${fileStore.mainFile}"].default
             AppComponent.name = 'Repl'
             const app = window.__app__ = _createApp(AppComponent)
             app.config.unwrapInjectedRef = true
@@ -112,11 +112,14 @@ const renderSandbox = async () => {
     );
   }
 
-  if (store.mainFile.endsWith('.jsx') || store.mainFile.endsWith('.tsx')) {
+  if (
+    fileStore.mainFile.endsWith('.jsx') ||
+    fileStore.mainFile.endsWith('.tsx')
+  ) {
     codeToEval.push(
       `import React from "react";
         import ReactDOM from "react-dom";
-        const App = __modules__["${store.mainFile}"].default;
+        const App = __modules__["${fileStore.mainFile}"].default;
         ReactDOM.render(
           React.createElement(App, null),
           document.getElementById('app')

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { File } from '@/utils';
-import { store } from '@/store';
+import { fileStore, store } from '@/store';
 import { fileTypes } from '@/constant';
 import AddFile from './icons/add-file.vue';
 import FileInput from './file-input.vue';
@@ -13,7 +13,7 @@ const showNewFile = ref(false);
 
 // 切换文件
 const changeActiveFile = (filename: string) => {
-  store.activeFile = store.files[filename];
+  fileStore.activeFile = fileStore.files[filename];
 };
 
 // 处理(新增/更改)文件
@@ -21,22 +21,22 @@ const changeFile = (newFilename: string, oldFilename: string) => {
   if (!oldFilename) {
     // add a new file
     const file = new File(newFilename, '');
-    store.files[newFilename] = file;
+    fileStore.files[newFilename] = file;
     changeActiveFile(newFilename);
-    if (!store.mainFile) {
-      store.mainFile = newFilename;
+    if (!fileStore.mainFile) {
+      fileStore.mainFile = newFilename;
     }
   } else {
     // rename filename
     const tempFiles = {
-      ...store.files,
-      [newFilename]: { ...store.files[oldFilename], filename: newFilename },
+      ...fileStore.files,
+      [newFilename]: { ...fileStore.files[oldFilename], filename: newFilename },
     };
     delete tempFiles[oldFilename];
-    store.files = tempFiles;
+    fileStore.files = tempFiles;
     changeActiveFile(newFilename);
-    if (oldFilename === store.mainFile) {
-      store.mainFile = newFilename;
+    if (oldFilename === fileStore.mainFile) {
+      fileStore.mainFile = newFilename;
     }
   }
 };
@@ -70,7 +70,7 @@ const validateFilenameError = (filename: string) => {
   if (!filename || filename === originFilename.value) {
     return '';
   }
-  if (store.files[filename]) {
+  if (fileStore.files[filename]) {
     return `已存在同名文件 ${filename}`;
   }
   const fileType = fileTypes.some((type) => filename.endsWith(type));

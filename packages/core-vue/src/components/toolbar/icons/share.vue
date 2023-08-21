@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { store } from '@/store';
+import { fileStore, store } from '@/store';
 import { TooltipText } from '@/constant';
 import { utoa } from '@/utils';
 
@@ -13,8 +13,8 @@ function share() {
 
 const getSerializedState = () => {
   const _files: Record<string, string> = {};
-  Object.keys(store.files).forEach((filename) => {
-    _files[filename] = store.files[filename].code;
+  Object.keys(fileStore.files).forEach((filename) => {
+    _files[filename] = fileStore.files[filename].code;
   });
   return utoa(JSON.stringify(_files));
 };

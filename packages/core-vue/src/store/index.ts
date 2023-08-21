@@ -23,6 +23,7 @@ export interface Store {
 }
 
 export const store = reactive<Store>({
+  // 文件系统相关
   mainFile: '',
   files: {},
   activeFile: {
@@ -31,6 +32,7 @@ export const store = reactive<Store>({
     hidden: false,
     compiled: { js: '', css: '' },
   },
+  imports: {},
   showFileBar: true,
   showCode: true,
   showPreview: true,
@@ -39,9 +41,22 @@ export const store = reactive<Store>({
   vertical: false,
   reverse: false,
   excludeTools: [],
-  imports: {},
   editor: null,
   refreshID: 0,
   sharePath: 'https://code-sandbox.cn/playground',
   codeSize: 12,
 });
+
+export const fileSystem = reactive({
+  fileMap: {},
+  mainFile: '',
+  activeFile: {
+    filename: '',
+    code: '',
+    hidden: false,
+    compiled: { js: '', css: '' },
+  },
+  imports: {},
+});
+
+export * from './file-system';

@@ -10,7 +10,7 @@ import {
   toRaw,
 } from 'vue';
 import { convertToNumber } from '@/utils';
-import { store } from '@/store';
+import { fileStore, store } from '@/store';
 
 const props = withDefaults(
   defineProps<{

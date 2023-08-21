@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { store } from '@/store';
+import { fileStore, store } from '@/store';
 import CodeIcon from './icons/code.vue';
 import SettingIcon from './icons/setting.vue';
 import CopyIcon from './icons/copy.vue';

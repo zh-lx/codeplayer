@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { toRaw } from 'vue';
-import { store } from '@/store';
+import { fileStore, store } from '@/store';
 import { TooltipText } from '@/constant';
 import { message } from '@/utils';
 

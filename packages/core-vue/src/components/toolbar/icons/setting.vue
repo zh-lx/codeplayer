@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
-import { store } from '@/store';
+import { fileStore, store } from '@/store';
 import { TooltipText, CodeSizes } from '@/constant';
 import RightMenu, { activeClass } from '@/components/menus';
 

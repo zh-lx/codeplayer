@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps, watch, computed } from 'vue';
-import { store } from '@/store';
+import { fileStore, store } from '@/store';
 import { MapFile } from '@/constant';
 import { atou, getTemplate, File } from '@/utils';
 import { CodeSandboxOptions } from '@/type';
@@ -17,43 +17,49 @@ const PreviewSlotName = computed(() => (store.reverse ? 'left' : 'right'));
 
 const init = () => {
   const options = props.options || {};
-  let _files = getTemplate(options.appType || '') as Record<string, string>;
-  if (options.serializedState) {
-    _files = JSON.parse(atou(options.serializedState));
-  } else if (options.initFiles) {
-    _files = options.initFiles;
-  }
-
-  const files: Record<string, File> = {};
-  for (const filename in _files) {
-    files[filename] = new File(filename, _files[filename]);
-  }
-
-  store.files = files;
-
-  for (let key in options) {
-    if (
-      key in store &&
-      options[key as keyof CodeSandboxOptions] !== undefined
-    ) {
+  for (let key in props.options) {
+    if (key in store && options[key as keyof typeof options] !== undefined) {
       // @ts-ignore
       store[key] = options[key];
     }
   }
 
-  store.mainFile = options.mainFile || '';
-  if (!files[store.mainFile]) {
-    store.mainFile = Object.keys(files)[0];
-  }
-  store.activeFile = files[store.mainFile];
+  initFileSystem();
+};
 
+// 初始化文件系統
+function initFileSystem() {
+  // 依次根据 options.initFiles、serializedState、appType 初始化文件
+  const options = props.options || {};
+  let filesMap = getTemplate(options.appType || '') as Record<string, string>;
+  if (options.serializedState) {
+    filesMap = JSON.parse(atou(options.serializedState));
+  } else if (options.initFiles) {
+    filesMap = options.initFiles;
+  }
+
+  // 将键值对转换为虚拟文件
+  const files: Record<string, File> = {};
+  for (const filename in filesMap) {
+    files[filename] = new File(filename, filesMap[filename]);
+  }
+  fileStore.files = files;
+
+  // 初始化入口文件
+  fileStore.mainFile = options.mainFile || '';
+  if (!files[fileStore.mainFile]) {
+    fileStore.mainFile = Object.keys(files)[0];
+  }
+  fileStore.activeFile = files[fileStore.mainFile];
+
+  // 初始化 imports
   if (options.imports) {
-    store.files[MapFile] = new File(
+    fileStore.files[MapFile] = new File(
       MapFile,
       JSON.stringify({ imports: options.imports }, null, 2)
     );
   }
-};
+}
 
 watch(
   () => props.options,

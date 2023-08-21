@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 import { TooltipText } from '@/constant';
-import { store } from '@/store';
+import { fileStore, store } from '@/store';
 import { message, dialog } from '@/utils';
 
 const props = defineProps<{ filename: string }>();
 
 // 删除文件
 const deleteFile = (e: Event) => {
-  if (props.filename === store.mainFile) {
+  if (props.filename === fileStore.mainFile) {
     message('不能删除入口文件', { type: 'danger' });
   }
   e.stopPropagation();
@@ -16,12 +16,12 @@ const deleteFile = (e: Event) => {
     title: '提示',
     content: `确定要删除 ${props.filename} 吗?`,
     confirm: () => {
-      if (store.activeFile.filename === props.filename) {
-        store.activeFile = store.files[store.mainFile];
+      if (fileStore.activeFile.filename === props.filename) {
+        fileStore.activeFile = fileStore.files[fileStore.mainFile];
       }
-      const tempFiles = { ...store.files };
+      const tempFiles = { ...fileStore.files };
       delete tempFiles[props.filename];
-      store.files = tempFiles;
+      fileStore.files = tempFiles;
     },
   });
 };
@@ -30,7 +30,7 @@ const deleteFile = (e: Event) => {
   <div
     data-toggle="tooltip"
     class="operate-btn delete-operate"
-    :class="{ 'hide-file-operate': store.mainFile === props.filename }"
+    :class="{ 'hide-file-operate': fileStore.mainFile === props.filename }"
     :title="TooltipText.DeleteFile"
     @click="deleteFile"
   >

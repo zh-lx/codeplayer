@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, defineProps, defineEmits, withDefaults } from 'vue';
-import { store } from '@/store';
+import { fileStore, store } from '@/store';
 import { MapFile } from '@/constant';
 import FileInput from './file-input.vue';
 import { file } from '@babel/types';
@@ -39,7 +39,7 @@ const emit = defineEmits([
 ]);
 
 const list = computed(() => [
-  ...Object.keys(store.files).filter((file) => file !== MapFile),
+  ...Object.keys(fileStore.files).filter((file) => file !== MapFile),
   MapFile,
 ]);
 
@@ -83,7 +83,9 @@ const getIcon = (filename: string) => {
       <div
         v-else
         class="file-item"
-        :class="{ 'active-file-item': filename === store.activeFile.filename }"
+        :class="{
+          'active-file-item': filename === fileStore.activeFile.filename,
+        }"
         @click="() => emit('changeActiveFile', filename)"
       >
         <div class="file-left">
