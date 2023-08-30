@@ -4,8 +4,7 @@ export const renderIframeString = (importMap: string) => `<!DOCTYPE html>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Code Sandbox</title>
-    <style id="__sfc-styles"></style>
+    <title>CS-IDE</title>
     <script
     async
     rel"modulepreload"
@@ -16,7 +15,7 @@ export const renderIframeString = (importMap: string) => `<!DOCTYPE html>
     </script>
   </head>
   <body>
-
+    <div id="app"></div>
   </body>
 </html>
 `;

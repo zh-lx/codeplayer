@@ -2,7 +2,8 @@
 import { defineProps, watch, computed } from 'vue';
 import { fileStore, store } from '@/store';
 import { MapFile } from '@/constant';
-import { atou, getTemplate, File } from '@/utils';
+import { atou } from '@/utils';
+import { getTemplate, File } from '@/compiler';
 import { CodeSandboxOptions } from '@/type';
 import Toolbar from './toolbar/index.vue';
 import Splitter from './splitter/index.vue';

@@ -16,17 +16,19 @@ import {
   moduleKey,
   scriptRE,
   scriptModuleRE,
+  styleRE,
 } from '@/constant';
 
-export function compileModulesForPreview(
+export async function compileModulesForPreview(
   files: Record<string, File>,
   mainFile: string
 ) {
   const seen = new Set<File>();
   const processed: string[] = [];
-  processFile(files, files[mainFile], processed, seen);
+  const styles: string[] = [];
+  processFile(files, files[mainFile], processed, styles, seen);
 
-  return processed;
+  return { processed, styles };
 }
 
 // similar logic with Vite's SSR transform, except this is targeting the browser
@@ -34,6 +36,7 @@ function processFile(
   files: Record<string, File>,
   file: File,
   processed: string[],
+  styles: string[],
   seen: Set<File>
 ) {
   if (seen.has(file)) {
@@ -42,7 +45,14 @@ function processFile(
   seen.add(file);
 
   if (file.filename.endsWith('.html')) {
-    return processHtmlFile(files, file.code, file.filename, processed, seen);
+    return processHtmlFile(
+      files,
+      file.code,
+      file.filename,
+      processed,
+      styles,
+      seen
+    );
   }
 
   let [js, importedFiles] = processModule(
@@ -52,12 +62,12 @@ function processFile(
   );
   // append css
   if (file.compiled.css) {
-    js += `\nwindow.__css__ += ${JSON.stringify(file.compiled.css)}`;
+    styles.push(file.compiled.css);
   }
   // crawl child imports
   if (importedFiles.size) {
     for (const imported of importedFiles) {
-      processFile(files, files[imported], processed, seen);
+      processFile(files, files[imported], processed, styles, seen);
     }
   }
   // push self
@@ -92,10 +102,7 @@ function processModule(
     importedFiles.add(filename);
     const id = `__import_${importedFiles.size}__`;
     importToIdMap.set(filename, id);
-    s.appendLeft(
-      node.start!,
-      `const ${id} = ${modulesKey}[${JSON.stringify(filename)}]\n`
-    );
+    s.appendLeft(node.start!, `const ${id} = ${modulesKey}["${filename}"]\n`);
     return id;
   }
 
@@ -104,11 +111,7 @@ function processModule(
   }
 
   // 0. instantiate module
-  s.prepend(
-    `const ${moduleKey} = ${modulesKey}[${JSON.stringify(
-      filename
-    )}] = { [Symbol.toStringTag]: "Module" }\n\n`
-  );
+  s.prepend(`const ${moduleKey} = ${modulesKey}["${filename}"] = {}\n`);
 
   // 1. check all import statements and record id -> importName map
   for (const node of ast) {
@@ -119,7 +122,6 @@ function processModule(
       const source = node.source.value;
       if (source.startsWith('./')) {
         const importId = defineImport(node, node.source.value);
-        console.log(1111,importId)
         for (const spec of node.specifiers) {
           if (spec.type === 'ImportSpecifier') {
             idToImportMap.set(
@@ -265,6 +267,7 @@ function processHtmlFile(
   src: string,
   filename: string,
   processed: string[],
+  styles: string[],
   seen: Set<File>
 ) {
   const deps: string[] = [];
@@ -274,7 +277,7 @@ function processHtmlFile(
       const [code, importedFiles] = processModule(files, content, filename);
       if (importedFiles.size) {
         for (const imported of importedFiles) {
-          processFile(files, files[imported], deps, seen);
+          processFile(files, files[imported], deps, styles, seen);
         }
       }
       jsCode += '\n' + code;
@@ -282,6 +285,10 @@ function processHtmlFile(
     })
     .replace(scriptRE, (_, content) => {
       jsCode += '\n' + content;
+      return '';
+    })
+    .replace(styleRE, (_, content) => {
+      styles.push(`\n${content}\n`);
       return '';
     });
   processed.push(`document.body.innerHTML = ${JSON.stringify(html)}`);

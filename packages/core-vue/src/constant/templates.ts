@@ -1,10 +1,16 @@
 import { MapFile } from './index';
 
 export const Vue3Template = {
-  'App.vue': `<script setup>
-import { ref } from 'vue'
+  'index.ts': `import { createApp } from "vue";
+import App from "./App.vue";
 
-const msg = ref('Hello CodeSandbox!')
+const app = createApp(App);
+app.mount('#app');
+  `,
+  'App.vue': `<script setup>
+import { ref } from 'vue';
+
+const msg = ref('Hello CS-Editor!');
 </script>
 
 <template>
@@ -14,16 +20,23 @@ const msg = ref('Hello CodeSandbox!')
   [MapFile]: `
 {
   "imports": {
-    "vue": "https://unpkg.com/vue@3.2.45/dist/vue.esm-browser.js"
+    "vue": "https://esm.sh/vue@3.2.45"
   }
 }`.trim(),
 };
 
 export const ReactTemplate = {
+  'main.tsx': `import React from "react";
+import { createRoot } from "react-dom/client";
+import App from './App.tsx';
+
+const root = createRoot(document.getElementById('app'));
+root.render(<App />)
+  `,
   'App.tsx': `import React, { useState } from 'react';
 
 export default function App() {
-  const [msg, setMsg] = useState('Hello CodeSandbox!');
+  const [msg, setMsg] = useState('Hello CS-Editor!');
   return <div>
     <h1>{msg}</h1>
     <input value={msg} onInput={(e) => setMsg(e.target.value)} />
@@ -33,10 +46,8 @@ export default function App() {
   [MapFile]: `
 {
   "imports": {
-    "react": "https://ga.jspm.io/npm:react@18.0.0-rc.0/index.js",
-    "react-dom": "https://ga.jspm.io/npm:react-dom@18.0.0-rc.0/index.js",
-    "object-assign": "https://ga.jspm.io/npm:object-assign@4.1.1/index.js",
-    "scheduler": "https://ga.jspm.io/npm:scheduler@0.23.0/index.js"
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client"
   }
 }
   `.trim(),
@@ -53,7 +64,7 @@ export const HtmlTemplate = {
   </head>
   <body>
     <div>
-      <h1>Hello CodeSandbox!</h1>
+      <h1>Hello CS-Editor!</h1>
     </div>
   </body>
 </html>
@@ -66,8 +77,8 @@ export const HtmlTemplate = {
 };
 
 export const JavascriptTemplate = {
-  'index.js': `const msg = 'Hello CodeSandbox!'
-console.log(msg)
+  'index.js': `const msg = 'Hello CS-Editor!';
+console.log(msg);
     `,
   [MapFile]: `
   {
@@ -78,8 +89,8 @@ console.log(msg)
 
 export const TypescriptTemplate = {
   'index.ts': `
-const msg = 'Hello CodeSandbox!'
-console.log(msg)
+const msg = 'Hello CS-Editor!';
+console.log(msg);
     `,
   [MapFile]: `
   {

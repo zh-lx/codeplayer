@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { File } from '@/utils';
+import { File } from '@/compiler';
 import { fileStore, store } from '@/store';
 import { fileTypes } from '@/constant';
 import AddFile from './icons/add-file.vue';

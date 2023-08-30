@@ -1,5 +1,5 @@
 import CodeMirror from 'codemirror';
-import { File } from '@/utils';
+import { File } from '@/compiler';
 import { getMode } from './mode';
 
 // mode

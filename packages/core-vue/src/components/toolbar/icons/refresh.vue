@@ -3,7 +3,7 @@ import { fileStore, store } from '@/store';
 import { TooltipText } from '@/constant';
 
 function refresh() {
-  store.refreshID++;
+  store.rerenderID++;
 }
 </script>
 

@@ -5,6 +5,7 @@ export const dynamicImportKey = `__dynamic_import__`;
 export const moduleKey = `__module__`;
 export const nextKey = '__next__';
 export const scriptRE = /<script\b(?:\s[^>]*>|>)([^]*?)<\/script>/gi;
+export const styleRE = /<style\b(?:\s[^>]*>|>)([^]*?)<\/style>/gi;
 export const scriptModuleRE =
   /<script\b[^>]*type\s*=\s*(?:"module"|'module')[^>]*>([^]*?)<\/script>/gi;
 export const MapFile = 'import-map.json';
@@ -19,6 +20,9 @@ export const fileTypes = [
   'jsx',
   'tsx',
   'json',
+  '.less',
+  '.scss',
+  '.sass'
 ];
 export const URLCodeKey = '_codesandbox_code';
 export * from './tooltip';

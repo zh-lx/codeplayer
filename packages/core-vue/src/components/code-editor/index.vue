@@ -3,7 +3,7 @@ import { ref, Ref, onMounted, watch, nextTick, computed } from 'vue';
 import { Editor } from 'codemirror';
 import { fileStore, store } from '@/store';
 import { createCodeMirror } from './code-mirror';
-import { getFileExtraName } from '@/utils';
+import { getFileExtraName } from '@/compiler';
 import { getMode } from './mode';
 
 const codeEditorDOM = ref() as Ref<HTMLDivElement>;

@@ -43,7 +43,9 @@ const splitterDOM = ref<HTMLDivElement>() as Ref<HTMLDivElement>;
 const draggerDOM = ref<HTMLDivElement>() as Ref<HTMLDivElement>;
 
 onMounted(() => {
-  changeStyle();
+  nextTick(() => {
+    changeStyle();
+  });
 });
 
 // 获取 container 总宽(高)度

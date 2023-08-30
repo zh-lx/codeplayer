@@ -1,6 +1,7 @@
-import { File } from '../utils';
+import { File } from '@/compiler';
 import hashId from 'hash-sum';
-import { COMP_IDENTIFIER } from '../constant';
+import { COMP_IDENTIFIER } from '@/constant';
+import { transform } from 'sucrase';
 import {
   SFCDescriptor,
   BindingMetadata,
@@ -11,40 +12,37 @@ import {
   compileTemplate,
   rewriteDefault,
 } from '@vue/compiler-sfc';
-import { transformTS } from './transform-ts';
+import less from 'less';
+import { compileString as compileSassString } from 'sass';
+import { Hooks } from '@/compiler/type';
 
 export const transformVue3 = async (
-  result: { errors: (string | Error)[] },
-  { filename, code, compiled }: File
-) => {
+  file: File
+): Promise<Error[] | undefined> => {
+  const { filename, code, compiled } = file;
+
+  if (!filename.endsWith('.vue')) {
+    return;
+  }
+
   const id = hashId(filename);
+
   const { errors, descriptor } = parse(code, {
     filename,
     sourceMap: true,
   });
-  if (errors.length) {
-    result.errors = errors;
-    return;
-  }
 
-  if (
-    descriptor.styles.some((s) => s.lang) ||
-    (descriptor.template && descriptor.template.lang)
-  ) {
-    result.errors = [
-      `lang="x" pre-processors for <template> or <style> are currently not ` +
-        `supported.`,
-    ];
-    return;
+  if (errors.length) {
+    return errors;
   }
 
   const scriptLang =
     (descriptor.script && descriptor.script.lang) ||
     (descriptor.scriptSetup && descriptor.scriptSetup.lang);
   const isTS = scriptLang === 'ts';
+
   if (scriptLang && !isTS) {
-    result.errors = [`Only lang="ts" is supported for <script> blocks.`];
-    return;
+    return [new Error(`Only lang="ts" is supported for <script> blocks.`)];
   }
 
   const hasScoped = descriptor.styles.some((s) => s.scoped);
@@ -54,34 +52,29 @@ export const transformVue3 = async (
     clientCode += code;
   };
 
-  const clientScriptResult = await doCompileScript(
-    result,
-    descriptor,
-    id,
-    isTS
-  );
+  // script
+  const clientScriptResult = await doCompileScript(descriptor, id, isTS);
   if (!clientScriptResult) {
     return;
   }
-  const [clientScript, bindings] = clientScriptResult;
+  const [clientScript, bindings, scriptErrors] = clientScriptResult;
+  if (scriptErrors) {
+    return scriptErrors;
+  }
   clientCode += clientScript;
 
-  if (
-    descriptor.template &&
-    !descriptor.scriptSetup
-    // || vue3SFCOptions?.script?.inlineTemplate === false
-  ) {
-    const clientTemplateResult = await doCompileTemplate(
-      result,
+  // template
+  if (descriptor.template && !descriptor.scriptSetup) {
+    const [code, templateErrors] = await doCompileTemplate(
       descriptor,
       id,
       bindings,
       isTS
     );
-    if (!clientTemplateResult) {
-      return;
+    if (templateErrors) {
+      return templateErrors;
     }
-    clientCode += clientTemplateResult;
+    clientCode += code;
   }
 
   if (hasScoped) {
@@ -95,15 +88,52 @@ export const transformVue3 = async (
       `\n${COMP_IDENTIFIER}.__file = ${JSON.stringify(filename)}` +
         `\nexport default ${COMP_IDENTIFIER}`
     );
-    compiled.js = clientCode.trimStart();
+    compiled.js = clientCode.trim();
   }
 
+  // css 处理
+  let [css, styleErrors] = await doCompileStyle(descriptor, id, filename);
+  if (styleErrors) {
+    return styleErrors;
+  }
+  if (css) {
+    compiled.css = css.trim();
+  } else {
+    compiled.css = '/* No <style> tags present */';
+  }
+};
+
+async function doCompileStyle(
+  descriptor: SFCDescriptor,
+  id: string,
+  filename: string
+): Promise<[string, Error[] | null]> {
   // styles
   let css = '';
+
   for (const style of descriptor.styles) {
     if (style.module) {
-      result.errors = [`<style module> is not supported in the playground.`];
-      return;
+      return [
+        '',
+        [new Error(`<style module> is not supported in the playground.`)],
+      ];
+    }
+
+    let source = style.content;
+    const errors = [];
+
+    if (style.lang === 'less') {
+      try {
+        source = (await less.render(source)).css;
+      } catch (error) {
+        errors.push(new Error(String(error)));
+      }
+    } else if (style.lang === 'scss' || style.lang === 'sass') {
+      try {
+        source = (await compileSassString(source)).css;
+      } catch (error) {
+        errors.push(new Error(String(error)));
+      }
     }
 
     const styleResult = await compileStyleAsync({
@@ -114,33 +144,43 @@ export const transformVue3 = async (
       scoped: style.scoped,
       modules: !!style.module,
     });
+
     if (styleResult.errors.length) {
       // postcss uses pathToFileURL which isn't polyfilled in the browser
       // ignore these errors for now
       if (!styleResult.errors[0].message.includes('pathToFileURL')) {
-        result.errors = styleResult.errors;
+        return ['', errors];
       }
       // proceed even if css compile errors
     } else {
       css += styleResult.code + '\n';
     }
   }
-  if (css) {
-    compiled.css = css.trim();
-  } else {
-    compiled.css = '/* No <style> tags present */';
-  }
 
-  // clear errors
-  result.errors = [];
-};
+  return [css, null];
+}
 
 async function doCompileScript(
-  result: { errors: (string | Error)[] },
   descriptor: SFCDescriptor,
   id: string,
   isTS: boolean
-): Promise<[string, BindingMetadata | undefined] | undefined> {
+): Promise<[string, BindingMetadata | undefined, Error[] | null] | undefined> {
+  const scriptLang =
+    (descriptor.script && descriptor.script.lang) ||
+    (descriptor.scriptSetup && descriptor.scriptSetup.lang);
+
+  if (scriptLang && !isTS && scriptLang !== 'js') {
+    return [
+      '',
+      undefined,
+      [
+        new Error(
+          `Only lang="ts" or lang="js" is supported for <script> blocks.`
+        ),
+      ],
+    ];
+  }
+
   if (descriptor.script || descriptor.scriptSetup) {
     try {
       const expressionPlugins: CompilerOptions['expressionPlugins'] = isTS
@@ -176,26 +216,26 @@ async function doCompileScript(
         );
 
       if ((descriptor.script || descriptor.scriptSetup)!.lang === 'ts') {
-        code = await transformTS(code);
+        code = await transform(code, {
+          transforms: ['typescript'],
+        }).code;
       }
 
-      return [code, compiledScript.bindings];
+      return [code, compiledScript.bindings, null];
     } catch (e: any) {
-      result.errors = [e.stack.split('\n').slice(0, 12).join('\n')];
-      return;
+      return ['', undefined, [e.stack.split('\n').slice(0, 12).join('\n')]];
     }
   } else {
-    return [`\nconst ${COMP_IDENTIFIER} = {}`, undefined];
+    return [`\nconst ${COMP_IDENTIFIER} = {}`, undefined, null];
   }
 }
 
 async function doCompileTemplate(
-  result: { errors: (string | Error)[] },
   descriptor: SFCDescriptor,
   id: string,
   bindingMetadata: BindingMetadata | undefined,
   isTS: boolean
-) {
+): Promise<[string, Error[] | null]> {
   const templateResult = compileTemplate({
     // ...vue3SFCOptions?.template,
     source: descriptor.template!.content,
@@ -212,8 +252,7 @@ async function doCompileTemplate(
     },
   });
   if (templateResult.errors.length) {
-    result.errors = templateResult.errors;
-    return;
+    return ['', templateResult.errors as Error[]];
   }
 
   const fnName = 'render';
@@ -225,8 +264,16 @@ async function doCompileTemplate(
     )}` + `\n${COMP_IDENTIFIER}.${fnName} = ${fnName}`;
 
   if ((descriptor.script || descriptor.scriptSetup)?.lang === 'ts') {
-    code = await transformTS(code);
+    code = await transform(code, {
+      transforms: ['typescript'],
+    }).code;
   }
 
-  return code;
+  return [code, null];
+}
+
+export default function (hooks: Hooks) {
+  hooks.addHooks({
+    transform: transformVue3,
+  });
 }

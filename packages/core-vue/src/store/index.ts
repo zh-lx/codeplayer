@@ -1,8 +1,8 @@
 import { reactive } from 'vue';
-import type { File } from '@/utils';
+import type { File } from '@/compiler';
 import { type Editor } from 'codemirror';
 import type { ToolbarPosition, Control } from '@/type';
-
+import { FileSystem } from '@/compiler/file-system';
 export interface Store {
   mainFile: string;
   activeFile: File;
@@ -17,7 +17,7 @@ export interface Store {
   excludeTools: Control[];
   imports: Record<string, string>;
   editor: Editor | null; // code Mirror 编辑器
-  refreshID: number; // 用于 preview 刷新的标识，当点击刷新按钮该值 +1 触发刷新
+  rerenderID: number; // 用于 preview 刷新的标识，当点击刷新按钮该值 +1 触发刷新
   sharePath: string; // 分享按钮的路径
   codeSize: number;
 }
@@ -29,7 +29,6 @@ export const store = reactive<Store>({
   activeFile: {
     filename: '',
     code: '',
-    hidden: false,
     compiled: { js: '', css: '' },
   },
   imports: {},
@@ -42,21 +41,18 @@ export const store = reactive<Store>({
   reverse: false,
   excludeTools: [],
   editor: null,
-  refreshID: 0,
+  rerenderID: 0,
   sharePath: 'https://code-sandbox.cn/playground',
   codeSize: 12,
 });
 
-export const fileSystem = reactive({
-  fileMap: {},
+export const fileStore = reactive<FileSystem>({
+  files: {},
   mainFile: '',
   activeFile: {
     filename: '',
     code: '',
-    hidden: false,
     compiled: { js: '', css: '' },
   },
   imports: {},
 });
-
-export * from './file-system';
