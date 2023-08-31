@@ -61,10 +61,12 @@ async function emitHtml(content: {
   });
 
   // css
-  const styleEl = document.createElement('style');
-  styleEl.setAttribute('replace', 'true');
-  styleEl.innerHTML = styles.join('\n');
-  iframeDoc.head.appendChild(styleEl);
+  for (let style of styles) {
+    const styleEl = document.createElement('style');
+    styleEl.setAttribute('replace', 'true');
+    styleEl.innerHTML = style;
+    iframeDoc.head.appendChild(styleEl);
+  }
 
   const codeToEval = ['window.__modules__ = {};\n', ...modules];
 
