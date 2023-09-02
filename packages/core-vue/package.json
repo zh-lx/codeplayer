@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
+    "build:web": "vue-tsc && vite build --config ./vite.config.web.ts",
     "preview": "vite preview"
   },
   "devDependencies": {

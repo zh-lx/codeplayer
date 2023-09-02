@@ -7,8 +7,9 @@ async function emitHtml(content: {
   importMap: string;
   iframe: HTMLIFrameElement;
   render: boolean;
+  links: string[];
 }) {
-  const { modules, styles, importMap, iframe, render } = content;
+  const { modules, styles, importMap, iframe, render, links } = content;
 
   let iframeDoc = iframe.contentDocument as Document;
   let iframeWindow = iframe.contentWindow as any;
@@ -40,6 +41,7 @@ async function emitHtml(content: {
     `;
     iframeDoc.write(template);
     iframeWindow.process = { env: {} };
+    iframeWindow[modulesKey] = {};
     iframeWindow[exportKey] = (mod: Object, key: string, get: () => any) => {
       Object.defineProperty(mod, key, {
         enumerable: true,
@@ -60,29 +62,74 @@ async function emitHtml(content: {
     el.remove();
   });
 
-  // css
-  for (let style of styles) {
-    const styleEl = document.createElement('style');
-    styleEl.setAttribute('replace', 'true');
-    styleEl.innerHTML = style;
-    iframeDoc.head.appendChild(styleEl);
+  const map = flattenScopeMappings(JSON.parse(importMap));
+  // links
+  for (let link of links) {
+    for (let key in map) {
+      if (link === key || `${link}/` === key) {
+        const styleEl = document.createElement('link');
+        styleEl.setAttribute('href', map[key]);
+        styleEl.setAttribute('rel', 'stylesheet');
+        styleEl.setAttribute('type', 'text/css');
+        styleEl.setAttribute('replace', 'true');
+        iframeDoc.head.appendChild(styleEl);
+        break;
+      } else if (link.startsWith(key) && key.endsWith('/')) {
+        const href = map[key] + link.replace(key, '');
+        const styleEl = document.createElement('link');
+        styleEl.setAttribute('href', href);
+        styleEl.setAttribute('rel', 'stylesheet');
+        styleEl.setAttribute('type', 'text/css');
+        styleEl.setAttribute('replace', 'true');
+        iframeDoc.head.appendChild(styleEl);
+      }
+    }
   }
 
-  const codeToEval = ['window.__modules__ = {};\n', ...modules];
+  // css
+  const styleEl = document.createElement('style');
+  styleEl.setAttribute('replace', 'true');
+  styleEl.innerHTML = styles.join('\n');
+  iframeDoc.head.appendChild(styleEl);
 
-  for (let script of codeToEval) {
+  // const fragment = document.createDocumentFragment();
+  for (let i = 0; i < modules.length; i++) {
+    let script = modules[i];
     const scriptEl = document.createElement('script');
     scriptEl.setAttribute('type', 'module');
     scriptEl.setAttribute('replace', 'true');
     const done = new Promise((resolve) => {
-      iframeWindow[nextKey] = resolve;
+      iframeWindow[nextKey] = function () {
+        resolve(true);
+      };
     });
     // send ok in the module script to ensure sequential evaluation
     // of multiple proxy.eval() calls
     scriptEl.innerHTML = script + `\nwindow.${nextKey}();`;
     iframeDoc.head.appendChild(scriptEl);
+    // fragment.appendChild(scriptEl);
     await done;
   }
+
+  iframeDoc.close();
+}
+
+function flattenScopeMappings(importMap: any) {
+  const flattenedMappings: Record<string, string> = {};
+
+  for (let key in importMap.imports) {
+    flattenedMappings[key] = importMap.imports[key];
+  }
+
+  for (const scopePrefix in importMap.scopes) {
+    const scopeMappings = importMap.scopes[scopePrefix];
+    for (const scopeModulePath in scopeMappings) {
+      const fullPath = `${scopePrefix}${scopeModulePath}`;
+      flattenedMappings[fullPath] = scopeMappings[scopeModulePath];
+    }
+  }
+
+  return flattenedMappings;
 }
 
 export default function (hooks: Hooks) {

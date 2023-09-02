@@ -1,6 +1,6 @@
 import CodeMirror from 'codemirror';
-import { File } from '@/compiler';
 import { getMode } from './mode';
+import { fileStore } from '@/store'
 
 // mode
 import 'codemirror/mode/javascript/javascript.js';
@@ -21,7 +21,7 @@ import 'codemirror/addon/fold/comment-fold.js';
 interface CodeMirrorOptions {
   mode?: string;
   readonly?: boolean;
-  activeFile: File;
+  activeFile: string;
 }
 
 export const createCodeMirror = (
@@ -36,12 +36,12 @@ export const createCodeMirror = (
   };
 
   const editor = CodeMirror(el, {
-    value: activeFile.code || '',
+    value: fileStore.files[activeFile]?.code || '',
     tabSize: 2,
     // lineWrapping: true,
     lineNumbers: true,
     readOnly: readonly,
-    mode: getMode(activeFile.filename),
+    mode: getMode(fileStore.files[activeFile]?.filename || ''),
     ...addonOptions,
   });
 

@@ -119,7 +119,6 @@ function processModule(
       const source = node.source.value;
       if (source.startsWith('./')) {
         const importId = defineImport(node, node.source.value);
-        console.log(1111,importId)
         for (const spec of node.specifiers) {
           if (spec.type === 'ImportSpecifier') {
             idToImportMap.set(

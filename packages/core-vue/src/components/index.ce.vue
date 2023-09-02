@@ -37,6 +37,11 @@ function initFileSystem() {
     filesMap = JSON.parse(atou(options.serializedState));
   } else if (options.initFiles) {
     filesMap = options.initFiles;
+  } else if(location.hash) {
+    if(location.hash.slice(1)) {
+      const files = JSON.parse(atou(location.hash.slice(1)))
+      filesMap = files
+    }
   }
 
   // 将键值对转换为虚拟文件
@@ -51,7 +56,7 @@ function initFileSystem() {
   if (!files[fileStore.mainFile]) {
     fileStore.mainFile = Object.keys(files)[0];
   }
-  fileStore.activeFile = files[fileStore.mainFile];
+  fileStore.activeFile = options.activeFile || fileStore.mainFile;
 
   // 初始化 imports
   if (options.imports) {
@@ -68,8 +73,8 @@ watch(
     init();
   },
   {
-    immediate: true,
     deep: true,
+    immediate: true
   }
 );
 </script>

@@ -16,8 +16,8 @@ const deleteFile = (e: Event) => {
     title: '提示',
     content: `确定要删除 ${props.filename} 吗?`,
     confirm: () => {
-      if (fileStore.activeFile.filename === props.filename) {
-        fileStore.activeFile = fileStore.files[fileStore.mainFile];
+      if (fileStore.activeFile === props.filename) {
+        fileStore.activeFile = fileStore.mainFile;
       }
       const tempFiles = { ...fileStore.files };
       delete tempFiles[props.filename];

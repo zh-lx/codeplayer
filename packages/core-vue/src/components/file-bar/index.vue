@@ -13,7 +13,7 @@ const showNewFile = ref(false);
 
 // 切换文件
 const changeActiveFile = (filename: string) => {
-  fileStore.activeFile = fileStore.files[filename];
+  fileStore.activeFile = filename;
 };
 
 // 处理(新增/更改)文件

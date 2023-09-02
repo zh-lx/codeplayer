@@ -11,7 +11,6 @@ export async function transformLess(file: File): Promise<Error[] | undefined> {
 
   try {
     code = (await less.render(code)).css
-    console.log(code)
     file.compiled.css = code;
   } catch (error) {
     return [error as Error]

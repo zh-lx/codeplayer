@@ -38,7 +38,7 @@ export class Compiler {
     // before-compile
     await this.hooks.callHook('before-compile', params);
     // compile-module
-    const { processed: modules, styles } = await this.hooks.callHook(
+    const { processed: modules, styles, links } = await this.hooks.callHook(
       'compile-module',
       fileMap,
       entry
@@ -52,6 +52,7 @@ export class Compiler {
       importMap: fileMap[MapFile].code,
       iframe,
       render,
+      links,
     });
     // after-emit
     await this.hooks.callHook('after-emit', params);

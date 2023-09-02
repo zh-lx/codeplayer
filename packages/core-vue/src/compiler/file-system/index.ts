@@ -26,7 +26,7 @@ export interface FileSystem {
   // 入口文件
   mainFile: string;
   // 当前编辑中的文件
-  activeFile: File;
+  activeFile: string;
   // imports map
   imports: Record<string, string>;
 }
@@ -46,6 +46,6 @@ export const getTemplate = (appType: string = 'vue3') => {
 };
 
 export const getFileExtraName = (filename: string) => {
-  const segments = filename.split('.');
+  const segments = filename?.split('.');
   return segments[segments.length - 1];
 };

@@ -44,7 +44,7 @@ const list = computed(() => [
 ]);
 
 const getIcon = (filename: string) => {
-  const segments = filename.split('.');
+  const segments = filename?.split('.');
   const suffix = segments[segments.length - 1];
   if (suffix === 'js') {
     return JsSVG;
@@ -84,7 +84,7 @@ const getIcon = (filename: string) => {
         v-else
         class="file-item"
         :class="{
-          'active-file-item': filename === fileStore.activeFile.filename,
+          'active-file-item': filename === fileStore.activeFile,
         }"
         @click="() => emit('changeActiveFile', filename)"
       >

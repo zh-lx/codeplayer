@@ -19,8 +19,12 @@ const createEditor = () => {
   });
 
   editor.on('change', () => {
-    fileStore.activeFile.code = editor.getValue();
+    fileStore.files[fileStore.activeFile].code = editor.getValue();
   });
+
+  nextTick(() => {
+    editor.refresh()
+  })
 };
 
 const styleStr = computed(
@@ -42,16 +46,19 @@ watch(
     if (!file || !editor) {
       return;
     }
-    const { code, filename } = file;
+    const { code, filename } = fileStore.files[file];
     if (code !== editor.getValue()) {
       editor.setValue(code);
       nextTick(() => editor.refresh());
     }
-    const newType = getFileExtraName(filename);
-    if (newType !== getFileExtraName(oldFile?.filename || '')) {
+    const newType = getFileExtraName(filename || '');
+    if (newType !== getFileExtraName(oldFile?.toString() || '')) {
       editor.setOption('mode', getMode(filename));
       nextTick(() => editor.refresh());
     }
+  },
+  {
+    immediate: true
   }
 );
 </script>

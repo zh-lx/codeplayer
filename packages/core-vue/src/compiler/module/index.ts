@@ -26,9 +26,10 @@ export async function compileModulesForPreview(
   const seen = new Set<File>();
   const processed: string[] = [];
   const styles: string[] = [];
-  processFile(files, files[mainFile], processed, styles, seen);
+  const links: string[] = []
+  processFile(files, files[mainFile], processed, styles, links, seen);
 
-  return { processed, styles };
+  return { processed, styles, links };
 }
 
 // similar logic with Vite's SSR transform, except this is targeting the browser
@@ -37,6 +38,7 @@ function processFile(
   file: File,
   processed: string[],
   styles: string[],
+  links: string[],
   seen: Set<File>
 ) {
   if (seen.has(file)) {
@@ -51,14 +53,15 @@ function processFile(
       file.filename,
       processed,
       styles,
+      links,
       seen
     );
   }
 
-  let [js, importedFiles] = processModule(
+  let [js, importedFiles, _links] = processModule(
     files,
     file.compiled.js,
-    file.filename
+    file.filename,
   );
   // append css
   if (file.compiled.css) {
@@ -67,19 +70,21 @@ function processFile(
   // crawl child imports
   if (importedFiles.size) {
     for (const imported of importedFiles) {
-      processFile(files, files[imported], processed, styles, seen);
+      processFile(files, files[imported], processed, styles, links, seen);
     }
   }
   // push self
   processed.push(js);
+  links.push(..._links)
 }
 
 function processModule(
   files: Record<string, File>,
   src: string,
-  filename: string
-): [string, Set<string>] {
+  filename: string,
+): [string, Set<string>, string[]] {
   const s = new MagicString(src);
+  const links: string[] = []
 
   const ast = babelParse(src, {
     sourceFilename: filename,
@@ -136,6 +141,9 @@ function processModule(
           }
         }
         s.remove(node.start!, node.end!);
+      } else if(source.endsWith('.css')) {
+        s.overwrite(node.start!, node.end!, '')
+        links.push(source)
       }
     }
   }
@@ -259,7 +267,7 @@ function processModule(
     },
   });
 
-  return [s.toString(), importedFiles];
+  return [s.toString(), importedFiles, links];
 }
 
 function processHtmlFile(
@@ -268,6 +276,7 @@ function processHtmlFile(
   filename: string,
   processed: string[],
   styles: string[],
+  links: string[],
   seen: Set<File>
 ) {
   const deps: string[] = [];
@@ -277,7 +286,7 @@ function processHtmlFile(
       const [code, importedFiles] = processModule(files, content, filename);
       if (importedFiles.size) {
         for (const imported of importedFiles) {
-          processFile(files, files[imported], deps, styles, seen);
+          processFile(files, files[imported], deps, styles, links, seen);
         }
       }
       jsCode += '\n' + code;

@@ -1,11 +1,12 @@
-import { reactive } from 'vue';
+import { reactive, watch } from 'vue';
 import type { File } from '@/compiler';
 import { type Editor } from 'codemirror';
 import type { ToolbarPosition, Control } from '@/type';
 import { FileSystem } from '@/compiler/file-system';
+import { utoa } from '@//utils'
 export interface Store {
   mainFile: string;
-  activeFile: File;
+  activeFile: string;
   files: Record<string, File>;
   showFileBar: boolean;
   showCode: boolean;
@@ -26,11 +27,7 @@ export const store = reactive<Store>({
   // 文件系统相关
   mainFile: '',
   files: {},
-  activeFile: {
-    filename: '',
-    code: '',
-    compiled: { js: '', css: '' },
-  },
+  activeFile: '',
   imports: {},
   showFileBar: true,
   showCode: true,
@@ -49,10 +46,17 @@ export const store = reactive<Store>({
 export const fileStore = reactive<FileSystem>({
   files: {},
   mainFile: '',
-  activeFile: {
-    filename: '',
-    code: '',
-    compiled: { js: '', css: '' },
-  },
+  activeFile: '',
   imports: {},
 });
+
+watch(() => fileStore.files, (val) => {
+  if(!val) {
+    return
+  }
+  const fileMap: Record<string, string> = {};
+  for(let key in fileStore.files) {
+    fileMap[key] = fileStore.files[key].code
+  }
+  location.hash = utoa(JSON.stringify(fileMap))
+}, {deep: true})

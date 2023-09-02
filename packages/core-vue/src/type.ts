@@ -50,6 +50,11 @@ export interface CodeSandboxOptions {
    */
   mainFile?: string;
   /**
+   * @description_en Entry file name
+   * @description_zh 初始化聚焦文件
+   */
+  activeFile?: string;
+  /**
    * @description_en Initialization files JSON string, format: Record<filename, code>
    * @description_zh 初始化文件 JSON 字符串，格式为：Record<filename, code>
    */
