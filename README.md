@@ -2,6 +2,11 @@
 
 CodePlayer 是一个在线代码编辑及实时预览的 UI 组件，支持浏览器环境下编写 `html/js/css/ts/vue/react` 等类型的代码并在沙盒环境下实时运行预览。
 
+<p>
+  <a href="https://sandbox-docs.fe-dev.cn">中文文档</a> | 
+  <a href="https://sandbox.fe-dev.cn">在线体验</a>
+</p>
+
 [![NPM version](https://img.shields.io/npm/v/codeplayer.svg)](https://www.npmjs.com/package/codeplayer)
 [![GITHUB star](https://img.shields.io/github/stars/zh-lx/codeplayer.svg)](https://github.com/zh-lx/codeplayer)
 [![MIT-license](https://img.shields.io/npm/l/code-inspector.svg)](https://opensource.org/licenses/MIT)
