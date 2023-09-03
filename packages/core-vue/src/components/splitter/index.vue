@@ -154,8 +154,8 @@ watch(
 
 <template>
   <div
-    class="code-sandbox-splitter"
-    :class="{ 'code-sandbox-splitter-vertical': props.vertical }"
+    class="code-player-splitter"
+    :class="{ 'code-player-splitter-vertical': props.vertical }"
     ref="splitterDOM"
     @mousemove="dragMove"
     @mouseup="dragEnd"

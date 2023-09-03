@@ -3,7 +3,7 @@ import type { File } from '@/compiler';
 import { type Editor } from 'codemirror';
 import type { ToolbarPosition, Control } from '@/type';
 import { FileSystem } from '@/compiler/file-system';
-import { utoa } from '@//utils'
+import { utoa } from '@//utils';
 export interface Store {
   mainFile: string;
   activeFile: string;
@@ -39,7 +39,7 @@ export const store = reactive<Store>({
   excludeTools: [],
   editor: null,
   rerenderID: 0,
-  sharePath: 'https://code-sandbox.cn/playground',
+  sharePath: 'https://code-player.cn/playground',
   codeSize: 12,
 });
 
@@ -50,13 +50,17 @@ export const fileStore = reactive<FileSystem>({
   imports: {},
 });
 
-watch(() => fileStore.files, (val) => {
-  if(!val) {
-    return
-  }
-  const fileMap: Record<string, string> = {};
-  for(let key in fileStore.files) {
-    fileMap[key] = fileStore.files[key].code
-  }
-  location.hash = utoa(JSON.stringify(fileMap))
-}, {deep: true})
+watch(
+  () => fileStore.files,
+  (val) => {
+    if (!val) {
+      return;
+    }
+    const fileMap: Record<string, string> = {};
+    for (let key in fileStore.files) {
+      fileMap[key] = fileStore.files[key].code;
+    }
+    location.hash = utoa(JSON.stringify(fileMap));
+  },
+  { deep: true }
+);

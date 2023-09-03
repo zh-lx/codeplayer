@@ -47,7 +47,7 @@ async function renderSandbox() {
   // 建立一个新的 iframe
   iframe.value?.remove();
   iframe.value = document.createElement('iframe');
-  iframe.value.className = 'code-sandbox-iframe';
+  iframe.value.className = 'code-player-iframe';
   previewDOM.value.append(iframe.value);
 
   const result = { errors: [] };
@@ -79,5 +79,5 @@ async function refreshSandbox() {
 </script>
 
 <template>
-  <div class="code-sandbox-iframe-container" ref="previewDOM"></div>
+  <div class="code-player-iframe-container" ref="previewDOM"></div>
 </template>

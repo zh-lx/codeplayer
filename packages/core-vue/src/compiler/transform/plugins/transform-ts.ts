@@ -1,9 +1,9 @@
 import { transform } from 'sucrase';
 import { File } from '@/compiler';
-import { Hooks } from '@/compiler/type'
+import { Hooks } from '@/compiler/type';
 
 export async function transformTS(file: File): Promise<Error[] | undefined> {
-  let { filename, code } = file
+  let { filename, code } = file;
 
   if (!filename.endsWith('.ts') && !filename.endsWith('.js')) {
     return;
@@ -18,12 +18,12 @@ export async function transformTS(file: File): Promise<Error[] | undefined> {
 
     file.compiled.js = code;
   } catch (error) {
-    return [error as Error]
+    return [error as Error];
   }
 }
 
-export default function(hooks: Hooks) {
+export default function (hooks: Hooks) {
   hooks.addHooks({
     transform: transformTS,
-  })
+  });
 }

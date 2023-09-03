@@ -4,14 +4,14 @@ import { fileStore, store } from '@/store';
 import { MapFile } from '@/constant';
 import { atou } from '@/utils';
 import { getTemplate, File } from '@/compiler';
-import { CodeSandboxOptions } from '@/type';
+import { CodePlayerOptions } from '@/type';
 import Toolbar from './toolbar/index.vue';
 import Splitter from './splitter/index.vue';
 import FileBar from './file-bar/index.vue';
 import CodeEditor from './code-editor/index.vue';
 import Preview from './preview/index.vue';
 
-const props = defineProps<{ options?: CodeSandboxOptions }>();
+const props = defineProps<{ options?: CodePlayerOptions }>();
 
 const CodeSlotName = computed(() => (store.reverse ? 'right' : 'left'));
 const PreviewSlotName = computed(() => (store.reverse ? 'left' : 'right'));
@@ -33,14 +33,12 @@ function initFileSystem() {
   // 依次根据 options.initFiles、serializedState、appType 初始化文件
   const options = props.options || {};
   let filesMap = getTemplate(options.appType || '') as Record<string, string>;
-  if (options.serializedState) {
-    filesMap = JSON.parse(atou(options.serializedState));
-  } else if (options.initFiles) {
+  if (options.initFiles) {
     filesMap = options.initFiles;
-  } else if(location.hash) {
-    if(location.hash.slice(1)) {
-      const files = JSON.parse(atou(location.hash.slice(1)))
-      filesMap = files
+  } else if (location.hash) {
+    if (location.hash.slice(1)) {
+      const files = JSON.parse(atou(location.hash.slice(1)));
+      filesMap = files;
     }
   }
 
@@ -57,14 +55,6 @@ function initFileSystem() {
     fileStore.mainFile = Object.keys(files)[0];
   }
   fileStore.activeFile = options.activeFile || fileStore.mainFile;
-
-  // 初始化 imports
-  if (options.imports) {
-    fileStore.files[MapFile] = new File(
-      MapFile,
-      JSON.stringify({ imports: options.imports }, null, 2)
-    );
-  }
 }
 
 watch(
@@ -74,7 +64,7 @@ watch(
   },
   {
     deep: true,
-    immediate: true
+    immediate: true,
   }
 );
 </script>
@@ -82,7 +72,7 @@ watch(
 <template>
   <component is="style">{{ props.options?.css || '' }}</component>
   <div
-    class="code-sandbox-container"
+    class="code-player-container"
     :style="{
       height: props.options?.height ? `${props.options?.height}px` : '',
     }"

@@ -75,7 +75,7 @@ const validateFilenameError = (filename: string) => {
   }
   const fileType = fileTypes.some((type) => filename.endsWith(type));
   if (!fileType) {
-    return `CodeSandbox 当前只支持 ${fileTypes
+    return `CodePlayer 当前只支持 ${fileTypes
       .map((type) => `*${type}`)
       .join('、')} 类型的文件`;
   }
@@ -88,7 +88,7 @@ const newFileError = computed(() => {
 </script>
 
 <template>
-  <div class="code-sandbox-files-container">
+  <div class="code-player-files-container">
     <div class="files-container">
       <div class="files-head">
         <div class="files-head-left">FILES</div>

@@ -82,6 +82,7 @@ async function emitHtml(content: {
         styleEl.setAttribute('type', 'text/css');
         styleEl.setAttribute('replace', 'true');
         iframeDoc.head.appendChild(styleEl);
+        break;
       }
     }
   }

@@ -1,4 +1,4 @@
-.code-sandbox-message {
+.code-player-message {
   position: fixed;
   top: 24px;
   left: 50%;
@@ -11,25 +11,25 @@
   border-radius: 4px;
 }
 
-.code-sandbox-message-info {
+.code-player-message-info {
   color: @info;
   background-color: @info-light-bg;
   border: 1px solid @info-light-border;
 }
 
-.code-sandbox-message-danger {
+.code-player-message-danger {
   color: @danger;
   border: 1px solid @danger-light-border;
   background-color: @danger-light-bg;
 }
 
-.code-sandbox-message-success {
+.code-player-message-success {
   color: @success;
   border: 1px solid @success-light-border;
   background-color: @success-light-bg;
 }
 
-.code-sandbox-dialog-mask {
+.code-player-dialog-mask {
   font-family: @font-family;
   position: fixed;
   top: 0;
@@ -38,7 +38,7 @@
   height: 100vh;
   background-color: @bg-mask;
   z-index: 9999;
-  .code-sandbox-dialog {
+  .code-player-dialog {
     position: absolute;
     min-width: 300px;
     max-width: 600px;
@@ -48,11 +48,11 @@
     background-color: @bg-white;
     border-radius: 4px;
     padding: 16px;
-    .code-sandbox-dialog-title {
+    .code-player-dialog-title {
       margin: 0 0 12px 0;
       line-height: 24px;
     }
-    .code-sandbox-dialog-close {
+    .code-player-dialog-close {
       color: @text-color-secondary;
       cursor: pointer;
       position: absolute;
@@ -69,10 +69,10 @@
         color: @brand-active;
       }
     }
-    .code-sandbox-dialog-content {
+    .code-player-dialog-content {
       font-size: 13px;
     }
-    .code-sandbox-dialog-buttons {
+    .code-player-dialog-buttons {
       display: flex;
       justify-content: flex-end;
       button {
@@ -80,7 +80,7 @@
         cursor: pointer;
         padding: @gap-1 @gap-3;
       }
-      .code-sandbox-dialog-button-cancel {
+      .code-player-dialog-button-cancel {
         margin-right: 8px;
         background-color: @fill;
         border-radius: 4px;
@@ -92,7 +92,7 @@
           background-color: @fill-active;
         }
       }
-      .code-sandbox-dialog-button-confirm {
+      .code-player-dialog-button-confirm {
         margin-right: 8px;
         background-color: @brand;
         border-radius: 4px;

@@ -26,7 +26,7 @@ export async function compileModulesForPreview(
   const seen = new Set<File>();
   const processed: string[] = [];
   const styles: string[] = [];
-  const links: string[] = []
+  const links: string[] = [];
   processFile(files, files[mainFile], processed, styles, links, seen);
 
   return { processed, styles, links };
@@ -61,7 +61,7 @@ function processFile(
   let [js, importedFiles, _links] = processModule(
     files,
     file.compiled.js,
-    file.filename,
+    file.filename
   );
   // append css
   if (file.compiled.css) {
@@ -75,16 +75,16 @@ function processFile(
   }
   // push self
   processed.push(js);
-  links.push(..._links)
+  links.push(..._links);
 }
 
 function processModule(
   files: Record<string, File>,
   src: string,
-  filename: string,
+  filename: string
 ): [string, Set<string>, string[]] {
   const s = new MagicString(src);
-  const links: string[] = []
+  const links: string[] = [];
 
   const ast = babelParse(src, {
     sourceFilename: filename,
@@ -141,9 +141,9 @@ function processModule(
           }
         }
         s.remove(node.start!, node.end!);
-      } else if(source.endsWith('.css')) {
-        s.overwrite(node.start!, node.end!, '')
-        links.push(source)
+      } else if (source.endsWith('.css')) {
+        s.overwrite(node.start!, node.end!, '');
+        links.push(source);
       }
     }
   }

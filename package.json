@@ -1,5 +1,5 @@
 {
-  "name": "code-sandbox",
+  "name": "codeplayer",
   "version": "1.0.0",
   "description": "一个浏览器代码编辑&可视化运行 web 组件，支持 vue/react 等代码的浏览器编辑及运行",
   "main": "index.js",

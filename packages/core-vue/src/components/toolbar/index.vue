@@ -12,8 +12,8 @@ import ShareIcon from './icons/share.vue';
 
 <template>
   <div
-    class="code-sandbox-toolbar"
-    :class="`code-sandbox-toolbar-${
+    class="code-player-toolbar"
+    :class="`code-player-toolbar-${
       store.toolbarPosition === 'bottom' ? 'bottom' : 'top'
     }`"
   >

@@ -1,12 +1,12 @@
 import { defineCustomElement } from 'vue';
-import CodeSandboxVue from './components/index.ce.vue';
+import CodePlayerVue from './components/index.ce.vue';
 import globalStyle from '@/style/global.less?inline';
 import MenuStyle from '@/components/menus/index.less?inline';
-import { CodeSandboxOptions, HTMLCodeSandboxElement } from './type';
+import { CodePlayerOptions, HTMLCodePlayerElement } from './type';
 
-const CodeSandboxClass = defineCustomElement(CodeSandboxVue);
+const CodePlayerClass = defineCustomElement(CodePlayerVue);
 
-customElements.define('code-sandbox', CodeSandboxClass);
+customElements.define('code-player', CodePlayerClass);
 
 // 添加全局样式
 (function () {
@@ -16,17 +16,17 @@ customElements.define('code-sandbox', CodeSandboxClass);
   document.body.append(style);
 })();
 
-export default class CodeSandbox {
-  constructor(el: HTMLElement | string, options: CodeSandboxOptions) {
+export default class CodePlayer {
+  constructor(el: HTMLElement | string, options: CodePlayerOptions) {
     const container = typeof el === 'string' ? document.querySelector(el) : el;
-    const codeSandbox = document.createElement('code-sandbox');
-    codeSandbox.options = options;
-    container?.append(codeSandbox);
+    const codePlayer = document.createElement('code-player');
+    codePlayer.options = options;
+    container?.append(codePlayer);
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'code-sandbox': HTMLCodeSandboxElement;
+    'code-player': HTMLCodePlayerElement;
   }
 }

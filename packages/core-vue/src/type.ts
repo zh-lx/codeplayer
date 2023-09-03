@@ -18,7 +18,7 @@ export type AppType =
   | 'javascript'
   | 'typescript';
 
-export interface CodeSandboxOptions {
+export interface CodePlayerOptions {
   /**
    * @description_en The fixed height of the component. When this item is not set, the component height automatically changes with the content
    * @description_zh 组件的固定高度，不设置此项时组件高度随内容自动变化
@@ -46,24 +46,19 @@ export interface CodeSandboxOptions {
   showToolbar?: boolean;
   /**
    * @description_en Entry file name
-   * @description_zh 入口文件名称
+   * @description_zh 入口文件的文件名，若不设置，默认将第一个文件作为入口文件
    */
   mainFile?: string;
   /**
    * @description_en Entry file name
-   * @description_zh 初始化聚焦文件
+   * @description_zh 初始化展示代码的文件的文件名
    */
   activeFile?: string;
   /**
    * @description_en Initialization files JSON string, format: Record<filename, code>
-   * @description_zh 初始化文件 JSON 字符串，格式为：Record<filename, code>
+   * @description_zh 初始化文件 map，格式为：Record<filename, code>
    */
   initFiles?: Record<string, string>;
-  /**
-   * @description_en Dependent npm package, format: Record<package name, link>
-   * @description_zh 依赖的 npm 包，格式为：Record<package name, link>
-   */
-  imports?: Record<string, string>;
   /**
    * @description_en Application type. If initFiles is not configured, the initial file will be automatically generated according to the appType; If initFiles is configured, this item is invalid
    * @description_zh 应用类型。若未配置 initFiles，会根据 appType 自动生成初始文件；若配置了 initFiles，此项失效
@@ -90,17 +85,12 @@ export interface CodeSandboxOptions {
    */
   toolbarPosition?: ToolbarPosition;
   /**
-   * @description_en Serialized string of files<filename, code>
-   * @description_zh 文件的序列化字符串<filename, code>
-   */
-  serializedState?: string;
-  /**
    * @description_en String of styleSheet to define custom style.
    * @description_zh 用于自定义样式的 Css styleSheet 字符串
    */
   css?: string;
 }
 
-export interface HTMLCodeSandboxElement extends HTMLDivElement {
-  options: CodeSandboxOptions;
+export interface HTMLCodePlayerElement extends HTMLDivElement {
+  options: CodePlayerOptions;
 }

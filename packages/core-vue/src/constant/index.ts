@@ -22,9 +22,9 @@ export const fileTypes = [
   'json',
   '.less',
   '.scss',
-  '.sass'
+  '.sass',
 ];
-export const URLCodeKey = '_codesandbox_code';
+export const URLCodeKey = '_code-player_code';
 export * from './tooltip';
 
 export const CodeSizes = [12, 13, 14, 15, 16, 17, 18];

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -8,15 +8,14 @@
   </head>
   <body>
     <div id="app">
-      <div id="code-sandbox"></div>
+      <div id="code-player"></div>
     </div>
     <script type="module">
-      import CodeSandbox from './src/main.ts';
-      new CodeSandbox('#code-sandbox', {
+      import CodePlayer from './src/main.ts';
+      new CodePlayer('#code-player', {
         appType: 'react',
-        activeFile: 'App.tsx',
         css: `
-              .code-sandbox-container {
+              .code-player-container {
                 max-height: 100vh;
                 height: 100vh;
                 border: none;
@@ -27,37 +26,6 @@
               }
               `,
         excludeTools: ['code', 'share', 'reverse', 'preview', 'fileBar'],
-        initFiles: {
-          'main.tsx': `import React from "react";
-import { createRoot } from "react-dom/client";
-import App from './App.tsx';
-
-const root = createRoot(document.getElementById('app'));
-root.render(<App />)
-  `,
-          'App.tsx': `import React from 'react';
-import { Button, Space } from 'antd';
-
-const App: React.FC = () => (
-  <Space wrap>
-    <Button type="primary">Primary Button</Button>
-    <Button>Default Button</Button>
-    <Button type="dashed">Dashed Button</Button>
-    <Button type="text">Text Button</Button>
-    <Button type="link">Link Button</Button>
-  </Space>
-);
-
-export default App;
-`,
-          'import-map.json': `{    
-    "imports": {
-      "react": "https://esm.sh/react@18.2.0",
-      "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
-      "antd": "https://esm.sh/antd@5.8.5"
-    }
-}`,
-        },
       });
     </script>
   </body>

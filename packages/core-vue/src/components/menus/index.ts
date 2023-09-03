@@ -8,7 +8,7 @@ import {
   LayoutMenuDirection,
 } from './utils';
 
-export const activeClass = 'code-sandbox-active-menu-item';
+export const activeClass = 'code-player-active-menu-item';
 
 // 兼容 chrome e.path 失效
 function composedPath(e: any) {
@@ -147,7 +147,7 @@ export default class RightMenu {
     const skeleton = this.createDom(
       'ul',
       {
-        class: `code-sandbox-right-menu-list code-sandbox-theme-${this.config.theme}`,
+        class: `code-player-right-menu-list code-player-theme-${this.config.theme}`,
         style: this.menuStyle,
       },
       children
@@ -161,7 +161,7 @@ export default class RightMenu {
    * @returns { void }
    */
   destroyMenu(): void {
-    const menuList = document.querySelectorAll('.code-sandbox-right-menu-list');
+    const menuList = document.querySelectorAll('.code-player-right-menu-list');
     // 清除所有菜单栏, 有多少清多少
     menuList &&
       menuList.forEach((item) => {
@@ -220,7 +220,7 @@ export default class RightMenu {
     return this.createDom(
       'ul',
       {
-        class: `code-sandbox-right-menu-list code-sandbox-theme-${this.config.theme}`,
+        class: `code-player-right-menu-list code-player-theme-${this.config.theme}`,
         style: this.menuStyle,
       },
       children
