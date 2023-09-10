@@ -10,7 +10,7 @@ hero:
   tagline: 在浏览器端进行 Web 代码的编写及运行预览
   image:
     src: /logo.svg
-    alt: ChoDocs
+    alt: logo
   actions:
     - theme: brand
       text: 快速开始
