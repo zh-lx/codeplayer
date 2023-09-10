@@ -9,8 +9,5 @@
   "private": true,
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "workspaces": [
-    "packages/*"
-  ]
+  "license": "ISC"
 }

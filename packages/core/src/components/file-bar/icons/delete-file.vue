@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+import tippy from 'tippy.js';
 import { TooltipText } from '@/constant';
-import { fileStore, store } from '@/store';
+import { store } from '@/store';
 import { message, dialog } from '@/utils';
 
 const props = defineProps<{ filename: string }>();
 
 // 删除文件
 const deleteFile = (e: Event) => {
-  if (props.filename === fileStore.mainFile) {
+  if (props.filename === store.mainFile) {
     message('不能删除入口文件', { type: 'danger' });
   }
   e.stopPropagation();
@@ -16,29 +17,45 @@ const deleteFile = (e: Event) => {
     title: '提示',
     content: `确定要删除 ${props.filename} 吗?`,
     confirm: () => {
-      if (fileStore.activeFile === props.filename) {
-        fileStore.activeFile = fileStore.mainFile;
+      if (store.activeFile === props.filename) {
+        store.activeFile = store.mainFile;
       }
-      const tempFiles = { ...fileStore.files };
+      const tempFiles = { ...store.files };
       delete tempFiles[props.filename];
-      fileStore.files = tempFiles;
+      store.files = tempFiles;
     },
   });
 };
+
+const reference = ref();
+
+onMounted(() => {
+  watch(
+    () => store.theme,
+    () => {
+      tippy(reference.value, {
+        content: TooltipText.DeleteFile,
+        placement: 'bottom',
+        arrow: false,
+        theme: store.theme === 'dark' ? 'light' : '',
+      });
+    },
+    { immediate: true }
+  );
+});
 </script>
 <template>
   <div
-    data-toggle="tooltip"
     class="operate-btn delete-operate"
-    :class="{ 'hide-file-operate': fileStore.mainFile === props.filename }"
-    :title="TooltipText.DeleteFile"
+    :class="{ 'hide-file-operate': store.mainFile === props.filename }"
     @click="deleteFile"
+    ref="reference"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      height="1em"
-      width="1em"
+      height="16px"
+      width="16px"
       class="file-option-button"
     >
       <path

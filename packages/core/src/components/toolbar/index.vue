@@ -1,33 +1,40 @@
 <script setup lang="ts">
-import { fileStore, store } from '@/store';
-import CodeIcon from './icons/code.vue';
 import SettingIcon from './icons/setting.vue';
-import CopyIcon from './icons/copy.vue';
-import FileIcon from './icons/files.vue';
-import PreviewIcon from './icons/preview.vue';
-import ReverseIcon from './icons/reverse.vue';
 import RefreshIcon from './icons/refresh.vue';
 import ShareIcon from './icons/share.vue';
 </script>
 
 <template>
-  <div
-    class="code-player-toolbar"
-    :class="`code-player-toolbar-${
-      store.toolbarPosition === 'bottom' ? 'bottom' : 'top'
-    }`"
-  >
+  <div class="code-player-toolbar" :class="`code-player-toolbar-top`">
     <div class="toolbar-left">
       <SettingIcon />
     </div>
     <div class="toolbar-right">
-      <FileIcon />
-      <CodeIcon />
-      <PreviewIcon />
-      <ReverseIcon />
-      <CopyIcon />
       <RefreshIcon />
       <ShareIcon />
     </div>
   </div>
 </template>
+
+<style scoped lang="less">
+.code-player-toolbar {
+  height: 36px;
+  box-sizing: border-box;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  order: 1;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--toolbar-bgc);
+  .toolbar-left {
+    display: flex;
+    align-items: center;
+  }
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: @gap-1;
+  }
+}
+</style>

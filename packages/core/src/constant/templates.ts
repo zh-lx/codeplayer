@@ -10,7 +10,7 @@ const app = createApp(App);
 
 app.use(ElementPlus);
 app.mount('#app');
-  `,
+  `.trim(),
   'App.vue': `<template>
   <el-row class="mb-4">
     <el-button>Default</el-button>
@@ -71,12 +71,8 @@ import {
   "imports": {
     "vue": "https://esm.sh/stable/vue@3.3.4/es2022/vue.mjs",
     "element-plus": "https://esm.sh/element-plus@2.3.12",
+    "element-plus/": "https://esm.sh/element-plus@2.3.12/",
     "@element-plus/": "https://esm.sh/@element-plus/"
-  },
-  "scopes": {
-    "element-plus": {
-      "/": "https://esm.sh/element-plus/"
-    }
   }
 }`.trim(),
 };
@@ -107,8 +103,9 @@ export default App;
   [MapFile]: `{
   "imports": {
     "react": "https://esm.sh/react@18.2.0",
-    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
-    "antd": "https://esm.sh/antd@5.8.5"
+    "react-dom/": "https://esm.sh/react-dom@18.2.0/",
+    "antd": "https://esm.sh/antd@5.8.5",
+    "@antd/": "https://esm.sh/@antd@5.8.5/"
   }
 }`.trim(),
 };
@@ -147,7 +144,8 @@ export const HtmlTemplate = {
   [MapFile]: `
 {
   "imports": {
-    "layui": "https://esm.sh/layui@2.8.16"
+    "layui": "https://esm.sh/layui@2.8.16",
+    "layui/": "https://esm.sh/layui@2.8.16/"
   }
 }
   `.trim(),

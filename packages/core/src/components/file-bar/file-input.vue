@@ -1,13 +1,5 @@
 <script setup lang="ts">
-import {
-  defineProps,
-  defineEmits,
-  withDefaults,
-  ref,
-  Ref,
-  watch,
-  nextTick,
-} from 'vue';
+import { ref, Ref, watch, nextTick } from 'vue';
 const props = withDefaults(
   defineProps<{
     show: boolean;
@@ -55,3 +47,29 @@ watch(
     </div>
   </div>
 </template>
+<style scoped lang="less">
+.new-file-container {
+  height: 24px;
+  .new-file-input {
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    border: 1px solid var(--brand);
+    height: 22px;
+    box-sizing: border-box;
+    font-size: 12px;
+  }
+  .new-file-error {
+    position: absolute;
+    width: 100%;
+    top: 52px;
+    font-size: 12px;
+    color: @danger;
+    border: 1px solid @danger-light-border;
+    background-color: @danger-light-bg;
+    text-align: center;
+    padding: 3px;
+    box-sizing: border-box;
+  }
+}
+</style>

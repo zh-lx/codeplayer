@@ -1,6 +1,24 @@
 <script lang="ts" setup>
-import { fileStore, store } from '@/store';
+import { store } from '@/store';
+import { onMounted, ref, watch } from 'vue';
+import tippy from 'tippy.js';
 import { TooltipText } from '@/constant';
+
+const reference = ref();
+
+onMounted(() => {
+  watch(
+    () => store.theme,
+    () => {
+      tippy(reference.value, {
+        content: TooltipText.RefreshWebPreview,
+        placement: 'bottom',
+        arrow: false,
+      });
+    },
+    { immediate: true }
+  );
+});
 
 function refresh() {
   store.rerenderID++;
@@ -10,16 +28,15 @@ function refresh() {
 <template>
   <div
     v-if="!store.excludeTools.includes('refresh')"
-    data-toggle="tooltip"
-    :title="TooltipText.RefreshWebPreview"
+    ref="reference"
     @click="refresh"
     class="toolbar-icon"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      width="16"
-      height="16"
+      width="20"
+      height="20"
     >
       <path
         fill="currentColor"
@@ -28,3 +45,6 @@ function refresh() {
     </svg>
   </div>
 </template>
+<style scoped lang="less">
+@import './icon.less';
+</style>

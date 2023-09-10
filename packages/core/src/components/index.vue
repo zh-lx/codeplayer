@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { defineProps, watch, computed } from 'vue';
-import { fileStore, store } from '@/store';
-import { MapFile } from '@/constant';
+import { watch, computed } from 'vue';
+import { store } from '@/store';
 import { atou } from '@/utils';
 import { getTemplate, File } from '@/compiler';
 import { CodePlayerOptions } from '@/type';
 import Toolbar from './toolbar/index.vue';
 import Splitter from './splitter/index.vue';
 import FileBar from './file-bar/index.vue';
-import CodeEditor from './code-editor/index.vue';
+import CodeEditor from './monaco-editor/index.vue';
 import Preview from './preview/index.vue';
 
 const props = defineProps<{ options?: CodePlayerOptions }>();
@@ -33,13 +32,12 @@ function initFileSystem() {
   // 依次根据 options.initFiles、serializedState、appType 初始化文件
   const options = props.options || {};
   let filesMap = getTemplate(options.appType || '') as Record<string, string>;
+  const params = new URLSearchParams(location.search);
   if (options.initFiles) {
     filesMap = options.initFiles;
-  } else if (location.hash) {
-    if (location.hash.slice(1)) {
-      const files = JSON.parse(atou(location.hash.slice(1)));
-      filesMap = files;
-    }
+  } else if (params.get('codeplayer_files')) {
+    const files = JSON.parse(atou(params.get('codeplayer_files') as string));
+    filesMap = files;
   }
 
   // 将键值对转换为虚拟文件
@@ -47,14 +45,14 @@ function initFileSystem() {
   for (const filename in filesMap) {
     files[filename] = new File(filename, filesMap[filename]);
   }
-  fileStore.files = files;
+  store.files = files;
 
   // 初始化入口文件
-  fileStore.mainFile = options.mainFile || '';
-  if (!files[fileStore.mainFile]) {
-    fileStore.mainFile = Object.keys(files)[0];
+  store.mainFile = options.mainFile || '';
+  if (!files[store.mainFile]) {
+    store.mainFile = Object.keys(files)[0];
   }
-  fileStore.activeFile = options.activeFile || fileStore.mainFile;
+  store.activeFile = options.activeFile || store.mainFile;
 }
 
 watch(
@@ -70,22 +68,18 @@ watch(
 </script>
 
 <template>
-  <component is="style">{{ props.options?.css || '' }}</component>
   <div
     class="code-player-container"
     :style="{
       height: props.options?.height ? `${props.options?.height}px` : '',
     }"
   >
-    <Toolbar v-if="store.showToolbar" />
-    <div
-      class="main-content"
-      :class="{ 'main-content-top': store.toolbarPosition === 'bottom' }"
-    >
+    <Toolbar />
+    <div class="main-content main-content-top">
       <Splitter
-        min="120px"
+        min="140px"
         max="300px"
-        initSplit="130px"
+        initSplit="160px"
         :showLeft="store.showFileBar"
       >
         <template #left>
@@ -93,10 +87,10 @@ watch(
         </template>
         <template #right>
           <Splitter
+            class="main-splitter"
             min="0%"
             max="100%"
             :fixedHeight="props.options?.height"
-            :vertical="store.vertical"
             :showLeft="store.reverse ? store.showPreview : store.showCode"
             :showRight="store.reverse ? store.showCode : store.showPreview"
           >
@@ -117,4 +111,10 @@ watch(
 @import './index.less';
 @import 'codemirror/lib/codemirror.css';
 @import 'codemirror/addon/fold/foldgutter.css';
+
+.code-player-container {
+  width: 100vw;
+  height: 100vh;
+  color: var(--main-color);
+}
 </style>

@@ -1,13 +1,33 @@
 <script setup lang="ts">
+import { onMounted, ref, watch } from 'vue';
+import tippy from 'tippy.js';
 import { TooltipText } from '@/constant';
+import { store } from '@/store';
+
+const reference = ref();
+
+onMounted(() => {
+  watch(
+    () => store.theme,
+    () => {
+      tippy(reference.value, {
+        content: TooltipText.AddFile,
+        placement: 'bottom',
+        arrow: false,
+        theme: store.theme === 'dark' ? 'light' : '',
+      });
+    },
+    { immediate: true }
+  );
+});
 </script>
 <template>
-  <div class="operate-btn" data-toggle="tooltip" :title="TooltipText.AddFile">
+  <div class="operate-btn" ref="reference">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      height="14"
-      width="14"
+      height="16"
+      width="16"
       class="file-option-button"
     >
       <path

@@ -9,6 +9,7 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
       '~@': path.resolve(__dirname, './src'),
+      path: 'path-browserify'
     },
   },
   css: {
@@ -26,4 +27,7 @@ export default defineConfig({
       fileName: 'index',
     },
   },
+  server: {
+    host: '0.0.0.0'
+  }
 });

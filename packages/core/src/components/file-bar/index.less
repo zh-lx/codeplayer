@@ -1,107 +1,14 @@
 .code-player-files-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: relative;
-  height: 100%;
-  font-family: @font-family;
   .files-container {
-    width: 100%;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-
-    .files-head {
-      height: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 4px;
-      color: @text-color-secondary;
-      font-weight: 600;
-      font-size: 12px;
-      user-select: none;
-      .files-head-left {
-        font-size: @font-size-default;
-        line-height: 20px;
-      }
-      .files-head-right {
-        display: flex;
-        align-items: center;
-      }
-    }
-    .new-file-container {
-      height: 24px;
-      .new-file-input {
-        width: 100%;
-        box-sizing: border-box;
-        outline: none;
-        border: 1px solid @brand;
-        height: 22px;
-        box-sizing: border-box;
-        font-size: 12px;
-      }
-      .new-file-error {
-        position: absolute;
-        width: 100%;
-        top: 52px;
-        font-size: 12px;
-        color: @danger;
-        border: 1px solid @danger-light-border;
-        background-color: @danger-light-bg;
-        text-align: center;
-        padding: 3px;
-        box-sizing: border-box;
-      }
-    }
     .file-list {
-      flex: 1;
-      overflow: auto;
       .file-item {
-        font-size: 12px;
-        line-height: 16px;
-        padding: 4px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        box-sizing: border-box;
-        user-select: none;
-        .file-left {
-          display: flex;
-          align-items: center;
-          flex: 1;
-          overflow: hidden;
-          .file-item-icon {
-            height: 14px;
-            width: 14px;
-            object-fit: cover;
-            margin-right: 2px;
-          }
-          .file-item-name {
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-          }
-          &:hover {
-            color: @brand;
-          }
-          &:active {
-            color: @brand-active;
-          }
-        }
         .file-right {
-          display: flex;
-          align-items: center;
-          color: @text-color-secondary;
           .file-option-button {
             display: none;
           }
         }
         &:hover {
-          color: @brand;
+          color: var(--brand);
           .file-right {
             .file-option-button {
               display: block;
@@ -120,12 +27,6 @@
           display: none;
         }
       }
-      .active-file-item {
-        border-left: 2px solid @brand;
-        padding-left: 2px;
-        background-color: @brand-light-bg;
-        color: @brand;
-      }
     }
   }
   .operate-btn {
@@ -134,10 +35,10 @@
     .file-option-button {
       cursor: pointer;
       &:hover {
-        color: @brand;
+        color: var(--brand);
       }
       &:active {
-        color: @brand-active;
+        color: var(--brand-active);
       }
     }
   }

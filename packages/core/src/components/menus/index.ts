@@ -147,7 +147,7 @@ export default class RightMenu {
     const skeleton = this.createDom(
       'ul',
       {
-        class: `code-player-right-menu-list code-player-theme-${this.config.theme}`,
+        class: `code-player-right-menu-list code-player-theme-${this.config.theme}  code-player-theme-${this.config.color}`,
         style: this.menuStyle,
       },
       children
@@ -251,7 +251,7 @@ export default class RightMenu {
           break;
         // [TODO:] 这里很奇怪, 按理说 key=class 的时候只剩 string 类型了
         case 'class':
-          res = value as string;
+          res = value as string
           break;
       }
       dom.setAttribute(key, res);
@@ -282,12 +282,36 @@ export default class RightMenu {
       ].join(' '),
     };
     const li = this.createDom('li', filterAttrs(opt, attrs), [span]);
+    if(opt.type === 'li' && opt.arrow) {
+      if(li.classList.contains(activeClass)) {
+        span.innerHTML = opt.text + ' ✓'
+      } else {
+        span.innerHTML = opt.text + ' 　'
+      }
+      li.classList.add('code-player-not-active-menu-item')
+    }
     if (!opt.disabled && opt.type === 'li' && opt.callback) {
       li.addEventListener('mousedown', (e) => {
         opt.callback(e);
-        const item = document.querySelector('.' + activeClass);
-        item?.classList.remove(activeClass);
-        li.classList.add(activeClass);
+        if(opt.uniqueActive) {
+          const parent = li.parentElement;
+          const item = parent?.querySelector('.' + activeClass);
+          item?.classList.remove(activeClass);
+          li.classList.add(activeClass);
+        } else {
+          if(li.classList.contains(activeClass)) {
+            li.classList.remove(activeClass)
+          } else {
+            li.classList.add(activeClass)
+          }
+        }
+        if(opt.arrow) {
+          if(li.classList.contains(activeClass)) {
+            span.innerHTML = opt.text + ' ✓'
+          } else {
+            span.innerHTML = opt.text + ' 　'
+          }
+        }
         if (opt.close) {
           this.destroyMenu();
         }

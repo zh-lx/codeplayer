@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -11,22 +11,22 @@
       <div id="code-player"></div>
     </div>
     <script type="module">
-      import CodePlayer from './src/main.ts';
-      new CodePlayer('#code-player', {
-        appType: 'react',
-        css: `
-              .code-player-container {
-                max-height: 100vh;
-                height: 100vh;
-                border: none;
-                .CodeMirror-scroll {
-                  max-height: calc(100vh - 20px);
-                  height: calc(100vh - 20px);
-                }
-              }
-              `,
-        excludeTools: ['code', 'share', 'reverse', 'preview', 'fileBar'],
-      });
+      import './src/main.ts';
+      // new CodePlayer('#code-player', {
+      //   appType: 'vue',
+      //   css: `
+      //         .code-player-container {
+      //           max-height: 100vh;
+      //           height: 100vh;
+      //           border: none;
+      //           .CodeMirror-scroll {
+      //             max-height: calc(100vh - 20px);
+      //             height: calc(100vh - 20px);
+      //           }
+      //         }
+      //         `,
+      //   excludeTools: ['code', 'share', 'reverse', 'preview', 'fileBar'],
+      // });
     </script>
   </body>
 </html>

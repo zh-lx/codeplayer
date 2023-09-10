@@ -22,8 +22,7 @@
     "src/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "src/**/*.ce.vue",
-    "src/components/code-editor/code-mirror-modes/vue.js"
+    "src/**/*.ce.vue"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

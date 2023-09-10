@@ -9,6 +9,8 @@ export type LiType = {
   // eslint-disable-next-line no-undef
   callback: EventListener;
   close?: boolean;
+  uniqueActive?: boolean;
+  arrow?: boolean;
 };
 
 export interface AttrsType {
@@ -49,6 +51,7 @@ export type ConfigType = {
   afterShow?: Function; // 显示菜单后
   beforeHide?: Function; // 隐藏菜单前
   afterHide?: Function; // 隐藏菜单后
+  color?: 'dark' | 'light';
 };
 
 export type OptionsType =

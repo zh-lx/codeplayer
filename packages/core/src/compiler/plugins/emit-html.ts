@@ -93,7 +93,6 @@ async function emitHtml(content: {
   styleEl.innerHTML = styles.join('\n');
   iframeDoc.head.appendChild(styleEl);
 
-  // const fragment = document.createDocumentFragment();
   for (let i = 0; i < modules.length; i++) {
     let script = modules[i];
     const scriptEl = document.createElement('script');
@@ -108,7 +107,6 @@ async function emitHtml(content: {
     // of multiple proxy.eval() calls
     scriptEl.innerHTML = script + `\nwindow.${nextKey}();`;
     iframeDoc.head.appendChild(scriptEl);
-    // fragment.appendChild(scriptEl);
     await done;
   }
 

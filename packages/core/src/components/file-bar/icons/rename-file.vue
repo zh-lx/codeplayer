@@ -1,17 +1,33 @@
 <script setup lang="ts">
+import { onMounted, ref, watch } from 'vue';
+import tippy from 'tippy.js';
 import { TooltipText } from '@/constant';
+import { store } from '@/store';
+
+const reference = ref();
+
+onMounted(() => {
+  watch(
+    () => store.theme,
+    () => {
+      tippy(reference.value, {
+        content: TooltipText.RenameFile,
+        placement: 'bottom',
+        arrow: false,
+        theme: store.theme === 'dark' ? 'light' : '',
+      });
+    },
+    { immediate: true }
+  );
+});
 </script>
 <template>
-  <div
-    data-toggle="tooltip"
-    :title="TooltipText.RenameFile"
-    class="operate-btn"
-  >
+  <div data-toggle="tooltip" class="operate-btn" ref="reference">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      height="1em"
-      width="1em"
+      height="16px"
+      width="16px"
       class="file-option-button"
     >
       <path

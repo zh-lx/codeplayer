@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { File } from '@/compiler';
-import { fileStore, store } from '@/store';
+import { store } from '@/store';
 import { fileTypes } from '@/constant';
 import AddFile from './icons/add-file.vue';
 import FileInput from './file-input.vue';
@@ -13,7 +13,7 @@ const showNewFile = ref(false);
 
 // 切换文件
 const changeActiveFile = (filename: string) => {
-  fileStore.activeFile = filename;
+  store.activeFile = filename;
 };
 
 // 处理(新增/更改)文件
@@ -21,22 +21,22 @@ const changeFile = (newFilename: string, oldFilename: string) => {
   if (!oldFilename) {
     // add a new file
     const file = new File(newFilename, '');
-    fileStore.files[newFilename] = file;
+    store.files[newFilename] = file;
     changeActiveFile(newFilename);
-    if (!fileStore.mainFile) {
-      fileStore.mainFile = newFilename;
+    if (!store.mainFile) {
+      store.mainFile = newFilename;
     }
   } else {
     // rename filename
     const tempFiles = {
-      ...fileStore.files,
-      [newFilename]: { ...fileStore.files[oldFilename], filename: newFilename },
+      ...store.files,
+      [newFilename]: { ...store.files[oldFilename], filename: newFilename },
     };
     delete tempFiles[oldFilename];
-    fileStore.files = tempFiles;
+    store.files = tempFiles;
     changeActiveFile(newFilename);
-    if (oldFilename === fileStore.mainFile) {
-      fileStore.mainFile = newFilename;
+    if (oldFilename === store.mainFile) {
+      store.mainFile = newFilename;
     }
   }
 };
@@ -70,7 +70,7 @@ const validateFilenameError = (filename: string) => {
   if (!filename || filename === originFilename.value) {
     return '';
   }
-  if (fileStore.files[filename]) {
+  if (store.files[filename]) {
     return `已存在同名文件 ${filename}`;
   }
   const fileType = fileTypes.some((type) => filename.endsWith(type));
@@ -88,10 +88,10 @@ const newFileError = computed(() => {
 </script>
 
 <template>
-  <div class="code-player-files-container">
+  <div :class="`code-player-files-container`">
     <div class="files-container">
       <div class="files-head">
-        <div class="files-head-left">FILES</div>
+        <div class="files-head-left">Files</div>
         <div class="files-head-right">
           <AddFile @click="() => handleEditFilename()" />
         </div>
@@ -117,3 +117,41 @@ const newFileError = computed(() => {
     </div>
   </div>
 </template>
+
+<style scoped lang="less">
+.code-player-files-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  height: 100%;
+  font-family: @font-family;
+  background-color: var(--filebar-bgc);
+  .files-container {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    .files-head {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 12px;
+      user-select: none;
+      .files-head-left {
+        font-size: @font-size-default;
+        line-height: 20px;
+      }
+      .files-head-right {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+}
+</style>

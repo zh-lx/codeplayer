@@ -24,6 +24,7 @@ export const fileTypes = [
   '.scss',
   '.sass',
 ];
+export const extensions = ['.js', '.ts', '.json', '.jsx', '.tsx', '.vue']
 export const URLCodeKey = '_code-player_code';
 export * from './tooltip';
 

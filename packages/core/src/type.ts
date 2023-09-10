@@ -1,14 +1,7 @@
-export type Control =
-  | 'toolbar'
-  | 'fileBar'
-  | 'code'
-  | 'preview'
-  | 'refresh'
-  | 'reverse'
+export type Control = 'refresh'
   | 'copy'
   | 'share';
 
-export type ToolbarPosition = 'top' | 'bottom';
 
 export type AppType =
   | 'vue'
@@ -70,20 +63,10 @@ export interface CodePlayerOptions {
    */
   excludeTools?: Control[];
   /**
-   * @description_en Whether or not CodeEditor and WebPreview's layout are vertical. Default value is false
-   * @description_zh 代码编辑区-web预览区是否垂直布局。默认值为左右布局
-   */
-  vertical?: boolean;
-  /**
    * @description_en Whether or not reversing CodeEditor and WebPreview's position. Default value is false
    * @description_zh 代码编辑区-web预览区是否位置翻转。默认值为不翻转
    */
   reverse?: boolean;
-  /**
-   * @description_en Toolbar's position. Default value is top
-   * @description_zh 工具栏位置，默认值为 top
-   */
-  toolbarPosition?: ToolbarPosition;
   /**
    * @description_en String of styleSheet to define custom style.
    * @description_zh 用于自定义样式的 Css styleSheet 字符串

@@ -18,6 +18,7 @@ import {
   scriptModuleRE,
   styleRE,
 } from '@/constant';
+import { extensions } from '@/constant'
 
 export async function compileModulesForPreview(
   files: Record<string, File>,
@@ -78,6 +79,18 @@ function processFile(
   links.push(..._links);
 }
 
+function getFileWithoutExt(filename: string, files: Record<string, File>){
+  if (!(filename in files)) {
+    const ext = extensions.find(ext => Object.keys(files).some(name => name === filename + ext));
+    if (ext) {
+      filename += ext
+    } else {
+      throw new Error(`File "${filename}" does not exist.`);
+    }
+  }
+  return filename;
+}
+
 function processModule(
   files: Record<string, File>,
   src: string,
@@ -85,6 +98,8 @@ function processModule(
 ): [string, Set<string>, string[]] {
   const s = new MagicString(src);
   const links: string[] = [];
+
+  filename = getFileWithoutExt(filename, files)
 
   const ast = babelParse(src, {
     sourceFilename: filename,
@@ -97,7 +112,8 @@ function processModule(
   const importToIdMap = new Map<string, string>();
 
   function defineImport(node: Node, source: string) {
-    const filename = source.replace(/^\.\/+/, '');
+    let filename = source.replace(/^\.\/+/, '');
+    filename = getFileWithoutExt(filename, files)
     if (!(filename in files)) {
       throw new Error(`File "${filename}" does not exist.`);
     }

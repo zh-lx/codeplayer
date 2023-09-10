@@ -1,16 +1,7 @@
 <script setup lang="ts">
-import {
-  ref,
-  Ref,
-  defineProps,
-  withDefaults,
-  watch,
-  onMounted,
-  nextTick,
-  toRaw,
-} from 'vue';
+import { ref, Ref, watch, onMounted, nextTick, toRaw } from 'vue';
 import { convertToNumber } from '@/utils';
-import { fileStore, store } from '@/store';
+import { store } from '@/store';
 
 const props = withDefaults(
   defineProps<{
@@ -19,7 +10,6 @@ const props = withDefaults(
     initSplit?: string;
     showLeft?: boolean;
     showRight?: boolean;
-    vertical?: boolean;
     fixedHeight?: number;
   }>(),
   {
@@ -49,10 +39,8 @@ onMounted(() => {
 });
 
 // 获取 container 总宽(高)度
-const getContainerLength = (vertical?: boolean) => {
-  return vertical || props.vertical
-    ? splitterDOM.value.offsetHeight
-    : splitterDOM.value.offsetWidth;
+const getContainerLength = () => {
+  return splitterDOM.value.offsetWidth;
 };
 
 // 计算 left 的宽(高)度
@@ -74,26 +62,19 @@ const computedSplitBound = () => {
 
 const dragStart = (e: MouseEvent) => {
   isDrag.value = true;
-  startPosition.value = props.vertical ? e.pageY : e.pageX;
+  startPosition.value = e.pageX;
   startSplit.value = computedSplitBound();
   startHeight.value = leftDOM.value.getBoundingClientRect().height;
-  splitterDOM.value.style.cursor = props.vertical ? 'row-resize' : 'col-resize';
+  splitterDOM.value.style.cursor = 'col-resize';
   draggerDOM.value.style.backgroundColor = 'var(--border-brand)';
   showMask.value = true;
 };
 
 const dragMove = (e: MouseEvent) => {
   if (isDrag.value) {
-    if (!props.vertical || props.fixedHeight !== undefined) {
-      const position = props.vertical ? e.pageY : e.pageX;
-      const dp = position - startPosition.value;
-      split.value = String(startSplit.value + dp);
-    } else {
-      // 自由高度下，拖拽只调整前一个元素的高度比例，不调整 split
-      const position = e.pageY;
-      const dp = position - startPosition.value;
-      leftDOM.value.style.height = startHeight.value + dp + 'px';
-    }
+    const position = e.pageX;
+    const dp = position - startPosition.value;
+    split.value = String(startSplit.value + dp);
   }
 };
 
@@ -108,31 +89,19 @@ const dragEnd = () => {
 };
 
 const changeStyle = () => {
-  if (props.vertical) {
-    if (props.fixedHeight !== undefined) {
-      leftDOM.value.style.height = computedSplitBound() + 'px';
-    }
-    leftDOM.value.style.width = '100%';
-    leftDOM.value.style.borderBottom =
-      computedSplitBound() && props.showRight
-        ? '1px solid var(--border-primary)'
-        : 'none';
-    leftDOM.value.style.borderRight = 'none';
-  } else {
-    leftDOM.value.style.height = '';
-    leftDOM.value.style.width = computedSplitBound() + 'px';
-    leftDOM.value.style.borderRight =
-      computedSplitBound() && props.showRight
-        ? '1px solid var(--border-primary)'
-        : 'none';
-    leftDOM.value.style.borderBottom = 'none';
-  }
+  leftDOM.value.style.height = '';
+  leftDOM.value.style.width = computedSplitBound() + 'px';
+  leftDOM.value.style.borderRight =
+    computedSplitBound() && props.showRight
+      ? '1px solid var(--border-color)'
+      : 'none';
+  leftDOM.value.style.borderBottom = 'none';
   leftDOM.value.style.display = props.showLeft ? 'block' : 'none';
   rightDOM.value.style.display = props.showRight ? 'block' : 'none';
 };
 
 watch(
-  () => [split.value, props.showRight, props.showLeft, props.vertical],
+  () => [split.value, props.showRight, props.showLeft],
   () => {
     if (!leftDOM.value) {
       // 还没 mount
@@ -155,7 +124,6 @@ watch(
 <template>
   <div
     class="code-player-splitter"
-    :class="{ 'code-player-splitter-vertical': props.vertical }"
     ref="splitterDOM"
     @mousemove="dragMove"
     @mouseup="dragEnd"
@@ -163,11 +131,7 @@ watch(
   >
     <div class="splitter-left" ref="leftDOM">
       <slot name="left" />
-      <div
-        ref="draggerDOM"
-        :class="`${props.vertical ? 'vertical-dragger' : 'dragger'}`"
-        @mousedown="dragStart"
-      />
+      <div ref="draggerDOM" :class="'dragger'" @mousedown="dragStart" />
       <div
         class="splitter-mask"
         :class="{ 'splitter-mask-hidden': !showMask }"

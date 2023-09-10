@@ -1,0 +1,32 @@
+@import './base.less';
+
+.code-player-light {
+  --filebar-bgc: @neutral-white;
+  --toolbar-bgc: @neutral-white;
+  --main-color: @neutral-10;
+  --text-secondary: @text-color-secondary;
+  --active-file-bgc: fade(@brand, 10%);
+  --brand: @brand-6; // 主色
+  --brand-active: @brand-7; // active
+  --brand-hover: @brand-5; // hover
+  --copy-icon-color: @neutral-1;
+  --border-color: @border-color;
+}
+
+.code-player-dark {
+  --filebar-bgc: rgb(37, 37, 38);
+  --toolbar-bgc: rgb(22, 22, 22);
+  --main-color: @neutral-3;
+  --text-secondary: @neutral-4;
+  --active-file-bgc: rgba(255, 255, 255, 0.15);
+  --brand: @dark-brand-6; // 主色
+  --brand-active: @dark-brand-7; // active
+  --brand-hover: @dark-brand-5; // hover
+  --copy-icon-color: @dark-neutral-8;
+  --border-color: @dark-neutral-6;
+  .main-splitter {
+    .splitter-left {
+      border-right-color: transparent !important;
+    }
+  }
+}

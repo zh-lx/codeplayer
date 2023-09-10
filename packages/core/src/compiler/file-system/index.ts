@@ -5,6 +5,7 @@ import {
   TypescriptTemplate,
   Vue3Template,
 } from '@/constant/templates';
+import * as monaco from 'monaco-editor';
 
 export class File {
   filename: string;
@@ -13,10 +14,12 @@ export class File {
     js: '',
     css: '',
   };
+  editorViewState: monaco.editor.ICodeEditorViewState | null;
 
   constructor(filename: string, code = '') {
     this.filename = filename;
     this.code = code;
+    this.editorViewState = null;
   }
 }
 
@@ -48,4 +51,17 @@ export const getTemplate = (appType: string = 'vue3') => {
 export const getFileExtraName = (filename: string) => {
   const segments = filename?.split('.');
   return segments[segments.length - 1];
+};
+
+export const getFileLanguage = (filename: string) => {
+  const ext = getFileExtraName(filename);
+  if(ext === 'js' || ext === 'jsx') {
+    return 'javascript'
+  } else if(ext === 'ts' || ext === 'tsx') {
+    return 'typescript'
+  } else if(['css', 'less', 'sass', 'scss'].includes(ext)) {
+    return  'css'
+  } else {
+    return ext
+  }
 };

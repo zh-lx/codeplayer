@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, Ref, onMounted, watch } from 'vue';
-import { fileStore, store } from '@/store';
+import { store } from '@/store';
 import { modulesKey, exportKey, dynamicImportKey, MapFile } from '@/constant';
 import { Compiler } from '@/compiler';
 
@@ -23,7 +23,7 @@ onMounted(() => {
 });
 
 watch(
-  () => fileStore.files,
+  () => store.files,
   (newVal, oldVal) => {
     if (newVal?.[MapFile]?.code !== oldVal?.[MapFile]?.code) {
       renderSandbox();
@@ -36,7 +36,7 @@ watch(
   }
 );
 
-watch(() => fileStore.mainFile, refreshSandbox);
+watch(() => store.mainFile, refreshSandbox);
 
 watch(() => store.rerenderID, renderSandbox);
 
@@ -52,9 +52,9 @@ async function renderSandbox() {
 
   const result = { errors: [] };
   await compiler.run({
-    fileMap: fileStore.files,
+    fileMap: store.files,
     result,
-    entry: fileStore.mainFile,
+    entry: store.mainFile,
     iframe: iframe.value as HTMLIFrameElement,
     render: true,
   });
@@ -68,9 +68,9 @@ async function refreshSandbox() {
   // 建立一个新的 iframe
   const result = { errors: [] };
   await compiler.run({
-    fileMap: fileStore.files,
+    fileMap: store.files,
     result,
-    entry: fileStore.mainFile,
+    entry: store.mainFile,
     iframe: iframe.value as HTMLIFrameElement,
     render: false,
   });

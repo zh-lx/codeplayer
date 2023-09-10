@@ -1,38 +1,53 @@
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+import tippy from 'tippy.js';
 import { TooltipText } from '@/constant';
-import { fileStore, store } from '@/store';
+import { store } from '@/store';
 import { dialog } from '@/utils';
 
 const props = defineProps<{ filename: string }>();
 
 const resetHomeFile = (e: Event) => {
+  if (store.mainFile === props.filename) {
+    return;
+  }
   e.stopPropagation();
   dialog({
     title: '提示',
     content: `确定要将 ${props.filename} 设置为入口文件吗?`,
-    confirm: () => (fileStore.mainFile = props.filename),
+    confirm: () => (store.mainFile = props.filename),
   });
 };
+
+const reference = ref();
+
+onMounted(() => {
+  watch(
+    () => store.theme,
+    () => {
+      tippy(reference.value, {
+        content:
+          store.mainFile === props.filename
+            ? TooltipText.isEntry
+            : TooltipText.SetEntry,
+        placement: 'bottom',
+        arrow: false,
+        theme: store.theme === 'dark' ? 'light' : '',
+      });
+    },
+    { immediate: true }
+  );
+});
 </script>
 <template>
-  <div
-    data-toggle="tooltip"
-    :title="
-      fileStore.mainFile === filename
-        ? TooltipText.isEntry
-        : TooltipText.SetEntry
-    "
-    class="operate-btn home-operate"
-    @click="resetHomeFile"
-  >
+  <div ref="reference" class="operate-btn home-operate" @click="resetHomeFile">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      height="1em"
-      width="1em"
+      height="16px"
+      width="16px"
       class="file-option-button"
-      :class="{ 'current-home-operate': fileStore.mainFile === props.filename }"
+      :class="{ 'current-home-operate': store.mainFile === props.filename }"
     >
       <path
         fill="currentColor"

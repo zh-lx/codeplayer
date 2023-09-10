@@ -1,3 +1,8 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
 .code-player-message {
   position: fixed;
   top: 24px;
@@ -5,10 +10,11 @@
   transform: translateX(-50%);
   padding: 4px 12px;
   font-size: 12px;
-  color: @brand;
+  color: var(--brand);
   background-color: @brand-light-bg;
   border: 1px solid @brand-light-border;
   border-radius: 4px;
+  z-index: 99999;
 }
 
 .code-player-message-info {
@@ -37,7 +43,7 @@
   width: 100vw;
   height: 100vh;
   background-color: @bg-mask;
-  z-index: 9999;
+  z-index: 999999;
   .code-player-dialog {
     position: absolute;
     min-width: 300px;
@@ -53,7 +59,7 @@
       line-height: 24px;
     }
     .code-player-dialog-close {
-      color: @text-color-secondary;
+      color: var(--text-secondary);
       cursor: pointer;
       position: absolute;
       height: 24px;
@@ -63,10 +69,10 @@
       align-items: center;
       justify-content: center;
       &:hover {
-        color: @brand;
+        color: var(--brand);
       }
       &:active {
-        color: @brand-active;
+        color: var(--brand-active);
       }
     }
     .code-player-dialog-content {
@@ -94,17 +100,26 @@
       }
       .code-player-dialog-button-confirm {
         margin-right: 8px;
-        background-color: @brand;
+        background-color: var(--brand);
         border-radius: 4px;
         color: @text-color-white;
         border: none;
         &:hover {
-          background-color: @brand-hover;
+          background-color: var(--brand-hover);
         }
         &:active {
-          background-color: @brand-active;
+          background-color: var(--brand-active);
         }
       }
     }
   }
+}
+
+.tippy-content {
+  padding: 4px 8px !important;
+  font-size: 12px;
+}
+.tippy-arrow {
+  width: 8px;
+  height: 8px;
 }

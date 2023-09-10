@@ -1,14 +1,22 @@
 <script lang="ts" setup>
-import { toRaw } from 'vue';
-import { fileStore, store } from '@/store';
-import { TooltipText } from '@/constant';
+import { ref } from 'vue';
+import { store } from '@/store';
 import { message } from '@/utils';
+
+const copied = ref(false);
+let timer: any;
 
 function copyCode() {
   try {
-    const code = toRaw(store.editor)?.getValue() || '';
+    if (timer) {
+      clearTimeout(timer);
+    }
+    const code = store.files[store.activeFile].code || '';
     navigator.clipboard.writeText(code);
-    message('代码已复制至剪切板', { type: 'success' });
+    copied.value = true;
+    timer = setTimeout(() => {
+      copied.value = false;
+    }, 3000);
   } catch (error) {
     message('复制失败: ' + String(error), { type: 'danger' });
   }
@@ -16,14 +24,23 @@ function copyCode() {
 </script>
 
 <template>
-  <div
-    v-if="!store.excludeTools.includes('copy')"
-    data-toggle="tooltip"
-    :title="TooltipText.CopyCode"
-    @click="copyCode"
-    class="toolbar-icon"
-  >
+  <div @click="copyCode" class="toolbar-icon copy-code-icon">
+    <div class="copied-box" v-if="copied">
+      <span>Copied</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        width="16"
+        height="16"
+      >
+        <path
+          fill="currentColor"
+          d="M10.0007 15.1709L19.1931 5.97852L20.6073 7.39273L10.0007 17.9993L3.63672 11.6354L5.05093 10.2212L10.0007 15.1709Z"
+        ></path>
+      </svg>
+    </div>
     <svg
+      v-else
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       width="16"
@@ -36,3 +53,27 @@ function copyCode() {
     </svg>
   </div>
 </template>
+
+<style scoped lang="less">
+@import './icon.less';
+
+.copy-code-icon {
+  width: auto;
+  font-size: 12px;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+  padding: 4px 8px;
+  &:hover {
+    color: var(--text-secondary);
+  }
+  &:active {
+    color: var(--text-secondary);
+  }
+}
+.copied-box {
+  display: flex;
+  align-items: center;
+  color: var(--brand);
+  padding: 0 4px 0 6px;
+}
+</style>

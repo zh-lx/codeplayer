@@ -1,9 +1,10 @@
 import { reactive, watch } from 'vue';
 import type { File } from '@/compiler';
 import { type Editor } from 'codemirror';
-import type { ToolbarPosition, Control } from '@/type';
-import { FileSystem } from '@/compiler/file-system';
+import type { Control } from '@/type';
 import { utoa } from '@//utils';
+
+export type Theme = "light" | "dark"
 export interface Store {
   mainFile: string;
   activeFile: string;
@@ -11,9 +12,6 @@ export interface Store {
   showFileBar: boolean;
   showCode: boolean;
   showPreview: boolean;
-  showToolbar: boolean;
-  toolbarPosition: ToolbarPosition;
-  vertical: boolean;
   reverse: boolean;
   excludeTools: Control[];
   imports: Record<string, string>;
@@ -21,6 +19,10 @@ export interface Store {
   rerenderID: number; // 用于 preview 刷新的标识，当点击刷新按钮该值 +1 触发刷新
   sharePath: string; // 分享按钮的路径
   codeSize: number;
+  vueVersion: string;
+  typescriptVersion: string;
+  theme: Theme;
+  reloadLanguageTools: () => void;
 }
 
 export const store = reactive<Store>({
@@ -32,35 +34,32 @@ export const store = reactive<Store>({
   showFileBar: true,
   showCode: true,
   showPreview: true,
-  showToolbar: true,
-  toolbarPosition: 'top',
-  vertical: false,
   reverse: false,
   excludeTools: [],
   editor: null,
   rerenderID: 0,
   sharePath: 'https://code-player.cn/playground',
-  codeSize: 12,
-});
-
-export const fileStore = reactive<FileSystem>({
-  files: {},
-  mainFile: '',
-  activeFile: '',
-  imports: {},
+  codeSize: 14,
+  vueVersion: '3.2.0',
+  typescriptVersion: "4.9.3",
+  theme: 'light',
+  reloadLanguageTools: () => {}
 });
 
 watch(
-  () => fileStore.files,
+  () => store.files,
   (val) => {
     if (!val) {
       return;
     }
     const fileMap: Record<string, string> = {};
-    for (let key in fileStore.files) {
-      fileMap[key] = fileStore.files[key].code;
+    for (let key in store.files) {
+      fileMap[key] = store.files[key].code;
     }
-    location.hash = utoa(JSON.stringify(fileMap));
+    const params = new URLSearchParams(location.search);
+    params.set('codeplayer_files', utoa(JSON.stringify(fileMap)));
+    const newURL = location.href.replace(location.search, '?' + params.toString())
+    history.pushState({ path: newURL }, '', newURL)
   },
   { deep: true }
 );

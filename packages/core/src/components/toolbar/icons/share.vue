@@ -1,38 +1,44 @@
 <script lang="ts" setup>
-import { fileStore, store } from '@/store';
+import { store } from '@/store';
+import { watch, ref, onMounted } from 'vue';
+import tippy from 'tippy.js';
 import { TooltipText } from '@/constant';
-import { utoa } from '@/utils';
+import { message } from '@/utils';
+
+const reference = ref();
+
+onMounted(() => {
+  watch(
+    () => store.theme,
+    () => {
+      tippy(reference.value, {
+        content: TooltipText.Share,
+        placement: 'bottom',
+        arrow: false,
+      });
+    },
+    { immediate: true }
+  );
+});
 
 function share() {
-  // Todo: share link
-  const url = new URL(store.sharePath);
-  const serializedState = getSerializedState();
-  url.searchParams.set('_cs_code_', serializedState);
-  window.open(url.href, '_blank');
+  navigator.clipboard.writeText(location.href);
+  message('已将链接复制至剪切板', { type: 'success' });
 }
-
-const getSerializedState = () => {
-  const _files: Record<string, string> = {};
-  Object.keys(fileStore.files).forEach((filename) => {
-    _files[filename] = fileStore.files[filename].code;
-  });
-  return utoa(JSON.stringify(_files));
-};
 </script>
 
 <template>
   <div
     v-if="!store.excludeTools.includes('share')"
-    data-toggle="tooltip"
-    :title="TooltipText.Share"
+    ref="reference"
     @click="share"
     class="toolbar-icon"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      width="16"
-      height="16"
+      width="20"
+      height="20"
     >
       <path
         fill="currentColor"
@@ -41,3 +47,6 @@ const getSerializedState = () => {
     </svg>
   </div>
 </template>
+<style scoped lang="less">
+@import './icon.less';
+</style>
