@@ -2,7 +2,7 @@
 import { onMounted, ref, watch } from 'vue';
 import tippy from 'tippy.js';
 import { store, Theme } from '@/store';
-import { TooltipText, CodeSizes } from '@/constant';
+import { TooltipText, CodeSizes, LocalThemeKey } from '@/constant';
 import RightMenu, { activeClass } from '@/components/menus';
 
 const settingDOM = ref();
@@ -83,7 +83,10 @@ const initSettingMenu = () => {
               type: 'li',
               text: theme,
               class: store.theme === theme ? activeClass : '',
-              callback: () => (store.theme = theme as Theme),
+              callback: () => {
+                (store.theme = theme as Theme),
+                  localStorage.setItem(LocalThemeKey, theme);
+              },
               uniqueActive: true,
             })),
           },
@@ -99,8 +102,8 @@ const initSettingMenu = () => {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      width="20"
-      height="20"
+      width="18"
+      height="18"
     >
       <path
         fill="currentColor"
@@ -119,7 +122,7 @@ const initSettingMenu = () => {
 /**
  * 基础样式
  */
-.code-player-right-menu-list {
+.codeplayer-right-menu-list {
   width: auto;
   z-index: 9999;
   position: fixed;
@@ -182,7 +185,7 @@ const initSettingMenu = () => {
 /**
  * mac主题色
  */
-.code-player-theme-mac {
+.codeplayer-theme-mac {
   min-width: 180px;
   max-width: 300px;
   color: @text-color;
@@ -225,13 +228,13 @@ const initSettingMenu = () => {
       }
     }
   }
-  .code-player-active-menu-item {
+  .codeplayer-active-menu-item {
     color: @brand;
     &:active {
       background-color: @brand-active;
     }
   }
-  .code-player-not-active-menu-item {
+  .codeplayer-not-active-menu-item {
     color: @text-color;
   }
 }

@@ -3,7 +3,7 @@
   padding: 0;
 }
 
-.code-player-message {
+.codeplayer-message {
   position: fixed;
   top: 24px;
   left: 50%;
@@ -17,25 +17,25 @@
   z-index: 99999;
 }
 
-.code-player-message-info {
+.codeplayer-message-info {
   color: @info;
   background-color: @info-light-bg;
   border: 1px solid @info-light-border;
 }
 
-.code-player-message-danger {
+.codeplayer-message-danger {
   color: @danger;
   border: 1px solid @danger-light-border;
   background-color: @danger-light-bg;
 }
 
-.code-player-message-success {
+.codeplayer-message-success {
   color: @success;
   border: 1px solid @success-light-border;
   background-color: @success-light-bg;
 }
 
-.code-player-dialog-mask {
+.codeplayer-dialog-mask {
   font-family: @font-family;
   position: fixed;
   top: 0;
@@ -44,7 +44,7 @@
   height: 100vh;
   background-color: @bg-mask;
   z-index: 999999;
-  .code-player-dialog {
+  .codeplayer-dialog {
     position: absolute;
     min-width: 300px;
     max-width: 600px;
@@ -54,11 +54,11 @@
     background-color: @bg-white;
     border-radius: 4px;
     padding: 16px;
-    .code-player-dialog-title {
+    .codeplayer-dialog-title {
       margin: 0 0 12px 0;
       line-height: 24px;
     }
-    .code-player-dialog-close {
+    .codeplayer-dialog-close {
       color: var(--text-secondary);
       cursor: pointer;
       position: absolute;
@@ -75,10 +75,10 @@
         color: var(--brand-active);
       }
     }
-    .code-player-dialog-content {
+    .codeplayer-dialog-content {
       font-size: 13px;
     }
-    .code-player-dialog-buttons {
+    .codeplayer-dialog-buttons {
       display: flex;
       justify-content: flex-end;
       button {
@@ -86,7 +86,7 @@
         cursor: pointer;
         padding: @gap-1 @gap-3;
       }
-      .code-player-dialog-button-cancel {
+      .codeplayer-dialog-button-cancel {
         margin-right: 8px;
         background-color: @fill;
         border-radius: 4px;
@@ -98,7 +98,7 @@
           background-color: @fill-active;
         }
       }
-      .code-player-dialog-button-confirm {
+      .codeplayer-dialog-button-confirm {
         margin-right: 8px;
         background-color: var(--brand);
         border-radius: 4px;

@@ -123,7 +123,7 @@ watch(
 
 <template>
   <div
-    class="code-player-splitter"
+    class="codeplayer-splitter"
     ref="splitterDOM"
     @mousemove="dragMove"
     @mouseup="dragEnd"

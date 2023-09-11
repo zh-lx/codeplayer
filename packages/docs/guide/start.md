@@ -29,7 +29,7 @@ pnpm add codeplayer
 ```js
 import CodePlayer from 'codeplayer';
 
-new CodePlayer('#code-player', {
+new CodePlayer('#codeplayer', {
   appType: 'react',
   activeFile: 'App.tsx',
   excludeTools: ['code', 'share', 'reverse', 'preview', 'fileBar'],

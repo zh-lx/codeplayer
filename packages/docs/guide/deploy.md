@@ -4,7 +4,7 @@
 
 CodePlayer 是一个 web component 组件，所以本身也可以作为一个网页进行私有化部署，步骤如下:
 
-- 执行如下命令 clone code-player 的 github 仓库
+- 执行如下命令 clone codeplayer 的 github 仓库
 
 ```perl
 git clone https://github.com/zh-lx/codeplayer.git

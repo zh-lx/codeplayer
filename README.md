@@ -1,9 +1,9 @@
 # CodePlayer
 
-CodePlayer 是一个在线代码编辑及实时预览的 UI 组件，支持浏览器环境下编写 `html/js/css/ts/vue/react` 等类型的代码并在沙盒环境下实时运行预览。
+CodePlayer 是一个轻量级的在线 WebIDE(Playground)，支持在线编写并运行 `html/js/css/ts/vue/react/less/scss` 等语法。实现了基于 esm 和 import-map 的纯浏览器构建，运行速度远超 `Stackblitz/CodeSandbox/CodePen` 等同类产品。
 
 <p>
-  <a href="https://sandbox-docs.fe-dev.cn">中文文档</a> | 
+  <a href="https://sandbox-docs.fe-dev.cn">在线文档</a> | 
   <a href="https://sandbox.fe-dev.cn">在线体验</a>
 </p>
 
@@ -12,15 +12,14 @@ CodePlayer 是一个在线代码编辑及实时预览的 UI 组件，支持浏�
 [![MIT-license](https://img.shields.io/npm/l/code-inspector.svg)](https://opensource.org/licenses/MIT)
 [![GITHUB-language](https://img.shields.io/github/languages/top/zh-lx/codeplayer.svg)](https://github.com/zh-lx/codeplayer)
 
-![image](https://github.com/zh-lx/code-inspector/assets/73059627/91c17020-570f-489a-9c45-6f1c0e5a86b7)
+![image](https://github.com/zh-lx/codeplayer/assets/73059627/e2df9937-3e36-433d-ad8d-89e19ed72eb8)
 
 ## Feature
 
-- 支持代码在线编辑及实时预览
+- 极致的编译和构建速度
 - 内置 `Vue3 / React / Typescript / Javascript / HTML / CSS / Less / Sass` 等多种代码解析器
-- 支持通过导入 ESModule 格式(`import/export`) npm 包
-- 支持多文件解析，并支持新增/删除文件
-- 代码可压缩添加至 hash，通过外链分享
+- 支持通过 importMap 导入第三方库
+- 代码实时编码压缩同步至 url 以便于分享
 
 ## Install
 
@@ -60,12 +59,3 @@ new CodePlayer('#container', {
   appType: 'react',
 });
 ```
-
-## Todo
-
-- [x] 支持 vue3 代码运行
-- [x] 支持 react 代码运行
-- [x] 增加侧文件栏以支持文件新增/删除/重命名
-- [x] 支持工具栏/上下/翻转等布局调整
-- [ ] 支持 vue2 代码运行
-- [ ] 支持其他框架如 svelte

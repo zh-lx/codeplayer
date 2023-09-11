@@ -1,6 +1,6 @@
 @import './base.less';
 
-.code-player-light {
+.codeplayer-light {
   --filebar-bgc: @neutral-white;
   --toolbar-bgc: @neutral-white;
   --main-color: @neutral-10;
@@ -13,7 +13,7 @@
   --border-color: @border-color;
 }
 
-.code-player-dark {
+.codeplayer-dark {
   --filebar-bgc: rgb(37, 37, 38);
   --toolbar-bgc: rgb(22, 22, 22);
   --main-color: @neutral-3;
@@ -26,7 +26,11 @@
   --border-color: @dark-neutral-6;
   .main-splitter {
     .splitter-left {
-      border-right-color: transparent !important;
+      // border-right-color: transparent !important;
     }
   }
+}
+
+.monaco-editor {
+  width: 100% !important;
 }

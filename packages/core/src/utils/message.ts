@@ -10,8 +10,8 @@ export const message = (
   }
   messageRef = document.createElement('div');
   messageRef.innerText = text;
-  messageRef.classList.add('code-player-message');
-  messageRef.classList.add('code-player-message-' + options?.type || 'info');
+  messageRef.classList.add('codeplayer-message');
+  messageRef.classList.add('codeplayer-message-' + options?.type || 'info');
   document.body.append(messageRef);
   setTimeout(() => {
     if (messageRef) {

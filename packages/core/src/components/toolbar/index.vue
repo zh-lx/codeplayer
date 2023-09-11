@@ -5,7 +5,7 @@ import ShareIcon from './icons/share.vue';
 </script>
 
 <template>
-  <div class="code-player-toolbar" :class="`code-player-toolbar-top`">
+  <div class="codeplayer-toolbar" :class="`codeplayer-toolbar-top`">
     <div class="toolbar-left">
       <SettingIcon />
     </div>
@@ -17,7 +17,7 @@ import ShareIcon from './icons/share.vue';
 </template>
 
 <style scoped lang="less">
-.code-player-toolbar {
+.codeplayer-toolbar {
   height: 36px;
   box-sizing: border-box;
   padding: 0 4px;

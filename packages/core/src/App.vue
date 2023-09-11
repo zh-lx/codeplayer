@@ -1,7 +1,7 @@
 <template>
   <CodePlayer
     :options="options"
-    :class="`code-player-container code-player-${store.theme}`"
+    :class="`codeplayer-container codeplayer-${store.theme}`"
   ></CodePlayer>
 </template>
 
@@ -17,7 +17,7 @@ const options: CodePlayerOptions = {
 </script>
 
 <style scoped lang="less">
-.code-player-container {
+.codeplayer-container {
   max-height: 100vh;
   height: 100vh;
   border: none;

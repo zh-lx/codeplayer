@@ -3,8 +3,9 @@ import type { File } from '@/compiler';
 import { type Editor } from 'codemirror';
 import type { Control } from '@/type';
 import { utoa } from '@//utils';
+import { LocalThemeKey } from '@/constant';
 
-export type Theme = "light" | "dark"
+export type Theme = 'light' | 'dark';
 export interface Store {
   mainFile: string;
   activeFile: string;
@@ -38,12 +39,12 @@ export const store = reactive<Store>({
   excludeTools: [],
   editor: null,
   rerenderID: 0,
-  sharePath: 'https://code-player.cn/playground',
+  sharePath: 'https://codeplayer.cn/playground',
   codeSize: 14,
   vueVersion: '3.2.0',
-  typescriptVersion: "4.9.3",
-  theme: 'light',
-  reloadLanguageTools: () => {}
+  typescriptVersion: '4.9.3',
+  theme: (localStorage.getItem(LocalThemeKey) as Theme) || 'light',
+  reloadLanguageTools: () => {},
 });
 
 watch(
@@ -58,8 +59,11 @@ watch(
     }
     const params = new URLSearchParams(location.search);
     params.set('codeplayer_files', utoa(JSON.stringify(fileMap)));
-    const newURL = location.href.replace(location.search, '?' + params.toString())
-    history.pushState({ path: newURL }, '', newURL)
+    const newURL = location.href.replace(
+      location.search,
+      '?' + params.toString()
+    );
+    history.pushState({ path: newURL }, '', newURL);
   },
   { deep: true }
 );

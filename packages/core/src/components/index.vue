@@ -69,7 +69,7 @@ watch(
 
 <template>
   <div
-    class="code-player-container"
+    class="codeplayer-container"
     :style="{
       height: props.options?.height ? `${props.options?.height}px` : '',
     }"
@@ -112,7 +112,7 @@ watch(
 @import 'codemirror/lib/codemirror.css';
 @import 'codemirror/addon/fold/foldgutter.css';
 
-.code-player-container {
+.codeplayer-container {
   width: 100vw;
   height: 100vh;
   color: var(--main-color);

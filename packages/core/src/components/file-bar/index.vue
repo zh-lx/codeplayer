@@ -88,7 +88,7 @@ const newFileError = computed(() => {
 </script>
 
 <template>
-  <div :class="`code-player-files-container`">
+  <div :class="`codeplayer-files-container`">
     <div class="files-container">
       <div class="files-head">
         <div class="files-head-left">Files</div>
@@ -119,7 +119,7 @@ const newFileError = computed(() => {
 </template>
 
 <style scoped lang="less">
-.code-player-files-container {
+.codeplayer-files-container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
