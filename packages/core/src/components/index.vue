@@ -109,8 +109,6 @@ watch(
 
 <style lang="less">
 @import './index.less';
-@import 'codemirror/lib/codemirror.css';
-@import 'codemirror/addon/fold/foldgutter.css';
 
 .codeplayer-container {
   width: 100vw;
