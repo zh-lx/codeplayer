@@ -1,8 +1,5 @@
 <template>
-  <CodePlayer
-    :options="options"
-    :class="`codeplayer-container codeplayer-${store.theme}`"
-  ></CodePlayer>
+  <CodePlayer :options="options" class="codeplayer-container"></CodePlayer>
 </template>
 
 <script setup lang="ts">

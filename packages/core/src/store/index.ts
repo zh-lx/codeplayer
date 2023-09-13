@@ -67,3 +67,11 @@ watch(
   },
   { deep: true }
 );
+
+watch(
+  () => store.theme,
+  (val) => {
+    document.body.className = `codeplayer-theme-${val}`;
+  },
+  { immediate: true }
+);
