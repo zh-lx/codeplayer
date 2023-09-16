@@ -44,6 +44,15 @@ async function renderSandbox() {
   if (!previewDOM.value) {
     return;
   }
+
+  const erudaDisplay = (
+    iframe.value?.contentWindow?.document
+      .querySelector('#eruda')
+      ?.shadowRoot?.querySelector('.eruda-dev-tools')
+      ?.computedStyleMap()
+      .get('display') as any
+  )?.value;
+
   // 建立一个新的 iframe
   iframe.value?.remove();
   iframe.value = document.createElement('iframe');
@@ -59,6 +68,12 @@ async function renderSandbox() {
     render: true,
   });
   errors.value = result.errors;
+
+  setTimeout(() => {
+    if (erudaDisplay === 'block') {
+      (iframe.value?.contentWindow as any)?.__eruda?.show();
+    }
+  });
 }
 
 async function refreshSandbox() {

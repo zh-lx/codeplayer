@@ -12,6 +12,7 @@ export interface Store {
   showFileBar: boolean;
   showCode: boolean;
   showPreview: boolean;
+  showConsole: boolean;
   reverse: boolean;
   excludeTools: Control[];
   imports: Record<string, string>;
@@ -34,6 +35,7 @@ export const store = reactive<Store>({
   showFileBar: true,
   showCode: true,
   showPreview: true,
+  showConsole: false,
   reverse: false,
   excludeTools: [],
   editor: null,

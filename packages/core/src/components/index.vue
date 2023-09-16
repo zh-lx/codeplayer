@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, computed } from 'vue';
+import { watch, computed, ref, onMounted } from 'vue';
 import { store } from '@/store';
 import { atou } from '@/utils';
 import { getTemplate, File } from '@/compiler';
@@ -14,6 +14,7 @@ const props = defineProps<{ options?: CodePlayerOptions }>();
 
 const CodeSlotName = computed(() => (store.reverse ? 'right' : 'left'));
 const PreviewSlotName = computed(() => (store.reverse ? 'left' : 'right'));
+const consoleRef = ref();
 
 const init = () => {
   const options = props.options || {};

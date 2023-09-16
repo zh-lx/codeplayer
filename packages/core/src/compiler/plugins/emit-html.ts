@@ -27,12 +27,16 @@ async function emitHtml(content: {
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>CS-IDE</title>
-        <script
-        async
-        rel"modulepreload"
-        src="https://unpkg.com/es-module-shims@1.5.18/dist/es-module-shims.wasm.js"
-        ></script>
         <script type="importmap">\n${importMap}</script>
+        <script>
+          window.addEventListener("message", (event) => {
+            if (event.data === 'codeplayer-eruda-show') {
+              window.eruda.show();
+            } else if (event.data === 'codeplayer-eruda-hide') {
+              window.eruda.hide();
+            }
+          });
+        </script>
       </head>
       <body>
         <div id="app"></div>
@@ -93,6 +97,9 @@ async function emitHtml(content: {
   styleEl.innerHTML = styles.join('\n');
   iframeDoc.head.appendChild(styleEl);
 
+  modules.unshift(`import eruda from 'https://esm.sh/eruda@3.0.1';
+window.__eruda = eruda;
+eruda.init();`);
   for (let i = 0; i < modules.length; i++) {
     let script = modules[i];
     const scriptEl = document.createElement('script');
