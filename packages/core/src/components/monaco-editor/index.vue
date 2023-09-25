@@ -191,12 +191,12 @@ onBeforeUnmount(() => {
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: var(--copy-icon-color);
-      box-shadow: @shadow-1-down;
+      background-color: var(--codeplayer-copy-icon-color);
+      box-shadow: var(--codeplayer-copy-shadow);
       border-radius: 0;
       border-bottom-left-radius: 2px;
       &:hover {
-        color: var(--brand-active);
+        color: var(--codeplayer-brand-active);
       }
     }
   }

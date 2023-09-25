@@ -274,7 +274,7 @@ export default class RightMenu {
   }
 
   createLi<T extends ItemType & { type: 'li' | 'ul' }>(opt: T): HTMLElement {
-    const span = this.createDom('span', {}, [String(opt.text)]);
+    const span = this.createDom('p', {}, [String(opt.text)]);
     const attrs = {
       class: [
         opt.disabled ? 'menu-disabled' : '',
@@ -284,9 +284,9 @@ export default class RightMenu {
     const li = this.createDom('li', filterAttrs(opt, attrs), [span]);
     if (opt.type === 'li' && opt.arrow) {
       if (li.classList.contains(activeClass)) {
-        span.innerHTML = opt.text + ' ✓';
+        li.classList.add('arrow-active-item');
       } else {
-        span.innerHTML = opt.text + ' 　';
+        li.classList.remove('arrow-active-item');
       }
       li.classList.add('codeplayer-not-active-menu-item');
     }
@@ -307,9 +307,9 @@ export default class RightMenu {
         }
         if (opt.arrow) {
           if (li.classList.contains(activeClass)) {
-            span.innerHTML = opt.text + ' ✓';
+            li.classList.add('arrow-active-item');
           } else {
-            span.innerHTML = opt.text + ' 　';
+            li.classList.remove('arrow-active-item');
           }
         }
         if (opt.close) {

@@ -114,7 +114,7 @@ const getIcon = (filename: string) => {
   flex: 1;
   overflow: auto;
   .file-item {
-    font-size: 14px;
+    font-size: 13px;
     line-height: 18px;
     padding: 4px;
     cursor: pointer;
@@ -142,22 +142,22 @@ const getIcon = (filename: string) => {
         white-space: nowrap;
       }
       &:hover {
-        color: var(--brand);
+        color: var(--codeplayer-brand);
       }
       &:active {
-        color: var(--brand-active);
+        color: var(--codeplayer-brand-active);
       }
     }
     .file-right {
       display: flex;
       align-items: center;
-      color: var(--text-secondary);
+      color: var(--codeplayer-text-secondary);
       .file-option-button {
         display: none;
       }
     }
     &:hover {
-      color: var(--brand);
+      color: var(--codeplayer-brand);
       .file-right {
         .file-option-button {
           display: block;
@@ -166,8 +166,8 @@ const getIcon = (filename: string) => {
     }
   }
   .active-file-item {
-    background-color: var(--active-file-bgc);
-    color: var(--brand);
+    background-color: var(--codeplayer-active-file-bgc);
+    color: var(--codeplayer-brand);
   }
 }
 </style>

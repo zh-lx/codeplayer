@@ -126,12 +126,14 @@ const newFileError = computed(() => {
   position: relative;
   height: 100%;
   font-family: @font-family;
-  background-color: var(--filebar-bgc);
+  background-color: var(--codeplayer-filebar-bgc);
   .files-container {
     width: 100%;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    height: 100%;
+    position: relative;
 
     .files-head {
       height: 28px;
@@ -139,7 +141,7 @@ const newFileError = computed(() => {
       align-items: center;
       justify-content: space-between;
       padding: 0 4px;
-      color: var(--text-secondary);
+      color: var(--codeplayer-text-secondary);
       font-weight: 500;
       font-size: 12px;
       user-select: none;

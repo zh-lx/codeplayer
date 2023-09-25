@@ -50,11 +50,12 @@ watch(
 <style scoped lang="less">
 .new-file-container {
   height: 24px;
+  position: relative;
   .new-file-input {
     width: 100%;
     box-sizing: border-box;
     outline: none;
-    border: 1px solid var(--brand);
+    border: 1px solid var(--codeplayer-brand);
     height: 22px;
     box-sizing: border-box;
     font-size: 12px;
@@ -62,7 +63,8 @@ watch(
   .new-file-error {
     position: absolute;
     width: 100%;
-    top: 52px;
+    top: 24px;
+    left: 0;
     font-size: 12px;
     color: @danger;
     border: 1px solid @danger-light-border;

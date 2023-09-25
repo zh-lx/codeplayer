@@ -1,23 +1,28 @@
 <script lang="ts" setup>
 import { onMounted, ref, watch } from 'vue';
 import tippy from 'tippy.js';
+import type { Instance, Props } from 'tippy.js';
 import { store, Theme } from '@/store';
 import { TooltipText, CodeSizes, LocalThemeKey } from '@/constant';
 import RightMenu, { activeClass } from '@/components/menus';
 
 const settingDOM = ref();
+let tippyDOM: Instance<Props> | undefined;
 
 onMounted(() => {
   initSettingMenu();
   watch(
     () => store.theme,
     () => {
-      tippy(settingDOM.value, {
+      if (tippyDOM) {
+        tippyDOM.destroy();
+      }
+      tippyDOM = tippy(settingDOM.value, {
         content: TooltipText.Settings,
         placement: 'bottom',
         arrow: false,
-        theme: store.theme === 'dark' ? 'light' : '',
-      });
+        theme: store.theme === 'dark' ? '' : 'light',
+      }) as unknown as Instance<Props>;
     },
     { immediate: true }
   );
@@ -33,64 +38,58 @@ const initSettingMenu = () => {
     },
     () => [
       {
+        type: 'li',
+        text: `文件栏`,
+        class: store.showFileBar ? activeClass : '',
+        callback: () => (store.showFileBar = !store.showFileBar),
+        arrow: true,
+      },
+      {
+        type: 'li',
+        text: `代码编辑器`,
+        class: store.showCode ? activeClass : '',
+        callback: () => (store.showCode = !store.showCode),
+        arrow: true,
+      },
+      {
+        type: 'li',
+        text: `预览区`,
+        class: store.showPreview ? activeClass : '',
+        callback: () => (store.showPreview = !store.showPreview),
+        arrow: true,
+      },
+      {
+        type: 'li',
+        text: '翻转布局',
+        class: !store.reverse ? '' : activeClass,
+        callback: () => (store.reverse = !store.reverse),
+        arrow: true,
+      },
+      { type: 'hr' },
+      {
         type: 'ul',
-        text: '外观',
-        children: [
-          {
-            type: 'li',
-            text: `文件栏`,
-            class: store.showFileBar ? activeClass : '',
-            callback: () => (store.showFileBar = !store.showFileBar),
-            arrow: true,
+        text: '编辑器字号',
+        children: CodeSizes.map((size) => ({
+          type: 'li',
+          text: `${size} px`,
+          class: store.codeSize === size ? activeClass : '',
+          callback: () => (store.codeSize = size),
+          uniqueActive: true,
+        })),
+      },
+      {
+        type: 'ul',
+        text: '主题',
+        children: ['light', 'dark'].map((theme) => ({
+          type: 'li',
+          text: theme,
+          class: store.theme === theme ? activeClass : '',
+          callback: () => {
+            (store.theme = theme as Theme),
+              localStorage.setItem(LocalThemeKey, theme);
           },
-          {
-            type: 'li',
-            text: `代码编辑器`,
-            class: store.showCode ? activeClass : '',
-            callback: () => (store.showCode = !store.showCode),
-            arrow: true,
-          },
-          {
-            type: 'li',
-            text: `预览区`,
-            class: store.showPreview ? activeClass : '',
-            callback: () => (store.showPreview = !store.showPreview),
-            arrow: true,
-          },
-          {
-            type: 'li',
-            text: '翻转布局',
-            class: !store.reverse ? '' : activeClass,
-            callback: () => (store.reverse = !store.reverse),
-            arrow: true,
-          },
-          { type: 'hr' },
-          {
-            type: 'ul',
-            text: '编辑器字号',
-            children: CodeSizes.map((size) => ({
-              type: 'li',
-              text: `${size} px`,
-              class: store.codeSize === size ? activeClass : '',
-              callback: () => (store.codeSize = size),
-              uniqueActive: true,
-            })),
-          },
-          {
-            type: 'ul',
-            text: '主题',
-            children: ['light', 'dark'].map((theme) => ({
-              type: 'li',
-              text: theme,
-              class: store.theme === theme ? activeClass : '',
-              callback: () => {
-                (store.theme = theme as Theme),
-                  localStorage.setItem(LocalThemeKey, theme);
-              },
-              uniqueActive: true,
-            })),
-          },
-        ],
+          uniqueActive: true,
+        })),
       },
     ]
   );
@@ -144,7 +143,7 @@ const initSettingMenu = () => {
         display: inline-block;
         width: 100%;
         border-radius: 3px;
-        background-image: linear-gradient(-45deg, #ccc 40%, #fff 55%, #ccc 63%);
+        background-image: #fff;
         background-size: 400% auto;
         background-repeat: no-repeat;
         position: relative;
@@ -164,11 +163,16 @@ const initSettingMenu = () => {
       }
     }
     &.menu-ul::after {
-      content: '▸';
-      width: 15px;
-      height: 15px;
-      position: absolute;
-      right: 0px;
+      content: '＞';
+      width: 16px;
+      height: 16px;
+      transform: translateX(10px);
+    }
+    &.arrow-active-item::after {
+      content: '✓';
+      width: 16px;
+      height: 16px;
+      transform: translateX(10px);
     }
   }
 }
@@ -186,18 +190,19 @@ const initSettingMenu = () => {
  * mac主题色
  */
 .codeplayer-theme-mac {
-  min-width: 180px;
-  max-width: 300px;
-  color: @text-color;
+  color: var(--codeplayer-menu-color);
   font-size: 13px;
   margin: 0;
   padding: 5px 4px;
-  border: 0.5px solid @border-color;
   border-radius: 5px;
-  background-color: @fill-gray-float;
-  box-shadow: @shadow-1-down;
+  background-color: var(--codeplayer-float-bgc);
+  box-shadow: var(--codeplayer-menu-shadow);
   li {
-    padding: 2.5px 26px 2.5px 8px;
+    padding: 2.5px 20px 2.5px 20px;
+    width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     border-radius: 3px;
     &:hover {
       color: @text-color-white;
@@ -206,19 +211,12 @@ const initSettingMenu = () => {
     }
     &.skeleton {
       padding: 2.5px 8px;
-      &::before {
-        background-image: linear-gradient(
-          -45deg,
-          #4c4c4f 40%,
-          #444 55%,
-          #4c4c4f 63%
-        );
-      }
     }
     &.menu-hr {
       border-bottom: 1px solid @border-color-hover;
       padding: 0;
-      margin: 5px 8px;
+      width: 100%;
+      margin: 5px 0px;
     }
     &.menu-disabled {
       color: @text-color-disable;
@@ -235,7 +233,7 @@ const initSettingMenu = () => {
     }
   }
   .codeplayer-not-active-menu-item {
-    color: @text-color;
+    color: var(--codeplayer-menu-color);
   }
 }
 </style>

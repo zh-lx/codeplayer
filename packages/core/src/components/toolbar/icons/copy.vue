@@ -64,16 +64,18 @@ function copyCode() {
   flex-wrap: nowrap;
   padding: 4px 8px;
   &:hover {
-    color: var(--text-secondary);
+    color: var(--codeplayer-text-secondary);
   }
   &:active {
-    color: var(--text-secondary);
+    color: var(--codeplayer-text-secondary);
   }
 }
 .copied-box {
   display: flex;
   align-items: center;
-  color: var(--brand);
+  color: var(--codeplayer-brand);
   padding: 0 4px 0 6px;
+  cursor: pointer;
+  user-select: none;
 }
 </style>

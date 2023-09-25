@@ -1,6 +1,6 @@
 .codeplayer-splitter {
-  --border-primary: @border-color;
-  --border-brand: @brand-light-border;
+  --codeplayer-border-primary: @border-color;
+  --codeplayer-border-brand: @brand-light-border;
   display: flex;
   position: relative;
   height: 100%;
@@ -11,13 +11,13 @@
     user-select: initial;
   }
   .splitter-left {
-    border-right: 1px solid var(--border-color);
+    border-right: 1px solid var(--codeplayer-border-color);
     position: relative;
   }
   .splitter-right {
     position: relative;
     flex: 1;
-    overflow-y: hidden;
+    overflow: hidden;
   }
   .splitter-mask {
     position: absolute;

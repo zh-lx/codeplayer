@@ -1,33 +1,51 @@
 @import './base.less';
 
 .codeplayer-theme-light {
-  --filebar-bgc: @neutral-white;
-  --toolbar-bgc: @neutral-white;
-  --main-color: @neutral-10;
-  --text-secondary: @text-color-secondary;
-  --active-file-bgc: fade(@brand, 10%);
-  --brand: @brand-6; // 主色
-  --brand-active: @brand-7; // active
-  --brand-hover: @brand-5; // hover
-  --copy-icon-color: @neutral-1;
-  --border-color: @border-color;
+  --codeplayer-filebar-bgc: @neutral-white;
+  --codeplayer-toolbar-bgc: @neutral-white;
+  --codeplayer-main-color: @neutral-10;
+  --codeplayer-text-secondary: @text-color-secondary;
+  --codeplayer-active-file-bgc: fade(@brand, 10%);
+  --codeplayer-active-file-color: @brand-6;
+  --codeplayer-brand: @brand-6; // 主色
+  --codeplayer-brand-active: @brand-7; // active
+  --codeplayer-brand-hover: @brand-5; // hover
+  --codeplayer-copy-icon-color: @neutral-1;
+  --codeplayer-border-color: @border-color;
+  --codeplayer-float-bgc: @neutral-2;
+  --codeplayer-menu-color: @text-color;
+  --codeplayer-menu-shadow: 0px 0px 10px rgba(0, 0, 0, 0.16),
+    0px 0px 15px rgba(0, 0, 0, 0.12), 0px 0px 25px rgba(0, 0, 0, 0.08);
+  --codeplayer-copy-shadow: 0px 0px 2px rgba(0, 0, 0, 0.16),
+    -2px 2px 8px rgba(0, 0, 0, 0.12), -4px 4px 12px rgba(0, 0, 0, 0.08);
+  .tippy-box {
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.16),
+      0px 0px 15px rgba(0, 0, 0, 0.12), 0px 0px 25px rgba(0, 0, 0, 0.08);
+  }
 }
 
 .codeplayer-theme-dark {
-  --filebar-bgc: rgb(37, 37, 38);
-  --toolbar-bgc: rgb(22, 22, 22);
-  --main-color: @neutral-3;
-  --text-secondary: @neutral-4;
-  --active-file-bgc: rgba(255, 255, 255, 0.15);
-  --brand: @dark-brand-6; // 主色
-  --brand-active: @dark-brand-7; // active
-  --brand-hover: @dark-brand-5; // hover
-  --copy-icon-color: @dark-neutral-8;
-  --border-color: @dark-neutral-6;
-  .main-splitter {
-    .splitter-left {
-      // border-right-color: transparent !important;
-    }
+  --codeplayer-filebar-bgc: rgb(37, 37, 38);
+  --codeplayer-toolbar-bgc: rgb(22, 22, 22);
+  --codeplayer-main-color: @neutral-3;
+  --codeplayer-text-secondary: @neutral-4;
+  --codeplayer-active-file-bgc: rgba(255, 255, 255, 0.15);
+  --codeplayer-active-file-color: @brand-6;
+  --codeplayer-brand: @dark-brand-6; // 主色
+  --codeplayer-brand-active: @dark-brand-7; // active
+  --codeplayer-brand-hover: @dark-brand-5; // hover
+  --codeplayer-copy-icon-color: #282828;
+  --codeplayer-border-color: @dark-neutral-6;
+  --codeplayer-float-bgc: #282828;
+  --codeplayer-menu-color: @neutral-4;
+  --codeplayer-menu-shadow: 0px 0px 10px rgba(0, 0, 0, 0.56),
+    0px 0px 15px rgba(0, 0, 0, 0.48), 0px 0px 25px rgba(0, 0, 0, 0.32);
+  --codeplayer-copy-shadow: -10px 10px 10px rgba(0, 0, 0, 0.56),
+    -15px 15px 15px rgba(0, 0, 0, 0.48), -25px 25px 25px rgba(0, 0, 0, 0.32);
+  .tippy-box {
+    background-color: #282828;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.56),
+      0px 0px 15px rgba(0, 0, 0, 0.48), 0px 0px 25px rgba(0, 0, 0, 0.32);
   }
 }
 

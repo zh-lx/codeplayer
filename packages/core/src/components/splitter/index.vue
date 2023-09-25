@@ -70,7 +70,7 @@ const dragStart = (e: MouseEvent) => {
   startSplit.value = computedSplitBound();
   startHeight.value = leftDOM.value.getBoundingClientRect().height;
   splitterDOM.value.style.cursor = props.vertical ? 'row-resize' : 'col-resize';
-  draggerDOM.value.style.backgroundColor = 'var(--border-brand)';
+  draggerDOM.value.style.backgroundColor = 'var(--codeplayer-border-brand)';
   showMask.value = true;
 };
 
@@ -107,7 +107,7 @@ const changeStyle = () => {
     leftDOM.value.style.width = '100%';
     leftDOM.value.style.borderBottom =
       computedSplitBound() && props.showRight
-        ? '1px solid var(--border-primary)'
+        ? '1px solid var(--codeplayer-border-color)'
         : 'none';
     leftDOM.value.style.borderRight = 'none';
   } else {
@@ -115,7 +115,7 @@ const changeStyle = () => {
     leftDOM.value.style.width = computedSplitBound() + 'px';
     leftDOM.value.style.borderRight =
       computedSplitBound() && props.showRight
-        ? '1px solid var(--border-primary)'
+        ? '1px solid var(--codeplayer-border-color)'
         : 'none';
     leftDOM.value.style.borderBottom = 'none';
   }

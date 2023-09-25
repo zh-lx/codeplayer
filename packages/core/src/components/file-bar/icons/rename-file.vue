@@ -1,21 +1,26 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
 import tippy from 'tippy.js';
+import type { Instance, Props } from 'tippy.js';
 import { TooltipText } from '@/constant';
 import { store } from '@/store';
 
 const reference = ref();
+let tippyDOM: Instance<Props> | undefined;
 
 onMounted(() => {
   watch(
     () => store.theme,
     () => {
-      tippy(reference.value, {
+      if (tippyDOM) {
+        tippyDOM.destroy();
+      }
+      tippyDOM = tippy(reference.value, {
         content: TooltipText.RenameFile,
         placement: 'bottom',
         arrow: false,
-        theme: store.theme === 'dark' ? 'light' : '',
-      });
+        theme: store.theme === 'dark' ? '' : 'light',
+      }) as unknown as Instance<Props>;
     },
     { immediate: true }
   );

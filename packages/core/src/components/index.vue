@@ -114,6 +114,6 @@ watch(
 .codeplayer-container {
   width: 100vw;
   height: 100vh;
-  color: var(--main-color);
+  color: var(--codeplayer-main-color);
 }
 </style>
