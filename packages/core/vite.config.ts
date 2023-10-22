@@ -9,7 +9,7 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
       '~@': path.resolve(__dirname, './src'),
-      path: 'path-browserify'
+      path: 'path-browserify',
     },
   },
   css: {
@@ -19,15 +19,7 @@ export default defineConfig({
       },
     },
   },
-  build: {
-    lib: {
-      entry: 'src/main.ts',
-      formats: ['umd', 'es'],
-      name: 'CodePlayer',
-      fileName: 'index',
-    },
-  },
   server: {
-    host: '0.0.0.0'
-  }
+    host: '0.0.0.0',
+  },
 });

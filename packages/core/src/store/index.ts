@@ -18,7 +18,6 @@ export interface Store {
   imports: Record<string, string>;
   editor: any | null; // code Mirror 编辑器
   rerenderID: number; // 用于 preview 刷新的标识，当点击刷新按钮该值 +1 触发刷新
-  sharePath: string; // 分享按钮的路径
   codeSize: number;
   vueVersion: string;
   typescriptVersion: string;
@@ -40,7 +39,6 @@ export const store = reactive<Store>({
   excludeTools: [],
   editor: null,
   rerenderID: 0,
-  sharePath: 'https://codeplayer.cn/playground',
   codeSize: 14,
   vueVersion: '3.2.0',
   typescriptVersion: '4.9.3',
