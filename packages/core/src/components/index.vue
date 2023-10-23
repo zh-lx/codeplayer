@@ -14,7 +14,6 @@ const props = defineProps<{ options?: CodePlayerOptions }>();
 
 const CodeSlotName = computed(() => (store.reverse ? 'right' : 'left'));
 const PreviewSlotName = computed(() => (store.reverse ? 'left' : 'right'));
-const consoleRef = ref();
 
 const init = () => {
   const options = props.options || {};
