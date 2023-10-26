@@ -13,7 +13,6 @@
     "skipLibCheck": true,
     "noEmit": true,
     "declaration": true,
-    "declarationDir": "./types",
     "paths": {
       "@/*": ["./src/*"]
     }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, computed, ref, onMounted } from 'vue';
+import { watch, computed } from 'vue';
 import { store } from '@/store';
 import { atou } from '@/utils';
 import { getTemplate, File } from '@/compiler';

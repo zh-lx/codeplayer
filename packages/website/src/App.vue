@@ -3,10 +3,9 @@
 </template>
 
 <script setup lang="ts">
-import CodePlayer from './components/index.vue';
-import { CodePlayerOptions } from './type';
+import CodePlayer from '../../core';
 
-const options: CodePlayerOptions = {
+const options = {
   appType: 'vue3',
   showFileBar: true,
   showCode: true,

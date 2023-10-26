@@ -46,9 +46,11 @@ async function renderSandbox() {
   }
 
   const erudaDisplay = (
-    iframe.value?.contentWindow?.document
-      .querySelector('#eruda')
-      ?.shadowRoot?.querySelector('.eruda-dev-tools')
+    (
+      iframe.value?.contentWindow?.document
+        .querySelector('#eruda')
+        ?.shadowRoot?.querySelector('.eruda-dev-tools') as any
+    )
       ?.computedStyleMap()
       .get('display') as any
   )?.value;

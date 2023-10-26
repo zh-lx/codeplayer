@@ -1,4 +1,7 @@
-export type Control = 'refresh' | 'copy' | 'share';
+export type Control = 'refresh'
+  | 'copy'
+  | 'share';
+
 
 export type AppType =
   | 'vue'
@@ -69,4 +72,8 @@ export interface CodePlayerOptions {
    * @description_zh 用于自定义样式的 Css styleSheet 字符串
    */
   css?: string;
+}
+
+export interface HTMLCodePlayerElement extends HTMLDivElement {
+  options: CodePlayerOptions;
 }
