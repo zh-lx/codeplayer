@@ -8,9 +8,22 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@babel/standalone": "^7.20.11",
+    "@babel/types": "^7.20.7",
+    "@types/hash-sum": "^1.0.0",
+    "@types/less": "^3.0.3",
     "@types/node": "^18.11.18",
     "@vitejs/plugin-vue": "^4.0.0",
+    "@vue/compiler-sfc": "^3.2.45",
+    "fflate": "^0.7.4",
+    "hash-sum": "^2.0.0",
+    "hookable": "^5.5.3",
     "less": "^4.2.0",
+    "monaco-editor-core": "0.41.0",
+    "monaco-volar": "^0.4.0",
+    "rollup-plugin-visualizer": "^5.9.0",
+    "sass": "^1.66.1",
+    "sucrase": "^3.29.0",
     "tslib": "^2.5.0",
     "typescript": "^4.9.3",
     "vite": "^4.1.0",
@@ -18,6 +31,16 @@
     "vue-tsc": "^1.0.24"
   },
   "dependencies": {
+    "@volar/cdn": "~1.9.2",
+    "@volar/monaco": "~1.9.2",
+    "@volar/typescript": "~1.9.2",
+    "@vue/language-service": "1.8.6",
+    "monaco-editor": "^0.41.0",
+    "monaco-editor-textmate": "^4.0.0",
+    "monaco-textmate": "^3.0.1",
+    "monaco-volar": "^0.4.0",
+    "onigasm": "^2.2.5",
+    "path-browserify": "^1.0.1",
     "tippy.js": "^6.3.7"
   }
 }
