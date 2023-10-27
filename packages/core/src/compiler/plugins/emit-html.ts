@@ -1,6 +1,9 @@
 import { Hooks } from '@/compiler/type';
 import { modulesKey, exportKey, dynamicImportKey, nextKey } from '@/constant';
 
+let count = 0;
+let nextIndex = 0;
+
 async function emitHtml(content: {
   modules: string[];
   styles: string[];
@@ -10,9 +13,12 @@ async function emitHtml(content: {
   links: string[];
 }) {
   const { modules, styles, importMap, iframe, render, links } = content;
+  count++;
+  const currentCount = count;
 
   let iframeDoc = iframe.contentDocument as Document;
   let iframeWindow = iframe.contentWindow as any;
+  iframeWindow[nextKey] = [];
 
   if (!iframeDoc) {
     return;
@@ -91,22 +97,29 @@ async function emitHtml(content: {
   modules.unshift(`import eruda from 'https://esm.sh/eruda@3.0.1';
   window.__eruda = eruda;
   eruda.init();`);
-  for (let i = 0; i < modules.length; i++) {
+
+  async function loadScript(i: number) {
+    if (currentCount !== count || i >= modules.length) {
+      return;
+    }
     let script = modules[i];
     const scriptEl = document.createElement('script');
     scriptEl.setAttribute('type', 'module');
     scriptEl.setAttribute('replace', 'true');
     const done = new Promise((resolve) => {
-      iframeWindow[nextKey] = function () {
+      iframeWindow[nextKey][nextIndex] = function () {
         resolve(true);
       };
     });
     // send ok in the module script to ensure sequential evaluation
     // of multiple proxy.eval() calls
-    scriptEl.innerHTML = script + `\nwindow.${nextKey}();`;
+    scriptEl.innerHTML = script + `\nwindow.${nextKey}[${nextIndex}] && window.${nextKey}[${nextIndex}]();`;
+    nextIndex++;
     iframeDoc.head.appendChild(scriptEl);
     await done;
+    loadScript(i + 1);
   }
+  await loadScript(0);
 
   iframeDoc.close();
 }
