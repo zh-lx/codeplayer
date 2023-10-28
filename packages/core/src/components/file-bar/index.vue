@@ -73,12 +73,6 @@ const validateFilenameError = (filename: string) => {
   if (store.files[filename]) {
     return `已存在同名文件 ${filename}`;
   }
-  const fileType = fileTypes.some((type) => filename.endsWith(type));
-  if (!fileType) {
-    return `CodePlayer 当前只支持 ${fileTypes
-      .map((type) => `*${type}`)
-      .join('、')} 类型的文件`;
-  }
   return null;
 };
 

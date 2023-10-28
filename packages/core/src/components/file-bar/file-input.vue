@@ -36,15 +36,16 @@ watch(
     <input
       id="new-filename-input"
       class="new-file-input"
+      autoComplete="off"
       :value="props.modelValue"
       @input="(e) => emit('update:modelValue', (e.target as HTMLInputElement).value)"
       @keydown="(e) => emit('handleKeyDown', e)"
       @blur="() => emit('handleBlur')"
       ref="fileInputDOM"
     />
-    <div class="new-file-error" v-show="props.error">
+    <!-- <div class="new-file-error" v-show="props.error">
       {{ props.error }}
-    </div>
+    </div> -->
   </div>
 </template>
 <style scoped lang="less">
@@ -59,6 +60,9 @@ watch(
     height: 22px;
     box-sizing: border-box;
     font-size: 12px;
+    padding-left: 4px;
+    background-color: var(--codeplayer-filebar-bgc);
+    color: var(--codeplayer-main-color);
   }
   .new-file-error {
     position: absolute;

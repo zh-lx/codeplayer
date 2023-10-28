@@ -7,9 +7,16 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
-      '~@': path.resolve(__dirname, './src'),
+      '@': path.resolve(__dirname, '../core/src'),
+      '~@': path.resolve(__dirname, '../core/src'),
       path: 'path-browserify',
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      less: {
+        additionalData: `@import "../core/src/style/index.less";`,
+      },
     },
   },
   server: {

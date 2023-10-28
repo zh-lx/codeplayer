@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import CodePlayer from '../../core';
+import CodePlayer from '../../core/src/index';
 
 const options = {
   appType: 'vue3',
