@@ -64,9 +64,4 @@ export interface CodePlayerOptions {
    * @description_zh 代码编辑区-web预览区是否位置翻转。默认值为不翻转
    */
   reverse?: boolean;
-  /**
-   * @description_en String of styleSheet to define custom style.
-   * @description_zh 用于自定义样式的 Css styleSheet 字符串
-   */
-  css?: string;
 }

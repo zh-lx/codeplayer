@@ -3,15 +3,14 @@
 </template>
 
 <script setup lang="ts">
-import CodePlayer from '../../core/src/index';
+import CodePlayer, { CodePlayerOptions } from '../../core/src/index';
+// import CodePlayer from 'codeplayer';
 
-const options = {
+const options: CodePlayerOptions = {
   appType: 'vue3',
   showFileBar: true,
   showCode: true,
   showPreview: true,
-  mainFile: '',
-  initFiles: undefined,
 };
 </script>
 
@@ -19,6 +18,5 @@ const options = {
 .codeplayer-container {
   max-height: 100vh;
   height: 100vh;
-  border: none;
 }
 </style>

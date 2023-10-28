@@ -111,8 +111,6 @@ watch(
 @import './index.less';
 
 .codeplayer-container {
-  width: 100vw;
-  height: 100vh;
   color: var(--codeplayer-main-color);
 }
 </style>
