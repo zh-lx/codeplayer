@@ -2,7 +2,6 @@
 import { ref, computed } from 'vue';
 import { File } from '@/compiler';
 import { store } from '@/store';
-import { fileTypes } from '@/constant';
 import AddFile from './icons/add-file.vue';
 import FileInput from './file-input.vue';
 import FileList from './file-list.vue';
@@ -107,7 +106,6 @@ const newFileError = computed(() => {
         @handleFilenameKeyDown="handleFilenameKeyDown"
         v-model:modelValue="newFilename"
       />
-      <!-- <div class="files-list">${this.renderFileList()}</div> -->
     </div>
   </div>
 </template>
