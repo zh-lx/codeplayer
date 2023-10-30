@@ -25,6 +25,9 @@ export default defineConfig({
       },
     },
   },
+  define: {
+    'process.env.NODE_ENV': '"production"',
+  },
   base: './',
   build: {
     emptyOutDir: true,

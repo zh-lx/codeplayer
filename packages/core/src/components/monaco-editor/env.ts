@@ -1,6 +1,7 @@
 import { jsDelivrUriBase } from '@volar/cdn';
 import * as volar from '@volar/monaco';
 import { editor, languages, Uri } from 'monaco-editor-core';
+/* @vite-ignore */
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import * as onigasm from 'onigasm';
 import onigasmWasm from 'onigasm/lib/onigasm.wasm?url';
@@ -8,6 +9,7 @@ import { watchEffect } from 'vue';
 import { getOrCreateModel } from './utils';
 import { Store } from '@/store';
 import type { CreateData } from './vue.worker';
+/* @vite-ignore */
 import vueWorker from './vue.worker?worker';
 import { getFileLanguage } from '@/compiler';
 
