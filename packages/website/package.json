@@ -1,10 +1,9 @@
 {
   "name": "website",
   "version": "0.0.1",
-  "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "vue-tsc && vite build && node ./scripts/index.js",
     "preview": "vite preview"
   },
   "devDependencies": {
