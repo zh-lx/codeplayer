@@ -4,6 +4,10 @@ import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base:
+    process.env.NODE_ENV == 'production'
+      ? 'https://github.com/zh-lx/codeplayer/packages/website/dist/'
+      : './',
   plugins: [vue()],
   resolve: {
     alias: {
