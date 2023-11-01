@@ -8,13 +8,13 @@
  * -------------------------------------------------------------------------- */
 
 :root {
-  --codeplayer-vp-c-brand: #006aff;
-  --codeplayer-vp-c-brand-light: #2e8cff;
-  --codeplayer-vp-c-brand-lighter: #5dabff;
-  --codeplayer-vp-c-brand-lightest: #8bc7ff;
-  --codeplayer-vp-c-brand-dark: #0051d2;
-  --codeplayer-vp-c-brand-darker: #003aa6;
-  --codeplayer-vp-c-brand-dimm: rgba(100, 108, 255, 0.08);
+  --vp-c-brand: #006aff;
+  --vp-c-brand-light: #2e8cff;
+  --vp-c-brand-lighter: #5dabff;
+  --vp-c-brand-lightest: #8bc7ff;
+  --vp-c-brand-dark: #0051d2;
+  --vp-c-brand-darker: #003aa6;
+  --vp-c-brand-dimm: rgba(100, 108, 255, 0.08);
 }
 
 /**
@@ -22,17 +22,15 @@
  * -------------------------------------------------------------------------- */
 
 :root {
-  --codeplayer-vp-button-brand-border: var(--codeplayer-vp-c-brand-light);
-  --codeplayer-vp-button-brand-text: var(--codeplayer-vp-c-white);
-  --codeplayer-vp-button-brand-bg: var(--codeplayer-vp-c-brand);
-  --codeplayer-vp-button-brand-hover-border: var(--codeplayer-vp-c-brand-light);
-  --codeplayer-vp-button-brand-hover-text: var(--codeplayer-vp-c-white);
-  --codeplayer-vp-button-brand-hover-bg: var(--codeplayer-vp-c-brand-light);
-  --codeplayer-vp-button-brand-active-border: var(
-    --codeplayer-vp-c-brand-light
-  );
-  --codeplayer-vp-button-brand-active-text: var(--codeplayer-vp-c-white);
-  --codeplayer-vp-button-brand-active-bg: var(--codeplayer-vp-button-brand-bg);
+  --vp-button-brand-border: var(--vp-c-brand);
+  --vp-button-brand-text: var(--vp-c-white);
+  --vp-button-brand-bg: var(--vp-c-brand);
+  --vp-button-brand-hover-border: var(--vp-c-brand-light);
+  --vp-button-brand-hover-text: var(--vp-c-white);
+  --vp-button-brand-hover-bg: var(--vp-c-brand-light);
+  --vp-button-brand-active-border: var(--vp-c-brand-light);
+  --vp-button-brand-active-text: var(--vp-c-white);
+  --vp-button-brand-active-bg: var(--vp-button-brand-bg);
 }
 
 /**
@@ -40,30 +38,30 @@
  * -------------------------------------------------------------------------- */
 
 :root {
-  --codeplayer-vp-home-hero-name-color: transparent;
-  --codeplayer-vp-home-hero-name-background: -webkit-linear-gradient(
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: -webkit-linear-gradient(
     120deg,
-    #006aff 30%,
-    #41d1ff
+    #006aff 20%,
+    #8bc7ff
   );
 
-  --codeplayer-vp-home-hero-image-background-image: linear-gradient(
+  --vp-home-hero-image-background-image: linear-gradient(
     -45deg,
-    #bae0ff 80%,
-    #41d1ff 80%
+    rgba(250, 78, 62, 0.5) 50%,
+    rgba(0, 106, 255, 0.5) 50%
   );
-  --codeplayer-vp-home-hero-image-filter: blur(40px);
+  --vp-home-hero-image-filter: blur(40px);
 }
 
 @media (min-width: 640px) {
   :root {
-    --codeplayer-vp-home-hero-image-filter: blur(56px);
+    --vp-home-hero-image-filter: blur(56px);
   }
 }
 
 @media (min-width: 960px) {
   :root {
-    --codeplayer-vp-home-hero-image-filter: blur(72px);
+    --vp-home-hero-image-filter: blur(72px);
   }
 }
 
@@ -72,15 +70,15 @@
  * -------------------------------------------------------------------------- */
 
 :root {
-  --codeplayer-vp-custom-block-tip-border: var(--codeplayer-vp-c-brand);
-  --codeplayer-vp-custom-block-tip-text: var(--codeplayer-vp-c-brand-darker);
-  --codeplayer-vp-custom-block-tip-bg: var(--codeplayer-vp-c-brand-dimm);
+  --vp-custom-block-tip-border: var(--vp-c-brand);
+  --vp-custom-block-tip-text: var(--vp-c-brand-darker);
+  --vp-custom-block-tip-bg: var(--vp-c-brand-dimm);
 }
 
 .dark {
-  --codeplayer-vp-custom-block-tip-border: var(--codeplayer-vp-c-brand);
-  --codeplayer-vp-custom-block-tip-text: var(--codeplayer-vp-c-brand-lightest);
-  --codeplayer-vp-custom-block-tip-bg: var(--codeplayer-vp-c-brand-dimm);
+  --vp-custom-block-tip-border: var(--vp-c-brand);
+  --vp-custom-block-tip-text: var(--vp-c-brand-lightest);
+  --vp-custom-block-tip-bg: var(--vp-c-brand-dimm);
 }
 
 /**
@@ -88,15 +86,17 @@
  * -------------------------------------------------------------------------- */
 
 .DocSearch {
-  --codeplayer-docsearch-primary-color: var(--codeplayer-vp-c-brand) !important;
+  --docsearch-primary-color: var(--vp-c-brand) !important;
 }
 
-.options-table {
-  display: table;
-  width: 100%;
-  th,
-  td {
-    overflow: hidden;
-    word-break: break-all;
+.VPDoc {
+  & > .container {
+    & > .content {
+      padding-left: 0;
+      padding-right: 0;
+      .content-container {
+        min-width: 100% !important;
+      }
+    }
   }
 }
