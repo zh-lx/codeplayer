@@ -6,7 +6,7 @@ import path from 'path';
 export default defineConfig({
   base:
     process.env.NODE_ENV == 'production'
-      ? 'https://github.com/zh-lx/codeplayer/packages/website/dist/'
+      ? 'https://cdn.jsdelivr.net/gh/zh-lx/codeplayer/packages/website/dist/'
       : './',
   plugins: [vue()],
   resolve: {
