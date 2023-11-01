@@ -12,7 +12,6 @@ function replaceTextInFile(filePath, search, replace) {
 
     let updatedData = data;
     while (updatedData.includes(search)) {
-      console.log(111, search);
       updatedData = updatedData.replace(search, replace);
     }
 
