@@ -47,9 +47,8 @@ eruda.init();`.trim()
           const devtools =
             iframe.value?.contentWindow?.__eruda?._shadowRoot?.querySelector?.(
               '.eruda-dev-tools'
-            ) as HTMLDivElement;
-          const display = (devtools.computedStyleMap()?.get?.('display') as any)
-            ?.value;
+            ) as any;
+          const display = devtools.computedStyleMap()?.get?.('display')?.value;
           store.showConsole = display === 'block';
         }, 300);
       });
