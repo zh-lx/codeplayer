@@ -16,7 +16,7 @@ export default defineConfig({
       {
         text: '指南',
         items: [
-          { text: '使用', link: '/guide/start' },
+          { text: '使用 CodePlayer', link: '/guide/start' },
           { text: '私有化部署', link: '/guide/deploy' },
         ],
       },

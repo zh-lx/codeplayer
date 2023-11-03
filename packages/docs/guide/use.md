@@ -1,14 +1,8 @@
-# Vue3 教程(以 ElementPlus 为例)
+# 快速开始
 
-本章节将以
+`codeplayer` 本身是一个 web component 组件，支持在各种前端框架中接入使用。
 
-介绍如何在 `CodePlayer` 上运行你自己的代码进行代码及运行效果的展示。
-
-## 以 Element Plus 为例
-
-以 [ElementPlus-按钮-基础用法](https://element-plus.org/zh-CN/component/button.html#%E5%9F%BA%E7%A1%80%E7%94%A8%E6%B3%95) 的 demo 为例。
-
-### 确定 importMaps 的依赖
+## 安装
 
 - 使用 npm 安装：
 
@@ -167,3 +161,4 @@ CodePlayerOptions 详细说明：
         <td><code>-</code></td>
     </tr>
 </table>
+s
