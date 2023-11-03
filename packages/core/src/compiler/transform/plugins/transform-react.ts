@@ -1,27 +1,36 @@
 import { transform } from 'sucrase';
-import { File } from '@/compiler';
-import { Hooks } from '@/compiler/type'
+import { Hooks, ComplierPluginParams } from '@/compiler/type';
 
-export async function transformReact(file: File): Promise<Error[] | undefined> {
-  let {filename, code} = file
+export async function transformReact(
+  params: ComplierPluginParams
+): Promise<Error[] | undefined> {
+  const { fileMap } = params;
+  const files = Object.keys(fileMap).map((filename) => fileMap[filename]);
+  const errors: Error[] = [];
 
-  if (!filename.endsWith('.tsx') && !filename.endsWith('.jsx')) {
-    return;
-  }
+  await Promise.all(
+    files
+      .filter(
+        ({ filename }) => filename.endsWith('.tsx') || filename.endsWith('.jsx')
+      )
+      .map(async (file) => {
+        let { code } = file;
 
-  try {
-    code = await transform(code, {
-      transforms: ['typescript', 'jsx'],
-      production: true,
-    }).code;
-    file.compiled.js = code;
-  } catch (error) {
-    return [error as Error]
-  }
+        try {
+          code = await transform(code, {
+            transforms: ['typescript', 'jsx'],
+            production: true,
+          }).code;
+          file.compiled.js = code;
+        } catch (error) {
+          errors.push(error as Error);
+        }
+      })
+  );
+
+  return errors.length ? errors : undefined;
 }
 
-export default function(hooks: Hooks) {
-  hooks.addHooks({
-    transform: transformReact,
-  })
+export default function (hooks: Hooks) {
+  hooks.hook('transform', transformReact);
 }

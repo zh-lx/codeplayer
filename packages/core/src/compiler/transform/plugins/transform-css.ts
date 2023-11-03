@@ -1,19 +1,24 @@
-import { File } from '@/compiler';
-import { Hooks } from '@/compiler/type';
+import { Hooks, ComplierPluginParams } from '@/compiler/type';
 
-export async function transformCSS(file: File): Promise<Error[] | undefined> {
-  const { filename, code } = file;
+export async function transformCSS(
+  params: ComplierPluginParams
+): Promise<Error[] | undefined> {
+  const { fileMap } = params;
+  const files = Object.keys(fileMap).map((filename) => fileMap[filename]);
 
-  if (!filename.endsWith('.css')) {
-    return;
-  }
+  await Promise.all(
+    files
+      .filter((file) => file.filename.endsWith('.css'))
+      .map((file) => {
+        const { code } = file;
 
-  file.compiled.css = code;
-  return undefined;
+        file.compiled.css = code;
+      })
+  );
+
+  return;
 }
 
 export default function (hooks: Hooks) {
-  hooks.addHooks({
-    transform: transformCSS,
-  });
+  hooks.hook('transform', transformCSS);
 }

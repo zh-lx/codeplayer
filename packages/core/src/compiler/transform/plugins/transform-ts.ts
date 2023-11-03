@@ -1,29 +1,38 @@
 import { transform } from 'sucrase';
-import { File } from '@/compiler';
-import { Hooks } from '@/compiler/type';
+import { Hooks, ComplierPluginParams } from '@/compiler/type';
 
-export async function transformTS(file: File): Promise<Error[] | undefined> {
-  let { filename, code } = file;
+export async function transformTS(
+  params: ComplierPluginParams
+): Promise<Error[] | undefined> {
+  const { fileMap } = params;
+  const files = Object.keys(fileMap).map((filename) => fileMap[filename]);
+  const errors: Error[] = [];
 
-  if (!filename.endsWith('.ts') && !filename.endsWith('.js')) {
-    return;
-  }
+  await Promise.all(
+    files
+      .filter(
+        ({ filename }) => filename.endsWith('.ts') || filename.endsWith('.js')
+      )
+      .map(async (file) => {
+        let { filename, code } = file;
 
-  try {
-    if (filename.endsWith('.ts')) {
-      code = await transform(code, {
-        transforms: ['typescript'],
-      }).code;
-    }
+        try {
+          if (filename.endsWith('.ts')) {
+            code = await transform(code, {
+              transforms: ['typescript'],
+            }).code;
+          }
 
-    file.compiled.js = code;
-  } catch (error) {
-    return [error as Error];
-  }
+          file.compiled.js = code;
+        } catch (error) {
+          errors.push(error as Error);
+        }
+      })
+  );
+
+  return errors.length ? errors : undefined;
 }
 
 export default function (hooks: Hooks) {
-  hooks.addHooks({
-    transform: transformTS,
-  });
+  hooks.hook('transform', transformTS);
 }

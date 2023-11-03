@@ -1,18 +1,23 @@
+import { ComplierPluginParams, ComplierPluginResult } from '@/compiler';
 import { Hooks } from '@/compiler/type';
-import { modulesKey, exportKey, dynamicImportKey, nextKey } from '@/constant';
+import {
+  modulesKey,
+  exportKey,
+  dynamicImportKey,
+  nextKey,
+  MapFile,
+} from '@/constant';
 
 let count = 0;
 let nextIndex = 0;
 
-async function emitHtml(content: {
-  modules: string[];
-  styles: string[];
-  importMap: string;
-  iframe: HTMLIFrameElement;
-  render: boolean;
-  links: string[];
-}) {
-  const { modules, styles, importMap, iframe, render, links } = content;
+async function emitHtml(
+  params: ComplierPluginParams,
+  result: ComplierPluginResult
+) {
+  const { iframe, render, fileMap } = params;
+  const importMap = fileMap[MapFile].code;
+  const { html, links, modules, styles } = result;
   count++;
   const currentCount = count;
 
@@ -25,22 +30,11 @@ async function emitHtml(content: {
   }
 
   if (render) {
-    const template = `
-    <!DOCTYPE html>
-    <html lang="en">
-      <head id="cs-ide-head">
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>CS-IDE</title>
-        <script type="importmap">\n${importMap}</script>
-      </head>
-      <body>
-        <div id="app"></div>
-      </body>
-    </html>
-    `;
-    iframeDoc.write(template);
+    iframeDoc.write(html[0]);
+    const importMapScript = document.createElement('script');
+    importMapScript.setAttribute('type', 'importmap');
+    importMapScript.innerHTML = `\n${importMap}\n`;
+    iframeDoc.head.appendChild(importMapScript);
     iframeWindow.process = { env: {} };
     iframeWindow[modulesKey] = {};
     iframeWindow[exportKey] = (mod: Object, key: string, get: () => any) => {
@@ -54,7 +48,7 @@ async function emitHtml(content: {
       return Promise.resolve(iframeWindow[modulesKey][key]);
     };
   } else {
-    iframeDoc.body.innerHTML = '<div id="app"></div>';
+    iframeDoc.documentElement.innerHTML = html[0];
   }
 
   // remove old code
@@ -94,10 +88,6 @@ async function emitHtml(content: {
   styleEl.innerHTML = styles.join('\n');
   iframeDoc.head.appendChild(styleEl);
 
-  modules.unshift(`import eruda from 'https://esm.sh/eruda@3.0.1';
-  window.__eruda = eruda;
-  eruda.init();`);
-
   async function loadScript(i: number) {
     if (currentCount !== count || i >= modules.length) {
       return;
@@ -113,7 +103,9 @@ async function emitHtml(content: {
     });
     // send ok in the module script to ensure sequential evaluation
     // of multiple proxy.eval() calls
-    scriptEl.innerHTML = script + `\nwindow.${nextKey}[${nextIndex}] && window.${nextKey}[${nextIndex}]();`;
+    scriptEl.innerHTML =
+      script +
+      `\nwindow.${nextKey}[${nextIndex}] && window.${nextKey}[${nextIndex}]();`;
     nextIndex++;
     iframeDoc.head.appendChild(scriptEl);
     await done;

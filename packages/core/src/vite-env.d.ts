@@ -6,4 +6,6 @@ declare module '*.vue' {
   export default Component;
 }
 
-
+declare interface Window {
+  __eruda: any;
+}

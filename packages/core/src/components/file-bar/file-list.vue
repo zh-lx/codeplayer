@@ -103,7 +103,7 @@ const getIcon = (filename: string) => {
         <div class="file-right" v-if="filename !== MapFile">
           <RenameFile @click="() => emit('handleClickRename', filename)" />
           <DeleteFile :filename="filename" />
-          <HomeFile :filename="filename" />
+          <!-- <HomeFile :filename="filename" /> -->
         </div>
       </div>
     </div>

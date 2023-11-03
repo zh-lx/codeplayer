@@ -3,6 +3,11 @@ import { ref, Ref, onMounted, watch } from 'vue';
 import { store } from '@/store';
 import { modulesKey, exportKey, dynamicImportKey, MapFile } from '@/constant';
 import { Compiler } from '@/compiler';
+import {
+  Hooks,
+  ComplierPluginParams,
+  ComplierPluginResult,
+} from '@/compiler/type';
 
 interface IframeWindow extends Window {
   process: Record<string, any>;
@@ -16,27 +21,80 @@ const errors = ref<string[]>([]);
 const previewDOM = ref() as Ref<HTMLDivElement>;
 const iframe = ref<HTMLIFrameElement>();
 
-const compiler = new Compiler();
+const erudaPlugin = (hooks: Hooks) => {
+  hooks.hook(
+    'before-emit',
+    (_: ComplierPluginParams, items: ComplierPluginResult) => {
+      items.modules.unshift(
+        `import eruda from 'https://esm.sh/eruda@3.0.1';
+if (window.__eruda) {
+  window.__eruda.destroy();
+}
+window.__eruda = eruda;
+eruda.init();`.trim()
+      );
+    }
+  );
+
+  hooks.hook('after-emit', () => {
+    if (iframe.value?.contentWindow?.__eruda) {
+      if (store.showConsole) {
+        iframe.value.contentWindow.__eruda.show();
+      }
+      iframe.value.contentWindow.__eruda._entryBtn._events.click.push(() => {
+        // eruda transition is 0.3s
+        setTimeout(() => {
+          const devtools =
+            iframe.value?.contentWindow?.__eruda?._shadowRoot?.querySelector?.(
+              '.eruda-dev-tools'
+            ) as HTMLDivElement;
+          const display = (devtools.computedStyleMap()?.get?.('display') as any)
+            ?.value;
+          store.showConsole = display === 'block';
+        }, 300);
+      });
+    }
+  });
+};
+
+const compiler = new Compiler({ plugins: [erudaPlugin] });
 
 onMounted(() => {
   renderSandbox();
 });
 
+// watch edit file
 watch(
-  () => store.files,
-  (newVal, oldVal) => {
-    if (newVal?.[MapFile]?.code !== oldVal?.[MapFile]?.code) {
+  () => [store.activeFile, store.files[store.activeFile]?.code],
+  (newV, oldV) => {
+    if (newV?.[0] !== oldV?.[0]) {
+      return;
+    }
+    if (store.activeFile === MapFile) {
       renderSandbox();
     } else {
       refreshSandbox();
     }
   },
-  {
-    deep: true,
-  }
+  { deep: true }
 );
 
-watch(() => store.mainFile, refreshSandbox);
+// watch add a new file or delete a file
+watch(
+  () => store.files,
+  (newV, oldV) => {
+    const newFiles = Object.keys(newV).sort();
+    const oldFiles = Object.keys(newV).sort();
+    if (
+      newFiles.length === oldFiles.length &&
+      newFiles.every((file, index) => file === oldFiles[index])
+    ) {
+      return;
+    }
+    refreshSandbox();
+  },
+  { deep: true }
+);
 
 watch(() => store.rerenderID, renderSandbox);
 
@@ -44,16 +102,6 @@ async function renderSandbox() {
   if (!previewDOM.value) {
     return;
   }
-
-  const erudaDisplay = (
-    (
-      iframe.value?.contentWindow?.document
-        .querySelector('#eruda')
-        ?.shadowRoot?.querySelector('.eruda-dev-tools') as any
-    )
-      ?.computedStyleMap()
-      .get('display') as any
-  )?.value;
 
   // 建立一个新的 iframe
   iframe.value?.remove();
@@ -70,12 +118,6 @@ async function renderSandbox() {
     render: true,
   });
   errors.value = result.errors;
-
-  setTimeout(() => {
-    if (erudaDisplay === 'block') {
-      (iframe.value?.contentWindow as any)?.__eruda?.show();
-    }
-  });
 }
 
 async function refreshSandbox() {

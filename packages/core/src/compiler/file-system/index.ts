@@ -5,23 +5,7 @@ import {
   TypescriptTemplate,
   Vue3Template,
 } from '@/constant/templates';
-import * as monaco from 'monaco-editor';
-
-export class File {
-  filename: string;
-  code: string;
-  compiled = {
-    js: '',
-    css: '',
-  };
-  editorViewState: monaco.editor.ICodeEditorViewState | null;
-
-  constructor(filename: string, code = '') {
-    this.filename = filename;
-    this.code = code;
-    this.editorViewState = null;
-  }
-}
+import { File } from '@/compiler/type';
 
 export interface FileSystem {
   // 全部文件
@@ -55,13 +39,13 @@ export const getFileExtraName = (filename: string) => {
 
 export const getFileLanguage = (filename: string) => {
   const ext = getFileExtraName(filename);
-  if(ext === 'js' || ext === 'jsx') {
-    return 'javascript'
-  } else if(ext === 'ts' || ext === 'tsx') {
-    return 'typescript'
-  } else if(['css', 'less', 'sass', 'scss'].includes(ext)) {
-    return  'css'
+  if (ext === 'js' || ext === 'jsx') {
+    return 'javascript';
+  } else if (ext === 'ts' || ext === 'tsx') {
+    return 'typescript';
+  } else if (['css', 'less', 'sass', 'scss'].includes(ext)) {
+    return 'css';
   } else {
-    return ext
+    return ext;
   }
 };

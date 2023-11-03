@@ -1,24 +1,34 @@
-import { File } from '@/compiler';
-import { compileString } from 'sass'
-import { Hooks } from '@/compiler/type'
+import { Hooks, ComplierPluginParams } from '@/compiler/type';
+import { compileString } from 'sass';
 
-export async function transformSaSS(file: File): Promise<Error[] | undefined> {
-  let {filename, code} = file
+export async function transformSaSS(
+  params: ComplierPluginParams
+): Promise<Error[] | undefined> {
+  const { fileMap } = params;
+  const files = Object.keys(fileMap).map((filename) => fileMap[filename]);
+  const errors: Error[] = [];
 
-  if (!filename.endsWith('.sass') && !filename.endsWith('.scss')) {
-    return;
-  }
+  await Promise.all(
+    files
+      .filter(
+        ({ filename }) =>
+          filename.endsWith('.sass') || filename.endsWith('.scss')
+      )
+      .map(async (file) => {
+        let { code } = file;
 
-  try {
-    code = (await compileString(code)).css
-    file.compiled.css = code;
-  } catch (error) {
-    return [error as Error]
-  }
+        try {
+          code = (await compileString(code)).css;
+          file.compiled.css = code;
+        } catch (error) {
+          errors.push(error as Error);
+        }
+      })
+  );
+
+  return errors.length ? errors : undefined;
 }
 
-export default function(hooks: Hooks) {
-  hooks.addHooks({
-    transform: transformSaSS,
-  })
+export default function (hooks: Hooks) {
+  hooks.hook('transform', transformSaSS);
 }

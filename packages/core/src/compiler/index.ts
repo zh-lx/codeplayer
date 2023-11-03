@@ -1,11 +1,11 @@
 import { createHooks, Hookable } from 'hookable';
 import { plugins } from './transform/plugins';
-import { File } from './file-system';
-import { MapFile } from '@/constant';
-import { Plugin } from './type';
+import { File } from './type';
+import { Plugin, ComplierPluginParams, ComplierPluginResult } from './type';
 
 export * from './file-system';
 export * from './module';
+export * from './type';
 
 export class Compiler {
   hooks: Hookable<Record<string, any>, string>;
@@ -22,40 +22,24 @@ export class Compiler {
     await this.hooks.callHook('after-init');
   }
 
-  async run(params: {
-    fileMap: Record<string, File>;
-    result: { errors: Error[] };
-    entry: string;
-    iframe: HTMLIFrameElement;
-    render: boolean;
-  }) {
-    const { fileMap, result, entry, iframe, render } = params;
-    const files = Object.keys(fileMap).map((filename) => fileMap[filename]);
+  async run(params: ComplierPluginParams) {
     // before-transform
     await this.hooks.callHook('before-transform', params);
     // transform
-    await this.transform(files, result);
+    await this.hooks.callHook('transform', params);
     // before-compile
     await this.hooks.callHook('before-compile', params);
     // compile-module
-    const { processed: modules, styles, links } = await this.hooks.callHook(
+    const compiledResult = (await this.hooks.callHook(
       'compile-module',
-      fileMap,
-      entry
-    );
+      params
+    )) as ComplierPluginResult;
     // before-emit
-    await this.hooks.callHook('before-emit', params);
+    await this.hooks.callHook('before-emit', params, compiledResult);
     // emit
-    await this.hooks.callHook('emit', {
-      modules,
-      styles,
-      importMap: fileMap[MapFile].code,
-      iframe,
-      render,
-      links,
-    });
+    await this.hooks.callHook('emit', params, compiledResult);
     // after-emit
-    await this.hooks.callHook('after-emit', params);
+    await this.hooks.callHook('after-emit', params, compiledResult);
   }
 
   // 文件转换

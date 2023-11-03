@@ -1,4 +1,3 @@
-import { File } from '@/compiler';
 import hashId from 'hash-sum';
 import { COMP_IDENTIFIER } from '@/constant';
 import { transform } from 'sucrase';
@@ -14,93 +13,108 @@ import {
 } from '@vue/compiler-sfc';
 import less from 'less';
 import { compileString as compileSassString } from 'sass';
-import { Hooks } from '@/compiler/type';
+import { Hooks, ComplierPluginParams } from '@/compiler/type';
 
 export const transformVue3 = async (
-  file: File
+  params: ComplierPluginParams
 ): Promise<Error[] | undefined> => {
-  const { filename, code, compiled } = file;
+  const { fileMap } = params;
+  const files = Object.keys(fileMap).map((filename) => fileMap[filename]);
+  const _errors: Error[] = [];
 
-  if (!filename.endsWith('.vue')) {
-    return;
-  }
+  await Promise.all(
+    files
+      .filter(({ filename }) => filename.endsWith('.vue'))
+      .map(async (file) => {
+        const { filename, code, compiled } = file;
 
-  const id = hashId(filename);
+        const id = hashId(filename);
 
-  const { errors, descriptor } = parse(code, {
-    filename,
-    sourceMap: true,
-  });
+        const { errors, descriptor } = parse(code, {
+          filename,
+          sourceMap: true,
+        });
 
-  if (errors.length) {
-    return errors;
-  }
+        if (errors.length) {
+          _errors.push(...errors);
+          return;
+        }
 
-  const scriptLang =
-    (descriptor.script && descriptor.script.lang) ||
-    (descriptor.scriptSetup && descriptor.scriptSetup.lang);
-  const isTS = scriptLang === 'ts';
+        const scriptLang =
+          (descriptor.script && descriptor.script.lang) ||
+          (descriptor.scriptSetup && descriptor.scriptSetup.lang);
+        const isTS = scriptLang === 'ts';
 
-  if (scriptLang && !isTS) {
-    return [new Error(`Only lang="ts" is supported for <script> blocks.`)];
-  }
+        if (scriptLang && !isTS) {
+          _errors.push(
+            new Error(`Only lang="ts" is supported for <script> blocks.`)
+          );
+          return;
+        }
 
-  const hasScoped = descriptor.styles.some((s) => s.scoped);
-  let clientCode = '';
+        const hasScoped = descriptor.styles.some((s) => s.scoped);
+        let clientCode = '';
 
-  const appendSharedCode = (code: string) => {
-    clientCode += code;
-  };
+        const appendSharedCode = (code: string) => {
+          clientCode += code;
+        };
 
-  // script
-  const clientScriptResult = await doCompileScript(descriptor, id, isTS);
-  if (!clientScriptResult) {
-    return;
-  }
-  const [clientScript, bindings, scriptErrors] = clientScriptResult;
-  if (scriptErrors) {
-    return scriptErrors;
-  }
-  clientCode += clientScript;
+        // script
+        const clientScriptResult = await doCompileScript(descriptor, id, isTS);
+        if (!clientScriptResult) {
+          return;
+        }
+        const [clientScript, bindings, scriptErrors] = clientScriptResult;
+        if (scriptErrors) {
+          _errors.push(...scriptErrors);
+          return;
+        }
+        clientCode += clientScript;
 
-  // template
-  if (descriptor.template && !descriptor.scriptSetup) {
-    const [code, templateErrors] = await doCompileTemplate(
-      descriptor,
-      id,
-      bindings,
-      isTS
-    );
-    if (templateErrors) {
-      return templateErrors;
-    }
-    clientCode += code;
-  }
+        // template
+        if (descriptor.template && !descriptor.scriptSetup) {
+          const [code, templateErrors] = await doCompileTemplate(
+            descriptor,
+            id,
+            bindings,
+            isTS
+          );
+          if (templateErrors) {
+            _errors.push(...templateErrors);
+            return;
+          }
+          clientCode += code;
+        }
 
-  if (hasScoped) {
-    appendSharedCode(
-      `\n${COMP_IDENTIFIER}.__scopeId = ${JSON.stringify(`data-v-${id}`)}`
-    );
-  }
+        if (hasScoped) {
+          appendSharedCode(
+            `\n${COMP_IDENTIFIER}.__scopeId = ${JSON.stringify(`data-v-${id}`)}`
+          );
+        }
 
-  if (clientCode) {
-    appendSharedCode(
-      `\n${COMP_IDENTIFIER}.__file = ${JSON.stringify(filename)}` +
-        `\nexport default ${COMP_IDENTIFIER}`
-    );
-    compiled.js = clientCode.trim();
-  }
+        if (clientCode) {
+          appendSharedCode(
+            `\n${COMP_IDENTIFIER}.__file = ${JSON.stringify(filename)}` +
+              `\nexport default ${COMP_IDENTIFIER}`
+          );
+          compiled.js = clientCode.trim();
+        }
 
-  // css 处理
-  let [css, styleErrors] = await doCompileStyle(descriptor, id, filename);
-  if (styleErrors) {
-    return styleErrors;
-  }
-  if (css) {
-    compiled.css = css.trim();
-  } else {
-    compiled.css = '/* No <style> tags present */';
-  }
+        // css 处理
+        let [css, styleErrors] = await doCompileStyle(descriptor, id, filename);
+        if (styleErrors) {
+          _errors.push(...styleErrors);
+          return;
+        }
+        if (css) {
+          compiled.css = css.trim();
+        } else {
+          compiled.css = '/* No <style> tags present */';
+        }
+      })
+  );
+
+  return _errors.length ? _errors : undefined;
 };
 
 async function doCompileStyle(
@@ -273,7 +287,5 @@ async function doCompileTemplate(
 }
 
 export default function (hooks: Hooks) {
-  hooks.addHooks({
-    transform: transformVue3,
-  });
+  hooks.hook('transform', transformVue3);
 }

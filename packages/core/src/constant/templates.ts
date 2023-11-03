@@ -1,7 +1,22 @@
 import { MapFile } from './index';
 
 export const Vue3Template = {
-  'index.ts': `import { createApp } from 'vue';
+  'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodePlayer</title>
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+  <script type="module">
+    import './main.ts';
+  </script>
+</html>`,
+  'main.ts': `import { createApp } from 'vue';
 import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
 import App from './App.vue';
@@ -78,6 +93,21 @@ import {
 };
 
 export const ReactTemplate = {
+  'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodePlayer</title>
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+  <script type="module">
+    import './main.tsx';
+  </script>
+</html>`,
   'main.tsx': `import React from "react";
 import { createRoot } from "react-dom/client";
 import App from './App.tsx';
@@ -152,6 +182,21 @@ export const HtmlTemplate = {
 };
 
 export const JavascriptTemplate = {
+  'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodePlayer</title>
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+  <script type="module">
+    import './index.js';
+  </script>
+</html>`,
   'index.js': `import layui from "layui";
 import "layui/dist/css/layui.css";
 
@@ -177,6 +222,21 @@ layer.open({
 };
 
 export const TypescriptTemplate = {
+  'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodePlayer</title>
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+  <script type="module">
+    import './index.ts';
+  </script>
+</html>`,
   'index.ts': `import layui from "layui";
 import "layui/dist/css/layui.css";
 

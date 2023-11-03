@@ -23,17 +23,17 @@ export function compileModulesForPreview(
   mainFile: string
 ) {
   const seen = new Set<File>();
-  const processed: string[] = [];
-  processFile(files, files[mainFile], processed, seen);
+  const modules: string[] = [];
+  processFile(files, files[mainFile], modules, seen);
 
-  return processed;
+  return modules;
 }
 
 // similar logic with Vite's SSR transform, except this is targeting the browser
 function processFile(
   files: Record<string, File>,
   file: File,
-  processed: string[],
+  modules: string[],
   seen: Set<File>
 ) {
   if (seen.has(file)) {
@@ -42,7 +42,7 @@ function processFile(
   seen.add(file);
 
   if (file.filename.endsWith('.html')) {
-    return processHtmlFile(files, file.code, file.filename, processed, seen);
+    return processHtmlFile(files, file.code, file.filename, modules, seen);
   }
 
   let [js, importedFiles] = processModule(
@@ -57,11 +57,11 @@ function processFile(
   // crawl child imports
   if (importedFiles.size) {
     for (const imported of importedFiles) {
-      processFile(files, files[imported], processed, seen);
+      processFile(files, files[imported], modules, seen);
     }
   }
   // push self
-  processed.push(js);
+  modules.push(js);
 }
 
 function processModule(
@@ -263,7 +263,7 @@ function processHtmlFile(
   files: Record<string, File>,
   src: string,
   filename: string,
-  processed: string[],
+  modules: string[],
   seen: Set<File>
 ) {
   const deps: string[] = [];
@@ -283,7 +283,7 @@ function processHtmlFile(
       jsCode += '\n' + content;
       return '';
     });
-  processed.push(`document.body.innerHTML = ${JSON.stringify(html)}`);
-  processed.push(...deps);
-  processed.push(jsCode);
+  modules.push(`document.body.innerHTML = ${JSON.stringify(html)}`);
+  modules.push(...deps);
+  modules.push(jsCode);
 }

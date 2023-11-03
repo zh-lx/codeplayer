@@ -12,6 +12,7 @@ export interface Store {
   showFileBar: boolean;
   showCode: boolean;
   showPreview: boolean;
+  showEruda: boolean;
   showConsole: boolean;
   reverse: boolean;
   excludeTools: Control[];
@@ -27,13 +28,14 @@ export interface Store {
 
 export const store = reactive<Store>({
   // 文件系统相关
-  mainFile: '',
+  mainFile: 'index.html',
   files: {},
   activeFile: '',
   imports: {},
   showFileBar: true,
   showCode: true,
   showPreview: true,
+  showEruda: true,
   showConsole: false,
   reverse: false,
   excludeTools: [],
