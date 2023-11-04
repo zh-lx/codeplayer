@@ -1,32 +1,82 @@
-# Vue3 教程(以 ElementPlus 为例)
+# 如何使用 CodePlayer
 
-本章节将以
+CodePlayer 本质上是解析 url 参数上的 `codeplayer_files` 字段，初始化对应的文件及代码，并将代码及运行结果呈现到页面上。
 
-介绍如何在 `CodePlayer` 上运行你自己的代码进行代码及运行效果的展示。
+一个 CodePlayer Demo 的访问链接格式应该如下：
 
-## 以 Element Plus 为例
-
-以 [ElementPlus-按钮-基础用法](https://element-plus.org/zh-CN/component/button.html#%E5%9F%BA%E7%A1%80%E7%94%A8%E6%B3%95) 的 demo 为例。
-
-### 确定 importMaps 的依赖
-
-- 使用 npm 安装：
-
-```perl
-npm install codeplayer
+```
+https://play.fe-dev.com/?codeplayer_files=xxx
 ```
 
-- 使用 yarn 安装：
+## codeplayer_files
 
-```perl
-yarn add codeplayer
+接下来我们通过一个 demo 来了解如何将代码转换为 `codeplayer_files` 参数的值，该 demo 包含下列文件：
+
+::: code-group
+
+```html [index.html]
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <div>max number: <span id="max"></span></div>
+  </body>
+  <script type="module">
+    import './main.ts';
+  </script>
+</html>
 ```
 
-- 使用 pnpm 安装：
-
-```perl
-pnpm add codeplayer
+```ts [main.ts]
+import _ from 'lodash';
+const numbers = [2, 1, 8, 9, 6];
+const maxNum = _.max(numbers);
+document.querySelector('#max').innerText = maxNum;
 ```
+
+```json [import-map.json]
+{
+  "imports": {
+    "lodash": "https://esm.sh/lodash"
+  }
+}
+```
+
+:::
+
+### 1. 构建文件对象
+
+首先，将上述文件以 `{ 文件名: 代码 }` 的格式构建一个 js 键值对对象，构建后的对象应如下：
+
+```js
+const files = {
+  'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <div>max number: <span id="max"></span></div>
+  </body>
+  <script type="module">
+    import './main.ts';
+  </script>
+</html>`,
+  'main.ts': `import _ from 'lodash';
+const numbers = [2, 1, 8, 9, 6];
+const maxNum = _.max(numbers);
+document.querySelector('#max').innerText = maxNum;`,
+  'import-map.json': `{
+  "imports": {
+    "lodash": "https://esm.sh/lodash"
+  }
+}`,
+};
+```
+
+### 2. 序列化文件对象
 
 ## 使用
 
