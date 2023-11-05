@@ -5,12 +5,12 @@ CodePlayer 本质上是解析 url 参数上的 `codeplayer_files` 字段，初�
 一个 CodePlayer Demo 的访问链接格式应该如下：
 
 ```
-https://play.fe-dev.com/?codeplayer_files=xxx
+https://play.fe-dev.cn/?codeplayer_files=xxx
 ```
 
-## codeplayer_files
+## CodePlayer Url 生成
 
-接下来我们通过一个 demo 来了解如何将代码转换为 `codeplayer_files` 参数的值，该 demo 包含下列文件：
+要生成一个 demo 对应 CodePlayer url，核心为将 demo 代码转换为对应的 `codeplayer_files` 参数的值，接下来我们通过一个案例来了解如何将代码转换为 `codeplayer_files` 参数的值，该 demo 包含下列文件：
 
 ::: code-group
 
@@ -67,7 +67,7 @@ const files = {
   'main.ts': `import _ from 'lodash';
 const numbers = [2, 1, 8, 9, 6];
 const maxNum = _.max(numbers);
-document.querySelector('#max').innerText = maxNum;`,
+document.querySelector('#max').textContent = maxNum;`,
   'import-map.json': `{
   "imports": {
     "lodash": "https://esm.sh/lodash"
@@ -78,142 +78,64 @@ document.querySelector('#max').innerText = maxNum;`,
 
 ### 2. 序列化文件对象
 
-## 使用
-
-虽然本身是一个 web component 组件，但是因为许多参数是引用类型，更推荐以一个类实例的方式去使用：
+使用 `JSON.stringify()` 方法，将上述得到的文件对象 `files` 转换为 JSON 字符串，然后使用 `window.btoa()` 序列化该字符串并使用 `encodeURIComponent()` 将字符串进行编码，最终得到的值即为 `codeplayer_files` 参数的值。将该值作为 url 参数访问 `https://play.fe-dev.cn` 即可展示并运行对应的代码。
 
 ```js
-import CodePlayer from 'codeplayer';
+const codeplayer_files = encodeURIComponent(window.btoa(JSON.stringify(files)));
 
-new CodePlayer('#codeplayer', {
-  appType: 'react',
-  activeFile: 'App.tsx',
-  excludeTools: ['code', 'share', 'reverse', 'preview', 'fileBar'],
-});
+window.open(`https://play.fe-dev.cn/?codeplayer_files=${codeplayer_files}`);
 ```
 
-## CodePlayer 参数说明
+## 第三方依赖
 
-CodePlayer 类的类型如下所示，其构造函数接收两个参数：
+在 CodePlayer 中，所有的第三方依赖都是通过现代浏览器支持的 `importMap` 特性处理的，你需要在一个名为 `import-map.json` 的 JSON 文件的 `imports` 字段中，声明所使用的第三方库对应的 `esm` 规范的文件映射。
 
-- el: CodePlayer 要挂载的节点，是一个 dom 或者选择器字符串
-- options: CodePlayer 的配置，详细见下表
+:::tip 注意事项
+你只需要在 `import-map.json` 文件中声明第三方依赖的映射即可，不需要在 html 文件中添加 `<script type="importmap"></script>` 这个标签，因为 CodePlayer 内部会自动完成这部分工作。
+:::
 
-```ts
-class CodePlayer {
-  constructor(el: HTMLElement | string, options: CodePlayerOptions) {
-    //
+更多有关于 `importMap` 相关的内容，可以在 [MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/script/type/importmap) 中了解。
+
+### esm 文件地址
+
+所以通过 npm 公共源发布的第三方库，都可以在 [esm.sh](https://esm.sh) 上找到对应的 esm 规范的文件: `https://esm.sh/<package_name>@<version>` 即为第三方库对应版本的地址。
+
+例如 `react 18.2.0` 版本的对应 esm 规范文件地址为：
+
+```
+https://esm.sh/react@18.2.0
+```
+
+### import-map.json 万能法则
+
+如果你不太明白如何正确地在 `import-map.json` 中声明所有的第三方依赖，可以参考这个法则：无论使用了哪个第三方库，都在 `import-map.json` 的 `imports` 字段中添加以下两行：
+
+```json
+{
+  "imports": {
+    // others...
+    // 直接引入库
+    "<package_name>": "https://esm.sh/<package_name>@<version>",
+    // 直接引入库中的文件
+    "<package_name>/": "https://esm.sh/<package_name>@<version>/"
   }
 }
 ```
 
-CodePlayerOptions 详细说明：
+例如，使用了 `element-plus` 的 `2.3.12` 版本，则添加以下代码：
 
-<table class="options-table">
-    <tr>
-        <th style="width: 100px;">属性</th>
-        <th style="width: 90px">类型</th>
-        <th>描述</th>
-        <th>可选值</th>
-        <th width="100">默认值</th>
-    </tr>
-    <!-- height -->
-    <tr>
-        <td>height</td>
-        <td>number</td>
-        <td>组件的固定高度，不设置此项时组件高度随内容自动变化</td>
-        <td>-</td>
-        <td>-</td>
-    </tr>
-    <tr>
-        <td>showFileBar</td>
-        <td>boolean</td>
-        <td>是否默认展示侧文件栏</td>
-        <td><code>true/false</code></td>
-        <td><code>true</code></td>
-    </tr>
-    <tr>
-        <td>showCode</td>
-        <td>boolean</td>
-        <td>是否默认展示代码编辑器</td>
-        <td><code>true/false</code></td>
-        <td><code>true</code></td>
-    </tr>
-    <tr>
-        <td>showPreview</td>
-        <td>boolean</td>
-        <td>是否默认展示预览区</td>
-        <td><code>true/false</code></td>
-        <td><code>true</code></td>
-    </tr>
-    <tr>
-        <td>showToolbar</td>
-        <td>boolean</td>
-        <td>是否默认工具栏</td>
-        <td><code>true/false</code></td>
-        <td><code>true</code></td>
-    </tr>
-    <tr>
-        <td>mainFile</td>
-        <td>string</td>
-        <td>入口文件(编译时)的文件名，未设置时默认会将第一个文件作为入口文件</td>
-        <td><code>-</code></td>
-        <td><code>-</code></td>
-    </tr>
-    <tr>
-        <td>activeFile</td>
-        <td>string</td>
-        <td>编译器默认展示代码的文件的文件名</td>
-        <td><code>-</code></td>
-        <td><code>-</code></td>
-    </tr>
-    <tr>
-        <td>initFiles</td>
-        <td>string</td>
-        <td>初始化文件 map，格式为：<code>Record&lt;filename, code&gt;</code></td>
-        <td><code>-</code></td>
-        <td><code>-</code></td>
-    </tr>
-    <tr>
-        <td>appType</td>
-        <td>string</td>
-        <td>若未设置 initFiles，会根据 appType 自动初始化内置的 demo</td>
-        <td><code>vue/vue3/react/html/javascript/typescript</code></td>
-        <td><code>typescript</code></td>
-    </tr>
-    <tr>
-        <td>excludeTools</td>
-        <td>string[]</td>
-        <td>要隐藏的工具栏按钮列表</td>
-        <td><code>('toolbar'|'fileBar'|'code'|'preview'|'refresh'|'reverse'|'copy'|'share')[]</code></td>
-        <td><code>[]</code></td>
-    </tr>
-    <tr>
-        <td>vertical</td>
-        <td>boolean</td>
-        <td>代码编辑区-web预览区是否垂直布局</td>
-        <td><code>true/false</code></td>
-        <td><code>false</code></td>
-    </tr>
-    <tr>
-        <td>reverse</td>
-        <td>boolean</td>
-        <td>代码编辑区-web预览区是否位置翻转</td>
-        <td><code>true/false</code></td>
-        <td><code>false</code></td>
-    </tr>
-    <tr>
-        <td>toolbarPosition</td>
-        <td>string</td>
-        <td>工具栏位置，默认值为 top</td>
-        <td><code>top/bottom</code></td>
-        <td><code>top</code></td>
-    </tr>
-    <tr>
-        <td>css</td>
-        <td>string</td>
-        <td>用于自定义样式的 Css styleSheet 字符串</td>
-        <td><code>-</code></td>
-        <td><code>-</code></td>
-    </tr>
-</table>
+```json
+{
+  "imports": {
+    // others...
+    "element-plus": "https://esm.sh/element-plus@2.3.12",
+    "element-plus/": "https://esm.sh/element-plus@2.3.12/"
+  }
+}
+```
+
+## 入口文件
+
+CodePlayer 默认约定入口文件为一个名为 `index.html` 的文件，并且会从该文件开始构建文件依赖图并运行代码。
+
+你也可以通过 url 上的 `entry` 参数自定义入口文件。
