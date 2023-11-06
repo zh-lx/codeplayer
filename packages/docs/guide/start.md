@@ -8,9 +8,9 @@ CodePlayer 本质上是解析 url 参数上的 `codeplayer_files` 字段，初�
 https://play.fe-dev.cn/?codeplayer_files=xxx
 ```
 
-## CodePlayer Url 生成
+## 示例
 
-要生成一个 demo 对应 CodePlayer url，核心为将 demo 代码转换为对应的 `codeplayer_files` 参数的值，接下来我们通过一个案例来了解如何将代码转换为 `codeplayer_files` 参数的值，该 demo 包含下列文件：
+使用 CodePlayer 展示 demo 的核心是将 demo 的代码转换为 url 的 `codeplayer_files` 参数的值。接下来我们通过一个案例来了解如何将代码转换为 `codeplayer_files` 参数的值，该 demo 包含下列文件：
 
 ::: code-group
 
@@ -48,7 +48,7 @@ document.querySelector('#max').innerText = maxNum;
 
 ### 1. 构建文件对象
 
-首先，将上述文件以 `{ 文件名: 代码 }` 的格式构建一个 js 键值对对象，构建后的对象应如下：
+首先，将上述文件以 `{ 文件名: 文件代码 }` 的格式构建一个 js 键值对对象，构建后的对象应如下：
 
 ```js
 const files = {
@@ -78,64 +78,19 @@ document.querySelector('#max').textContent = maxNum;`,
 
 ### 2. 序列化文件对象
 
-使用 `JSON.stringify()` 方法，将上述得到的文件对象 `files` 转换为 JSON 字符串，然后使用 `window.btoa()` 序列化该字符串并使用 `encodeURIComponent()` 将字符串进行编码，最终得到的值即为 `codeplayer_files` 参数的值。将该值作为 url 参数访问 `https://play.fe-dev.cn` 即可展示并运行对应的代码。
+使用 `JSON.stringify()` 方法，将上述得到的文件对象 `files` 转换为 JSON 字符串，然后使用 `window.btoa()` 序列化该字符串并使用 `encodeURIComponent()` 将字符串进行编码，最终得到的值即为 `codeplayer_files` 参数的值。
 
 ```js
 const codeplayer_files = encodeURIComponent(window.btoa(JSON.stringify(files)));
 
 window.open(`https://play.fe-dev.cn/?codeplayer_files=${codeplayer_files}`);
+
+// 对应的 url 为：
+/**
+ * http://play.fe-dev.cn/?codeplayer_files=eNo9j09PwzAMxb%2BKCYduUpcIDmh03S78OQIS44AImrIm0KImKUmKNk377jhNt5Ot5%2Feznw%2BkMVLtaB10SwpSXtw%2F363fXx4gCituylihFeZ7yYkynKAGUNZKyKHDXqsgoKqF8yqg6W39OJtzAiw52dlabq3cnyDZ%2FK202IHp9Va5AkrfCQONxAUo45mSRQVLdKZNZ770lWu6AGHfqQhY2bdqjAbQ6M66ABllWjSGBp8tEp%2Bo%2BBQbviM53hoc%2BPlIbeDLWQ1Za6XwdSQra3wYc3pYwsd1Dlc5zHO4zeHm8%2BzA2E%2B9RsOGYjsZgSnOpa16rUygv71y%2B1fVqipYN8ku0ZdNaWOMcmu1C8imJQtMlvLMtOjoj7cGEx7iF3wceE4KGJSopbRR4qQOofMFY8pr6mt2GkXrkZsjOf4D9xSi7Q%3D%3D
+ */
 ```
 
-## 第三方依赖
+在 CodePlayer 上对应的运行效果如下图所示：
 
-在 CodePlayer 中，所有的第三方依赖都是通过现代浏览器支持的 `importMap` 特性处理的，你需要在一个名为 `import-map.json` 的 JSON 文件的 `imports` 字段中，声明所使用的第三方库对应的 `esm` 规范的文件映射。
-
-:::tip 注意事项
-你只需要在 `import-map.json` 文件中声明第三方依赖的映射即可，不需要在 html 文件中添加 `<script type="importmap"></script>` 这个标签，因为 CodePlayer 内部会自动完成这部分工作。
-:::
-
-更多有关于 `importMap` 相关的内容，可以在 [MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/script/type/importmap) 中了解。
-
-### esm 文件地址
-
-所以通过 npm 公共源发布的第三方库，都可以在 [esm.sh](https://esm.sh) 上找到对应的 esm 规范的文件: `https://esm.sh/<package_name>@<version>` 即为第三方库对应版本的地址。
-
-例如 `react 18.2.0` 版本的对应 esm 规范文件地址为：
-
-```
-https://esm.sh/react@18.2.0
-```
-
-### import-map.json 万能法则
-
-如果你不太明白如何正确地在 `import-map.json` 中声明所有的第三方依赖，可以参考这个法则：无论使用了哪个第三方库，都在 `import-map.json` 的 `imports` 字段中添加以下两行：
-
-```json
-{
-  "imports": {
-    // others...
-    // 直接引入库
-    "<package_name>": "https://esm.sh/<package_name>@<version>",
-    // 直接引入库中的文件
-    "<package_name>/": "https://esm.sh/<package_name>@<version>/"
-  }
-}
-```
-
-例如，使用了 `element-plus` 的 `2.3.12` 版本，则添加以下代码：
-
-```json
-{
-  "imports": {
-    // others...
-    "element-plus": "https://esm.sh/element-plus@2.3.12",
-    "element-plus/": "https://esm.sh/element-plus@2.3.12/"
-  }
-}
-```
-
-## 入口文件
-
-CodePlayer 默认约定入口文件为一个名为 `index.html` 的文件，并且会从该文件开始构建文件依赖图并运行代码。
-
-你也可以通过 url 上的 `entry` 参数自定义入口文件。
+<img style="border: 1px solid #eee;" src="https://github.com/zh-lx/codeplayer/assets/73059627/33743b77-e720-4a24-a56f-1142daa23491" />
