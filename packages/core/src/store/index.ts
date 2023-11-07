@@ -6,7 +6,7 @@ import { LocalThemeKey } from '@/constant';
 
 export type Theme = 'light' | 'dark';
 export interface Store {
-  mainFile: string;
+  entry: string;
   activeFile: string;
   files: Record<string, File>;
   showFileBar: boolean;
@@ -28,7 +28,7 @@ export interface Store {
 
 export const store = reactive<Store>({
   // 文件系统相关
-  mainFile: 'index.html',
+  entry: 'index.html',
   files: {},
   activeFile: '',
   imports: {},
@@ -59,7 +59,7 @@ watch(
       fileMap[key] = store.files[key].code;
     }
     const params = new URLSearchParams(location.search);
-    params.set('codeplayer_files', utoa(JSON.stringify(fileMap)));
+    params.set('files', utoa(JSON.stringify(fileMap)));
     const newURL = location.href.replace(
       location.search,
       '?' + params.toString()

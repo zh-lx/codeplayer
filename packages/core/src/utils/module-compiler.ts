@@ -20,11 +20,11 @@ import {
 
 export function compileModulesForPreview(
   files: Record<string, File>,
-  mainFile: string
+  entry: string
 ) {
   const seen = new Set<File>();
   const modules: string[] = [];
-  processFile(files, files[mainFile], modules, seen);
+  processFile(files, files[entry], modules, seen);
 
   return modules;
 }

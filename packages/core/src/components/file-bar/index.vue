@@ -22,8 +22,8 @@ const changeFile = (newFilename: string, oldFilename: string) => {
     const file = new File(newFilename, '');
     store.files[newFilename] = file;
     changeActiveFile(newFilename);
-    if (!store.mainFile) {
-      store.mainFile = newFilename;
+    if (!store.entry) {
+      store.entry = newFilename;
     }
   } else {
     // rename filename
@@ -34,8 +34,8 @@ const changeFile = (newFilename: string, oldFilename: string) => {
     delete tempFiles[oldFilename];
     store.files = tempFiles;
     changeActiveFile(newFilename);
-    if (oldFilename === store.mainFile) {
-      store.mainFile = newFilename;
+    if (oldFilename === store.entry) {
+      store.entry = newFilename;
     }
   }
 };

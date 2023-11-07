@@ -35,8 +35,8 @@ function initFileSystem() {
   const params = new URLSearchParams(location.search);
   if (options.initFiles) {
     filesMap = options.initFiles;
-  } else if (params.get('codeplayer_files')) {
-    const files = JSON.parse(atou(params.get('codeplayer_files') as string));
+  } else if (params.get('files')) {
+    const files = JSON.parse(atou(params.get('files') as string));
     filesMap = files;
   }
 
@@ -48,11 +48,11 @@ function initFileSystem() {
   store.files = files;
 
   // 初始化入口文件
-  store.mainFile = options.mainFile || '';
-  if (!files[store.mainFile]) {
-    store.mainFile = Object.keys(files)[0];
+  store.entry = options.entry || '';
+  if (!files[store.entry]) {
+    store.entry = Object.keys(files)[0];
   }
-  store.activeFile = options.activeFile || store.mainFile;
+  store.activeFile = options.activeFile || store.entry;
 }
 
 watch(

@@ -38,7 +38,7 @@ export interface CodePlayerOptions {
    * @description_en Entry file name
    * @description_zh 入口文件的文件名，若不设置，默认将第一个文件作为入口文件
    */
-  mainFile?: string;
+  entry?: string;
   /**
    * @description_en Entry file name
    * @description_zh 初始化展示代码的文件的文件名

@@ -11,7 +11,7 @@ export interface FileSystem {
   // 全部文件
   files: Record<string, File>;
   // 入口文件
-  mainFile: string;
+  entry: string;
   // 当前编辑中的文件
   activeFile: string;
   // imports map

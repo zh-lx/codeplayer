@@ -9,14 +9,14 @@ import { dialog } from '@/utils';
 const props = defineProps<{ filename: string }>();
 
 const resetHomeFile = (e: Event) => {
-  if (store.mainFile === props.filename) {
+  if (store.entry === props.filename) {
     return;
   }
   e.stopPropagation();
   dialog({
     title: '提示',
     content: `确定要将 ${props.filename} 设置为入口文件吗?`,
-    confirm: () => (store.mainFile = props.filename),
+    confirm: () => (store.entry = props.filename),
   });
 };
 
@@ -32,7 +32,7 @@ onMounted(() => {
       }
       tippyDOM = tippy(reference.value, {
         content:
-          store.mainFile === props.filename
+          store.entry === props.filename
             ? TooltipText.isEntry
             : TooltipText.SetEntry,
         placement: 'bottom',
@@ -52,7 +52,7 @@ onMounted(() => {
       height="16px"
       width="16px"
       class="file-option-button"
-      :class="{ 'current-home-operate': store.mainFile === props.filename }"
+      :class="{ 'current-home-operate': store.entry === props.filename }"
     >
       <path
         fill="currentColor"

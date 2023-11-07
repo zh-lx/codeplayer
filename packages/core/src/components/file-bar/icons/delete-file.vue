@@ -10,7 +10,7 @@ const props = defineProps<{ filename: string }>();
 
 // 删除文件
 const deleteFile = (e: Event) => {
-  if (props.filename === store.mainFile) {
+  if (props.filename === store.entry) {
     message('不能删除入口文件', { type: 'danger' });
   }
   e.stopPropagation();
@@ -19,7 +19,7 @@ const deleteFile = (e: Event) => {
     content: `确定要删除 ${props.filename} 吗?`,
     confirm: () => {
       if (store.activeFile === props.filename) {
-        store.activeFile = store.mainFile;
+        store.activeFile = store.entry;
       }
       const tempFiles = { ...store.files };
       delete tempFiles[props.filename];
@@ -52,7 +52,7 @@ onMounted(() => {
 <template>
   <div
     class="operate-btn delete-operate"
-    :class="{ 'hide-file-operate': store.mainFile === props.filename }"
+    :class="{ 'hide-file-operate': store.entry === props.filename }"
     @click="deleteFile"
     ref="reference"
   >

@@ -21,7 +21,7 @@ import {
 import { extensions } from '@/constant';
 
 export async function compileModulesForPreview(params: ComplierPluginParams) {
-  const { fileMap: files, entry: mainFile } = params;
+  const { fileMap: files, entry: entry } = params;
   const seen = new Set<File>();
   const modules: string[] = [];
   const styles: string[] = [];
@@ -29,7 +29,7 @@ export async function compileModulesForPreview(params: ComplierPluginParams) {
   const html: string[] = [];
   processFile({
     files,
-    file: files[mainFile],
+    file: files[entry],
     modules,
     styles,
     links,

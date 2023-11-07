@@ -112,7 +112,7 @@ async function renderSandbox() {
   await compiler.run({
     fileMap: store.files,
     result,
-    entry: store.mainFile,
+    entry: store.entry,
     iframe: iframe.value as HTMLIFrameElement,
     render: true,
   });
@@ -128,7 +128,7 @@ async function refreshSandbox() {
   await compiler.run({
     fileMap: store.files,
     result,
-    entry: store.mainFile,
+    entry: store.entry,
     iframe: iframe.value as HTMLIFrameElement,
     render: false,
   });
