@@ -164,17 +164,17 @@ CodePlayerOptions 详细说明：
 
 # 如何使用 CodePlayer
 
-CodePlayer 本质上是解析 url 参数上的 `codeplayer_files` 字段，初始化对应的文件及代码，并将代码及运行结果呈现到页面上。
+CodePlayer 本质上是解析 url 参数上的 `files` 字段，初始化对应的文件及代码，并将代码及运行结果呈现到页面上。
 
 一个 CodePlayer Demo 的访问链接格式应该如下：
 
 ```
-https://play.fe-dev.cn/?codeplayer_files=xxx
+https://play.fe-dev.cn/?files=xxx
 ```
 
 ## CodePlayer Url 生成
 
-要生成一个 demo 对应 CodePlayer url，核心为将 demo 代码转换为对应的 `codeplayer_files` 参数的值，接下来我们通过一个案例来了解如何将代码转换为 `codeplayer_files` 参数的值，该 demo 包含下列文件：
+要生成一个 demo 对应 CodePlayer url，核心为将 demo 代码转换为对应的 `files` 参数的值，接下来我们通过一个案例来了解如何将代码转换为 `files` 参数的值，该 demo 包含下列文件：
 
 ::: code-group
 
@@ -215,7 +215,7 @@ document.querySelector('#max').innerText = maxNum;
 首先，将上述文件以 `{ 文件名: 代码 }` 的格式构建一个 js 键值对对象，构建后的对象应如下：
 
 ```js
-const files = {
+const filesMap = {
   'index.html': `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -242,12 +242,12 @@ document.querySelector('#max').textContent = maxNum;`,
 
 ### 2. 序列化文件对象
 
-使用 `JSON.stringify()` 方法，将上述得到的文件对象 `files` 转换为 JSON 字符串，然后使用 `window.btoa()` 序列化该字符串并使用 `encodeURIComponent()` 将字符串进行编码，最终得到的值即为 `codeplayer_files` 参数的值。将该值作为 url 参数访问 `https://play.fe-dev.cn` 即可展示并运行对应的代码。
+使用 `JSON.stringify()` 方法，将上述得到的文件对象 `filesMap` 转换为 JSON 字符串，然后使用 `window.btoa()` 序列化该字符串并使用 `encodeURIComponent()` 将字符串进行编码，最终得到的值即为 `files` 参数的值。将该值作为 url 参数访问 `https://play.fe-dev.cn` 即可展示并运行对应的代码。
 
 ```js
-const codeplayer_files = encodeURIComponent(window.btoa(JSON.stringify(files)));
+const files = encodeURIComponent(window.btoa(JSON.stringify(filesMap)));
 
-window.open(`https://play.fe-dev.cn/?codeplayer_files=${codeplayer_files}`);
+window.open(`https://play.fe-dev.cn/?files=${files}`);
 ```
 
 ## 第三方依赖
