@@ -16,7 +16,6 @@ export interface Store {
   showConsole: boolean;
   reverse: boolean;
   excludeTools: Control[];
-  imports: Record<string, string>;
   editor: any | null; // code Mirror 编辑器
   rerenderID: number; // 用于 preview 刷新的标识，当点击刷新按钮该值 +1 触发刷新
   codeSize: number;
@@ -31,7 +30,6 @@ export const store = reactive<Store>({
   entry: 'index.html',
   files: {},
   activeFile: '',
-  imports: {},
   showFileBar: true,
   showCode: true,
   showPreview: true,
