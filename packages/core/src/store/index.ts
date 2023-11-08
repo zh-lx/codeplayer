@@ -40,7 +40,7 @@ export const store = reactive<Store>({
   editor: null,
   rerenderID: 0,
   codeSize: 14,
-  vueVersion: '3.2.0',
+  vueVersion: '3.3.4',
   typescriptVersion: '4.9.3',
   theme: (localStorage.getItem(LocalThemeKey) as Theme) || 'light',
   reloadLanguageTools: () => {},

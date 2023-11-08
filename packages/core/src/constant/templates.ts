@@ -84,7 +84,7 @@ import {
   [MapFile]: `
 {
   "imports": {
-    "vue": "https://esm.sh/stable/vue@3.3.4/es2022/vue.mjs",
+    "vue": "https://esm.sh/vue@3.3.4",
     "element-plus": "https://esm.sh/element-plus@2.3.12",
     "element-plus/": "https://esm.sh/element-plus@2.3.12/",
     "@element-plus/": "https://esm.sh/@element-plus/"
