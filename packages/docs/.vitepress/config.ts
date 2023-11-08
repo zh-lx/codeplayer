@@ -18,6 +18,7 @@ export default defineConfig({
         items: [
           { text: '快速开始', link: '/guide/start' },
           { text: '第三方依赖(importmap)', link: '/guide/importmap' },
+          { text: '配置', link: '/guide/config' },
         ],
       },
       {
@@ -25,7 +26,9 @@ export default defineConfig({
         items: [{ text: '交流与反馈', link: '/more/feedback' }],
       },
     ],
-
+    nav: [
+      { text: '在线体验', link: 'https://play.fe-dev.cn', target: '_blank' },
+    ],
     socialLinks: [
       { icon: 'github', link: 'https://github.com/zh-lx/codeplayer' },
     ],
