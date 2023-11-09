@@ -38,7 +38,7 @@ eruda.init();`.trim()
 
   hooks.hook('after-emit', () => {
     if (iframe.value?.contentWindow?.__eruda) {
-      if (store.showConsole) {
+      if (store.openConsole) {
         iframe.value.contentWindow.__eruda.show();
       }
       iframe.value.contentWindow.__eruda._entryBtn._events.click.push(() => {
@@ -49,7 +49,7 @@ eruda.init();`.trim()
               '.eruda-dev-tools'
             ) as any;
           const display = devtools.computedStyleMap()?.get?.('display')?.value;
-          store.showConsole = display === 'block';
+          store.openConsole = display === 'block';
         }, 300);
       });
     }

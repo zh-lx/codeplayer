@@ -13,7 +13,7 @@ export interface Store {
   showCode: boolean;
   showPreview: boolean;
   showEruda: boolean;
-  showConsole: boolean;
+  openConsole: boolean;
   reverse: boolean;
   excludeTools: Control[];
   editor: any | null; // code Mirror 编辑器
@@ -25,24 +25,30 @@ export interface Store {
   reloadLanguageTools: () => void;
 }
 
+const params = new URLSearchParams(location.search);
+
 export const store = reactive<Store>({
   // 文件系统相关
-  entry: 'index.html',
+  entry: params.get('params') || 'index.html',
   files: {},
-  activeFile: '',
-  showFileBar: true,
-  showCode: true,
-  showPreview: true,
-  showEruda: true,
-  showConsole: false,
-  reverse: false,
-  excludeTools: [],
+  activeFile: params.get('activeFile') || '',
+  showFileBar: params.get('showFileBar') !== 'false',
+  showCode: params.get('showCode') !== 'false',
+  showPreview: params.get('showPreview') !== 'false',
+  showEruda: params.get('showEruda') !== 'false',
+  openConsole: params.get('openConsole') === 'true',
+  reverse: params.get('reverse') === 'true',
+  excludeTools:
+    JSON.parse(decodeURIComponent(params.get('excludeTools') || '[]')) || [],
   editor: null,
   rerenderID: 0,
-  codeSize: 14,
+  codeSize: Number(params.get('codeSize') || 14),
   vueVersion: '3.3.4',
   typescriptVersion: '4.9.3',
-  theme: (localStorage.getItem(LocalThemeKey) as Theme) || 'light',
+  theme:
+    (params.get('theme') as Theme) ||
+    (localStorage.getItem(LocalThemeKey) as Theme) ||
+    'light',
   reloadLanguageTools: () => {},
 });
 
