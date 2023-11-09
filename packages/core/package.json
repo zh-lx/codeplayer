@@ -36,6 +36,7 @@
     "@types/node": "^18.11.18",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/compiler-sfc": "^3.2.45",
+    "compiler-sfc-browser-vue2": "^0.0.5",
     "fflate": "^0.7.4",
     "hash-sum": "^2.0.0",
     "hookable": "^5.5.3",
