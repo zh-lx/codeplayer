@@ -41,7 +41,7 @@
 - 默认值: `true`
 - 说明: 是否显示侧文件栏
 
-## showConsole
+## openConsole
 
 - 类型: `boolean`
 - 默认值: `false`

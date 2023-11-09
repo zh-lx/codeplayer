@@ -22,6 +22,10 @@ export default defineConfig({
         ],
       },
       {
+        text: '参考',
+        items: [{ text: '组件式使用', link: '/reference/deploy' }],
+      },
+      {
         text: '更多',
         items: [{ text: '交流与反馈', link: '/more/feedback' }],
       },
