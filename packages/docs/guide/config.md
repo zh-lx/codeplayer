@@ -17,6 +17,12 @@
 - 类型: `string`
 - 说明: 初始化选中并展示代码的文件的文件名。如果不指定，默认为入口文件。
 
+## vueVersion
+
+- 类型: `number`
+- 可选值: `2 / 3`
+- 说明: 指定 vue 的版本，默认使用 vue3 解析器，如果是使用 vue2，务必指定该项
+
 ## showFileBar
 
 - 类型: `boolean`
@@ -70,3 +76,10 @@
 - 类型: `'dark' | 'light'`
 - 默认值: `light`
 - 说明: 主题色
+
+## appType
+
+- 类型: `string`
+- 可选值: `vue2 / vue3 / react / js / ts / html`
+- 默认值: `vue3`
+- 说明: 指定该参数且未指定 `files` 参数时，会使用内置的模板初始化一个对应类型的项目
