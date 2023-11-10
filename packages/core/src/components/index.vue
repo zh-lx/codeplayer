@@ -16,11 +16,14 @@ const CodeSlotName = computed(() => (store.reverse ? 'right' : 'left'));
 const PreviewSlotName = computed(() => (store.reverse ? 'left' : 'right'));
 
 const init = () => {
+  const params = new URLSearchParams(location.search);
   const options = props.options || {};
   for (let key in props.options) {
     if (key in store && options[key as keyof typeof options] !== undefined) {
-      // @ts-ignore
-      store[key] = options[key];
+      if (params.get(key) === undefined) {
+        // @ts-ignore
+        store[key] = options[key];
+      }
     }
   }
 
@@ -30,9 +33,13 @@ const init = () => {
 // 初始化文件系統
 function initFileSystem() {
   // 依次根据 options.initFiles、serializedState、appType 初始化文件
-  const options = props.options || {};
-  let filesMap = getTemplate(options.appType || '') as Record<string, string>;
   const params = new URLSearchParams(location.search);
+  const options = props.options || {};
+  const appType = params.get('appType') || options.appType || '';
+  if (appType === 'vue2') {
+    store.vueVersion = 2;
+  }
+  let filesMap = getTemplate(appType) as Record<string, string>;
   if (options.initFiles) {
     filesMap = options.initFiles;
   } else if (params.get('files')) {

@@ -14,7 +14,7 @@ import less from 'less';
 import { compileString as compileSassString } from 'sass';
 import { Hooks, ComplierPluginParams } from '@/compiler/type';
 
-export const transformVue3 = async (
+export const transformVue2 = async (
   params: ComplierPluginParams
 ): Promise<Error[] | undefined> => {
   const { fileMap } = params;
@@ -36,7 +36,7 @@ export const transformVue3 = async (
         });
 
         if (descriptor?.errors.length) {
-          _errors.push(...descriptor?.errors as unknown as Error[]);
+          _errors.push(...(descriptor?.errors as unknown as Error[]));
           return;
         }
 
@@ -196,15 +196,14 @@ async function doCompileScript(
 
   if (descriptor.script || descriptor.scriptSetup) {
     try {
-      const babelParserPlugins: SFCScriptCompileOptions['babelParserPlugins'] = isTS
-        ? ['typescript', 'jsx']
-        : undefined;
+      const babelParserPlugins: SFCScriptCompileOptions['babelParserPlugins'] =
+        isTS ? ['typescript', 'jsx'] : undefined;
       const compiledScript = compileScript(descriptor, {
         // ...vue3SFCOptions?.script,
         id,
         babelParserPlugins,
         isProd: false,
-        sourceMap: true
+        sourceMap: true,
       });
       let code = '';
       if (compiledScript.bindings) {
@@ -243,7 +242,6 @@ async function doCompileTemplate(
   bindingMetadata: any | undefined,
   isTS: boolean
 ): Promise<[string, Error[] | null]> {
-  
   const templateResult = compileTemplate({
     // ...vue3SFCOptions?.template,
     source: descriptor.template!.content,
@@ -255,10 +253,9 @@ async function doCompileTemplate(
       // ...vue3SFCOptions?.template?.compilerOptions,
       scopeId: id,
       bindings: bindingMetadata,
-      optimize: false
+      optimize: false,
     },
   });
-  console.log(templateResult)
   if (templateResult.errors.length) {
     return ['', templateResult.errors as unknown as Error[]];
   }
@@ -276,11 +273,10 @@ async function doCompileTemplate(
       transforms: ['typescript'],
     }).code;
   }
-  console.log(code)
 
   return [code, null];
 }
 
 export default function (hooks: Hooks) {
-  hooks.hook('transform', transformVue3);
+  hooks.hook('transform', transformVue2);
 }

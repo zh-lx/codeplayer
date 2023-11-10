@@ -7,7 +7,7 @@ import CodePlayer, { CodePlayerOptions } from '../../core/src/index';
 // import CodePlayer, { CodePlayerOptions } from '../../core';
 
 const options: CodePlayerOptions = {
-  appType: 'vue3',
+  appType: 'vue2',
 };
 </script>
 

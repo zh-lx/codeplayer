@@ -2,11 +2,14 @@ export type Control = 'refresh' | 'copy' | 'share';
 
 export type AppType =
   | 'vue'
+  | 'vue2'
   | 'vue3'
   | 'react'
   | 'html'
   | 'javascript'
-  | 'typescript';
+  | 'js'
+  | 'typescript'
+  | 'ts';
 
 export interface CodePlayerOptions {
   /**
@@ -53,7 +56,16 @@ export interface CodePlayerOptions {
    * @description_en Application type. If initFiles is not configured, the initial file will be automatically generated according to the appType; If initFiles is configured, this item is invalid
    * @description_zh 应用类型。若未配置 initFiles，会根据 appType 自动生成初始文件；若配置了 initFiles，此项失效
    */
-  appType?: 'vue' | 'vue3' | 'react' | 'html' | 'javascript' | 'typescript';
+  appType?:
+    | 'vue'
+    | 'vue2'
+    | 'vue3'
+    | 'react'
+    | 'html'
+    | 'javascript'
+    | 'js'
+    | 'typescript'
+    | 'ts';
   /**
    * @description_en Control buttons to be removed from the toolbar
    * @description_zh 工具栏要移除的工具按钮

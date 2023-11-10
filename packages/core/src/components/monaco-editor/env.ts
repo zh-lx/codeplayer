@@ -83,17 +83,18 @@ export async function reloadLanguageTools(store: Store) {
   };
 
   if (store.vueVersion) {
+    const version = store.vueVersion.toString() === '2' ? '2.7.15' : '3.3.6';
     dependencies = {
       ...dependencies,
-      vue: store.vueVersion,
-      '@vue/compiler-core': store.vueVersion,
-      '@vue/compiler-dom': store.vueVersion,
-      '@vue/compiler-sfc': store.vueVersion,
-      '@vue/compiler-ssr': store.vueVersion,
-      '@vue/reactivity': store.vueVersion,
-      '@vue/runtime-core': store.vueVersion,
-      '@vue/runtime-dom': store.vueVersion,
-      '@vue/shared': store.vueVersion,
+      vue: version,
+      '@vue/compiler-core': version,
+      '@vue/compiler-dom': version,
+      '@vue/compiler-sfc': version,
+      '@vue/compiler-ssr': version,
+      '@vue/reactivity': version,
+      '@vue/runtime-core': version,
+      '@vue/runtime-dom': version,
+      '@vue/shared': version,
       '@types/react': '18.0.0',
     };
   }

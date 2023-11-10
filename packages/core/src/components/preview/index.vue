@@ -56,7 +56,10 @@ eruda.init();`.trim()
   });
 };
 
-const compiler = new Compiler({ plugins: [erudaPlugin] });
+const compiler = new Compiler({
+  plugins: [erudaPlugin],
+  vueVersion: store.vueVersion,
+});
 
 onMounted(() => {
   renderSandbox();

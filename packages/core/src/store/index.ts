@@ -19,7 +19,7 @@ export interface Store {
   editor: any | null; // code Mirror 编辑器
   rerenderID: number; // 用于 preview 刷新的标识，当点击刷新按钮该值 +1 触发刷新
   codeSize: number;
-  vueVersion: string;
+  vueVersion: 2 | 3;
   typescriptVersion: string;
   theme: Theme;
   reloadLanguageTools: () => void;
@@ -43,7 +43,7 @@ export const store = reactive<Store>({
   editor: null,
   rerenderID: 0,
   codeSize: Number(params.get('codeSize') || 14),
-  vueVersion: '3.3.4',
+  vueVersion: Number(params.get('vueVersion') || 3) as 2 | 3,
   typescriptVersion: '4.9.3',
   theme:
     (params.get('theme') as Theme) ||
