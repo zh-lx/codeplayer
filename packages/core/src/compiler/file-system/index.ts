@@ -1,11 +1,11 @@
 import {
   HtmlTemplate,
-  JavascriptTemplate,
+  JsTemplate,
   ReactTemplate,
-  TypescriptTemplate,
+  TsTemplate,
   Vue3Template,
   Vue2Template,
-} from '@/constant/templates';
+} from '@/templates';
 import { File } from '@/compiler/type';
 
 export interface FileSystem {
@@ -29,9 +29,9 @@ export const getTemplate = (appType: string = 'vue3') => {
   } else if (appType === 'html') {
     return HtmlTemplate;
   } else if (appType === 'javascript' || 'js') {
-    return JavascriptTemplate;
+    return JsTemplate;
   } else {
-    return TypescriptTemplate;
+    return TsTemplate;
   }
 };
 
