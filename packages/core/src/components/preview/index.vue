@@ -22,6 +22,9 @@ const previewDOM = ref() as Ref<HTMLDivElement>;
 const iframe = ref<HTMLIFrameElement>();
 
 const erudaPlugin = (hooks: Hooks) => {
+  if (store.showEruda === false) {
+    return;
+  }
   hooks.hook(
     'before-emit',
     (_: ComplierPluginParams, items: ComplierPluginResult) => {

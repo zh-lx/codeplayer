@@ -80,3 +80,37 @@ watch(
   },
   { immediate: true }
 );
+
+function syncStoreToUrl(keys: string[]) {
+  for (let key of keys) {
+    watch(
+      () => store[key as keyof typeof store],
+      (val) => {
+        if (val !== undefined) {
+          const params = new URLSearchParams(location.search);
+          params.set(key, encodeURIComponent(JSON.stringify(val)));
+          const newURL = location.href.replace(
+            location.search,
+            '?' + params.toString()
+          );
+          history.pushState({ path: newURL }, '', newURL);
+        }
+      },
+      { deep: true }
+    );
+  }
+}
+
+syncStoreToUrl([
+  'entry',
+  'activeFile',
+  'showFileBar',
+  'showCode',
+  'showPreview',
+  'showEruda',
+  'openConsole',
+  'reverse',
+  'excludeTools',
+  'codeSize',
+  'theme',
+]);

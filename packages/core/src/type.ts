@@ -13,11 +13,6 @@ export type AppType =
 
 export interface CodePlayerOptions {
   /**
-   * @description_en The fixed height of the component. When this item is not set, the component height automatically changes with the content
-   * @description_zh 组件的固定高度，不设置此项时组件高度随内容自动变化
-   */
-  height?: number;
-  /**
    * @description_en Whether to display the side file column, default value is true
    * @description_zh 是否展示侧文件栏，默认为 true
    */
@@ -72,8 +67,28 @@ export interface CodePlayerOptions {
    */
   excludeTools?: Control[];
   /**
-   * @description_en Whether or not reversing CodeEditor and WebPreview's position. Default value is false
-   * @description_zh 代码编辑区-web预览区是否位置翻转。默认值为不翻转
+   * @description_en The initial font-size of code
+   * @description_zh 初始的代码字号
    */
-  reverse?: boolean;
+  codeSize?: number;
+  /**
+   * @description_en The version of vue compiler
+   * @description_zh vue 解析器的版本
+   */
+  vueVersion?: 2 | 3;
+  /**
+   * @description_en The theme
+   * @description_zh 主题
+   */
+  theme?: 'light' | 'dark';
+  /**
+   * @description_en Whether to open the console
+   * @description_zh 是否默认打开控制台
+   */
+  openConsole?: boolean;
+  /**
+   * @description_en Whether to show the eruda
+   * @description_zh 是否展示 eruda
+   */
+  showEruda?: boolean;
 }

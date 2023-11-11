@@ -75,12 +75,7 @@ watch(
 </script>
 
 <template>
-  <div
-    class="codeplayer-container"
-    :style="{
-      height: props.options?.height ? `${props.options?.height}px` : '',
-    }"
-  >
+  <div class="codeplayer-container">
     <Toolbar />
     <div class="main-content main-content-top">
       <Splitter
@@ -97,7 +92,6 @@ watch(
             class="main-splitter"
             min="0%"
             max="100%"
-            :fixedHeight="props.options?.height"
             :showLeft="store.reverse ? store.showPreview : store.showCode"
             :showRight="store.reverse ? store.showCode : store.showPreview"
           >
