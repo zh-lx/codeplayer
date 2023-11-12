@@ -15,7 +15,7 @@ import {
   watch,
   computed,
 } from 'vue';
-import * as monaco from 'monaco-editor-core';
+import * as monaco from 'monaco-editor';
 import { initMonaco } from './env';
 import { getOrCreateModel } from './utils';
 import { loadGrammars, loadTheme } from 'monaco-volar';

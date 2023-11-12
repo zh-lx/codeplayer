@@ -58,7 +58,7 @@
     "@volar/monaco": "~1.9.2",
     "@volar/typescript": "~1.9.2",
     "@vue/language-service": "1.8.6",
-    "monaco-editor": "^0.41.0",
+    "monaco-editor": "0.41.0",
     "monaco-editor-textmate": "^4.0.0",
     "monaco-textmate": "^3.0.1",
     "monaco-volar": "^0.4.0",

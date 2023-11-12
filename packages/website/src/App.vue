@@ -3,11 +3,11 @@
 </template>
 
 <script setup lang="ts">
-import CodePlayer, { CodePlayerOptions } from '../../core/src/index';
-// import CodePlayer, { CodePlayerOptions } from '../../core';
+// import CodePlayer, { CodePlayerOptions } from '../../core/src/index';
+import CodePlayer, { CodePlayerOptions } from '../../core';
 
 const options: CodePlayerOptions = {
-  appType: 'react',
+  appType: 'vue3',
 };
 </script>
 

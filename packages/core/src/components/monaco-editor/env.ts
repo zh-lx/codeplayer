@@ -1,6 +1,6 @@
 import { jsDelivrUriBase } from '@volar/cdn';
 import * as volar from '@volar/monaco';
-import { editor, languages, Uri } from 'monaco-editor-core';
+import { editor, languages, Uri } from 'monaco-editor';
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import * as onigasm from 'onigasm';
 import onigasmWasm from 'onigasm/lib/onigasm.wasm?url';

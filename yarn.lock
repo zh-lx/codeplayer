@@ -1791,7 +1791,7 @@ monaco-editor-textmate@^4.0.0:
   resolved "https://registry.npmmirror.com/monaco-editor-textmate/-/monaco-editor-textmate-4.0.0.tgz#f85a8916989dac01791fff1f001e56fdb2907ab4"
   integrity sha512-Clwup5LJzVfwURQrS+odSEC5/hZBEG36pQnvBKt4OtBndF8r2xLeXUZcK/AqEBK2u0Npy7frFp9hG7m66Ol9hA==
 
-monaco-editor@^0.41.0:
+monaco-editor@0.41.0, monaco-editor@^0.41.0:
   version "0.41.0"
   resolved "https://registry.npmmirror.com/monaco-editor/-/monaco-editor-0.41.0.tgz#2ba31e5af7e3ae93ac5d7467ec2772ef9b3d967f"
   integrity sha512-1o4olnZJsiLmv5pwLEAmzHTE/5geLKQ07BrGxlF4Ri/AXAc2yyDGZwHjiTqD8D/ROKUZmwMA28A+yEowLNOEcA==
