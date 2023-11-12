@@ -93,7 +93,6 @@ onMounted(async () => {
   watch(
     () => store.activeFile,
     async (_, oldFilename) => {
-      console.log(_);
       if (!editorInstance) return;
       const file = store.files[store.activeFile];
       if (!file) return null;
