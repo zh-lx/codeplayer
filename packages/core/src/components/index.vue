@@ -42,8 +42,8 @@ function initFileSystem() {
   let filesMap = getTemplate(appType) as Record<string, string>;
   if (options.initFiles) {
     filesMap = options.initFiles;
-  } else if (params.get('files')) {
-    const files = JSON.parse(atou(params.get('files') as string));
+  } else if (location.hash) {
+    const files = JSON.parse(atou(location.hash.slice(1)));
     filesMap = files;
   }
 
@@ -59,7 +59,10 @@ function initFileSystem() {
   if (!files[store.entry]) {
     store.entry = Object.keys(files)[0];
   }
-  store.activeFile = options.activeFile || store.entry;
+  store.activeFile =
+    params.get('activeFile') || options.activeFile || store.entry;
+
+  console.log(store.activeFile);
 }
 
 watch(

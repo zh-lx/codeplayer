@@ -29,9 +29,9 @@ const params = new URLSearchParams(location.search);
 
 export const store = reactive<Store>({
   // 文件系统相关
-  entry: params.get('params') || 'index.html',
+  entry: decodeURIComponent(params.get('params') || 'index.html'),
   files: {},
-  activeFile: params.get('activeFile') || '',
+  activeFile: decodeURIComponent(params.get('activeFile') || ''),
   showFileBar: params.get('showFileBar') !== 'false',
   showCode: params.get('showCode') !== 'false',
   showPreview: params.get('showPreview') !== 'false',
@@ -62,13 +62,7 @@ watch(
     for (let key in store.files) {
       fileMap[key] = store.files[key].code;
     }
-    const params = new URLSearchParams(location.search);
-    params.set('files', utoa(JSON.stringify(fileMap)));
-    const newURL = location.href.replace(
-      location.search,
-      '?' + params.toString()
-    );
-    history.pushState({ path: newURL }, '', newURL);
+    location.hash = utoa(JSON.stringify(fileMap));
   },
   { deep: true }
 );
@@ -88,7 +82,11 @@ function syncStoreToUrl(keys: string[]) {
       (val) => {
         if (val !== undefined) {
           const params = new URLSearchParams(location.search);
-          params.set(key, encodeURIComponent(JSON.stringify(val)));
+          if (typeof val === 'object') {
+            params.set(key, encodeURIComponent(JSON.stringify(val)));
+          } else {
+            params.set(key, val);
+          }
           const newURL = location.href.replace(
             location.search,
             '?' + params.toString()

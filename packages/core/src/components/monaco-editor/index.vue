@@ -51,7 +51,7 @@ onMounted(async () => {
   }
 
   const editorInstance = monaco.editor.create(containerRef.value, {
-    value: store.files[store.activeFile].code,
+    value: store.files[store.activeFile]?.code || '',
     language: lang.value,
     fontSize: 13,
     theme: theme[store.theme],
@@ -93,6 +93,7 @@ onMounted(async () => {
   watch(
     () => store.activeFile,
     async (_, oldFilename) => {
+      console.log(_);
       if (!editorInstance) return;
       const file = store.files[store.activeFile];
       if (!file) return null;
