@@ -55,14 +55,12 @@ function initFileSystem() {
   store.files = files;
 
   // 初始化入口文件
-  store.entry = options.entry || '';
+  store.entry = params.get('entry') || options.entry || '';
   if (!files[store.entry]) {
     store.entry = Object.keys(files)[0];
   }
   store.activeFile =
     params.get('activeFile') || options.activeFile || store.entry;
-
-  console.log(store.activeFile);
 }
 
 watch(

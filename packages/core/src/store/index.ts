@@ -81,17 +81,13 @@ function syncStoreToUrl(keys: string[]) {
       () => store[key as keyof typeof store],
       (val) => {
         if (val !== undefined) {
-          const params = new URLSearchParams(location.search);
+          const url = new URL(location.href);
           if (typeof val === 'object') {
-            params.set(key, encodeURIComponent(JSON.stringify(val)));
+            url.searchParams.set(key, encodeURIComponent(JSON.stringify(val)));
           } else {
-            params.set(key, val);
+            url.searchParams.set(key, val);
           }
-          const newURL = location.href.replace(
-            location.search,
-            '?' + params.toString()
-          );
-          history.pushState({ path: newURL }, '', newURL);
+          history.pushState({}, '', url);
         }
       },
       { deep: true }
