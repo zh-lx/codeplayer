@@ -1,27 +1,8 @@
-# CodePlayer
+# 介绍
 
-<p align="center">
-  <p>CodePlayer 是一款轻量、免登录、极快运行速度的 WebIDE，可以在线编写 vue2/3、react 等应用代码并运行，性能远超 CodePen、CodeSandbox、Stackblitz 等同类的产品。</p>
-  <a href="https://play.fe-dev.cn">在线体验</a> | 
-  <a href="https://play.fe-dev.cn/docs">使用手册</a>
-</p>
-
-</div>
+CodePlayer 是一款轻量、免登录、极快运行速度的 WebIDE，可以在线编写 vue2/3、react 等应用代码并运行，性能远超 CodePen、CodeSandbox、Stackblitz 等同类的产品。
 
 ![捕获](https://github.com/zh-lx/codeplayer/assets/73059627/4edd7fa7-f10b-4fbb-8a7e-ab3378ad7c57)
-
-## 使用
-
-具体的使用参照[使用手册](http://play.fe-dev.cn/docs/guide/start.html)
-
-## 支持语法
-
-- ✅ html
-- ✅ js/ts
-- ✅ css/less/scss
-- ✅ jsx/tsx
-- ✅ vue2/3
-- ✅ react
 
 ## 速度对比
 
@@ -34,12 +15,3 @@
 | CodePen     | 12s              | 4s               | [CodePen](https://codepen.io/ischaqje-the-bold/pen/OJdgQew?editors=001)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | CodeSandbox | 19s              | 17s              | [CodeSandbox](https://codesandbox.io/s/yv7rzl)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | Stackblitz  | 29s              | 22s              | [Stackblitz](https://stackblitz.com/edit/react-nxlcxa?file=demo.tsx)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-
-## 交流与反馈
-
-任何使用问题欢迎添加作者微信 `zhoulx1688888` 或者 QQ 群 `245077601` 进行咨询与反馈:
-
-<div style="display: flex;">
-  <img src="https://user-images.githubusercontent.com/73059627/226233691-848b2a40-f1a9-414e-a80f-3fc6c6209eb1.png" width="200" />
-  <img src="https://github.com/zh-lx/codeplayer/assets/73059627/24851d9e-4d94-4a33-94c7-dcc09696a67b" width="200" />
-</div>

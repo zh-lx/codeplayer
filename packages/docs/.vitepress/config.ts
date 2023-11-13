@@ -4,6 +4,7 @@ import { defineConfig } from 'vitepress';
 export default defineConfig({
   title: 'CodePlayer',
   description: '浏览器端进行 Web 代码的编写及运行预览',
+  base: '/docs/',
   themeConfig: {
     logo: '/logo.svg',
     // https://vitepress.dev/reference/default-theme-config
@@ -16,14 +17,18 @@ export default defineConfig({
       {
         text: '指南',
         items: [
+          { text: '介绍', link: '/guide/introduction' },
           { text: '快速开始', link: '/guide/start' },
-          { text: '第三方依赖(importmap)', link: '/guide/importmap' },
-          { text: '配置', link: '/guide/config' },
         ],
       },
       {
         text: '参考',
-        items: [{ text: '组件式使用', link: '/reference/deploy' }],
+        items: [
+          { text: '第三方依赖(importmap)', link: '/guide/importmap' },
+          { text: '配置', link: '/guide/config' },
+          { text: '组件式使用', link: '/reference/deploy' },
+          { text: '支持语法', link: '/reference/support' },
+        ],
       },
       {
         text: '更多',
