@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, computed } from 'vue';
+import { watch, computed, ref } from 'vue';
 import { store } from '@/store';
 import { atou } from '@/utils';
 import { getTemplate, File } from '@/compiler';
@@ -9,11 +9,24 @@ import Splitter from './splitter/index.vue';
 import FileBar from './file-bar/index.vue';
 import CodeEditor from './monaco-editor/index.vue';
 import Preview from './preview/index.vue';
+import Loading from './loading/index.vue';
 
 const props = defineProps<{ options?: CodePlayerOptions }>();
 
+const loaded = ref(false);
+
 const CodeSlotName = computed(() => (store.reverse ? 'right' : 'left'));
 const PreviewSlotName = computed(() => (store.reverse ? 'left' : 'right'));
+
+const onLoad = (cb: () => void) => {
+  if (document.readyState === 'complete') {
+    cb();
+  } else {
+    window.addEventListener('load', cb);
+  }
+};
+
+onLoad(() => (loaded.value = true));
 
 const init = () => {
   const params = new URLSearchParams(location.search);
@@ -100,7 +113,8 @@ watch(
               <CodeEditor />
             </template>
             <template v-slot:[PreviewSlotName]>
-              <Preview />
+              <Preview v-if="loaded" />
+              <Loading v-else />
             </template>
           </Splitter>
         </template>
