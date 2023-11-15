@@ -90,7 +90,7 @@ import {
 const importMap = `
 {
   "imports": {
-    "vue": "https://esm.sh/vue@3.3.4",
+    "vue": "https://esm.sh/vue",
     "element-plus": "https://esm.sh/element-plus@2.3.12",
     "element-plus/": "https://esm.sh/element-plus@2.3.12/",
     "@element-plus/": "https://esm.sh/@element-plus/"

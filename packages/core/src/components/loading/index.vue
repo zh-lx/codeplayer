@@ -36,27 +36,8 @@
         <path
           d="M446.784 757.28l99.568-370.832 30.896 8.288-99.568 370.848zM405.04 711.776L269.248 576l135.776-135.76-22.656-22.64L224 576l158.4 158.4zM618.96 711.776l22.672 22.624L800 576l-158.4-158.4-22.64 22.608L754.752 576z"
           p-id="5586"
-          fill="none"
-          stroke="#006AFF"
-          stroke-width="16"
-          stroke-dasharray="60"
-          stroke-dashoffset="60"
-        >
-          <animate
-            attributeName="stroke-dashoffset"
-            values="60;0"
-            dur="4s"
-            keyTimes="0;1"
-            repeatCount="indefinite"
-          />
-          <animate
-            attributeName="stroke-dasharray"
-            values="60;0"
-            dur="4s"
-            keyTimes="0;1"
-            repeatCount="indefinite"
-          />
-        </path>
+          fill="#006AFF"
+        ></path>
       </svg>
     </div>
     <p class="loading-text">{{ msg }}</p>

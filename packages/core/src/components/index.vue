@@ -18,15 +18,9 @@ const loaded = ref(false);
 const CodeSlotName = computed(() => (store.reverse ? 'right' : 'left'));
 const PreviewSlotName = computed(() => (store.reverse ? 'left' : 'right'));
 
-const onLoad = (cb: () => void) => {
-  if (document.readyState === 'complete') {
-    cb();
-  } else {
-    window.addEventListener('load', cb);
-  }
+window.onload = () => {
+  loaded.value = true;
 };
-
-onLoad(() => (loaded.value = true));
 
 const init = () => {
   const params = new URLSearchParams(location.search);
@@ -113,8 +107,8 @@ watch(
               <CodeEditor />
             </template>
             <template v-slot:[PreviewSlotName]>
-              <Preview v-if="loaded" />
-              <Loading v-else />
+              <Preview />
+              <Loading v-if="!loaded" />
             </template>
           </Splitter>
         </template>
