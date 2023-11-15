@@ -67,6 +67,7 @@ onMounted(() => {
 
 <style scoped lang="less">
 .loading-container {
+  background-color: var(--codeplayer-filebar-bgc);
   flex-direction: column;
   display: flex;
   align-items: center;
@@ -81,7 +82,7 @@ onMounted(() => {
     height: 120px;
   }
   .loading-text {
-    color: #333;
+    color: var(--codeplayer-text-secondary);
   }
 }
 </style>
