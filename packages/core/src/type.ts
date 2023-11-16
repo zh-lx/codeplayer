@@ -91,4 +91,14 @@ export interface CodePlayerOptions {
    * @description_zh 是否展示 eruda
    */
   showEruda?: boolean;
+  /**
+   * @description_en The link of document
+   * @description_zh 文档链接地址
+   */
+  document?: string;
+  /**
+   * @description_en The link of github
+   * @description_zh github 地址
+   */
+  github?: boolean;
 }

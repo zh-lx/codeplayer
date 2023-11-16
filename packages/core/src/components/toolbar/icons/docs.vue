@@ -27,7 +27,7 @@ onMounted(() => {
 });
 
 function readDocs() {
-  window.open('https://play.fe-dev.cn/docs', '_blank');
+  window.open(store.document, '_blank');
 }
 </script>
 

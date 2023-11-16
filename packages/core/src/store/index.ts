@@ -23,6 +23,8 @@ export interface Store {
   typescriptVersion: string;
   theme: Theme;
   reloadLanguageTools: () => void;
+  document: string;
+  github: string;
 }
 
 const params = new URLSearchParams(location.search);
@@ -50,6 +52,12 @@ export const store = reactive<Store>({
     (localStorage.getItem(LocalThemeKey) as Theme) ||
     'light',
   reloadLanguageTools: () => {},
+  document: decodeURIComponent(
+    params.get('document') || 'https://play.fe-dev.cn/docs'
+  ),
+  github: decodeURIComponent(
+    params.get('github') || 'https://github.com/zh-lx/codeplayer'
+  ),
 });
 
 watch(

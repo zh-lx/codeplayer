@@ -27,7 +27,7 @@ onMounted(() => {
 });
 
 function viewGithub() {
-  window.open('https://github.com/zh-lx/codeplayer', '_blank');
+  window.open(store.github, '_blank');
 }
 </script>
 
