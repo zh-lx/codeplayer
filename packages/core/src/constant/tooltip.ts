@@ -12,4 +12,6 @@ export const TooltipText = {
   SwapLayout: 'Swap the position of CodeEditor and WebPreview',
   CopyCode: 'Copy code to clipboard',
   Share: 'Share the page',
+  Docs: 'View documents of codeplayer',
+  Github: 'View codeplayer on github',
 };

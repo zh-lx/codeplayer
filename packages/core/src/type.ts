@@ -1,4 +1,4 @@
-export type Control = 'refresh' | 'copy' | 'share';
+export type Control = 'refresh' | 'copy' | 'share' | 'docs' | 'github';
 
 export type AppType =
   | 'vue'
