@@ -47,11 +47,17 @@
 - 默认值: `true`
 - 说明: 是否显示侧文件栏
 
+## showEruda
+
+- 类型: `boolean`
+- 默认值: `true`
+- 说明: 是否显示 eruda 控制台
+
 ## openConsole
 
 - 类型: `boolean`
 - 默认值: `false`
-- 说明: 初始化是否显示 eruda 的控制台
+- 说明: 初始化是否默认打开 eruda 的控制台
 
 ## reverse
 
@@ -61,7 +67,7 @@
 
 ## excludeTools
 
-- 类型: `('refresh' | 'share')[]`
+- 类型: `('refresh' | 'share' | 'docs' | 'git')[]`
 - 默认值: `[]`
 - 说明: 需要隐藏的工具栏按钮
 
@@ -83,3 +89,15 @@
 - 可选值: `vue2 / vue3 / react / js / ts / html`
 - 默认值: `vue3`
 - 说明: 指定该参数且未指定 `files` 参数时，会使用内置的模板初始化一个对应类型的项目
+
+## document
+
+- 类型: `string`
+- 默认值: `https://play.fe-dev.cn/docs`
+- 说明: 文档 icon 指向的地址
+
+## github
+
+- 类型: `string`
+- 默认值: `https://github.com/zh-lx/codeplayer`
+- 说明: Github icon 指向的地址
