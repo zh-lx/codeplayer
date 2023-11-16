@@ -14,7 +14,6 @@ import {
   exportKey,
   dynamicImportKey,
   moduleKey,
-  scriptRE,
   scriptModuleRE,
   styleRE,
 } from '@/constant';
@@ -336,10 +335,6 @@ function processHtmlFile(params: {
         }
       }
       jsCode += '\n' + code;
-      return '';
-    })
-    .replace(scriptRE, (_, content) => {
-      jsCode += '\n' + content;
       return '';
     })
     .replace(styleRE, (_, content) => {
