@@ -19,70 +19,32 @@ const indexHtml = `
 `.trim();
 
 const mainTs = `
-import { createApp } from 'vue';
-import ElementPlus from 'element-plus';
-import 'element-plus/dist/index.css';
+import { createApp } from 'vue'
+import ArcoVue from '@arco-design/web-vue';
 import App from './App.vue';
+import '@arco-design/web-vue/dist/arco.css';
 
 const app = createApp(App);
-
-app.use(ElementPlus);
+app.use(ArcoVue);
 app.mount('#app');
 `.trim();
 
 const appVue = `
 <template>
-  <el-row class="mb-4">
-    <el-button>Default</el-button>
-    <el-button type="primary">Primary</el-button>
-    <el-button type="success">Success</el-button>
-    <el-button type="info">Info</el-button>
-    <el-button type="warning">Warning</el-button>
-    <el-button type="danger">Danger</el-button>
-  </el-row>
-
-  <el-row class="mb-4">
-    <el-button plain>Plain</el-button>
-    <el-button type="primary" plain>Primary</el-button>
-    <el-button type="success" plain>Success</el-button>
-    <el-button type="info" plain>Info</el-button>
-    <el-button type="warning" plain>Warning</el-button>
-    <el-button type="danger" plain>Danger</el-button>
-  </el-row>
-
-  <el-row class="mb-4">
-    <el-button round>Round</el-button>
-    <el-button type="primary" round>Primary</el-button>
-    <el-button type="success" round>Success</el-button>
-    <el-button type="info" round>Info</el-button>
-    <el-button type="warning" round>Warning</el-button>
-    <el-button type="danger" round>Danger</el-button>
-  </el-row>
-
-  <el-row>
-    <el-button :icon="Search" circle />
-    <el-button type="primary" :icon="Edit" circle />
-    <el-button type="success" :icon="Check" circle />
-    <el-button type="info" :icon="Message" circle />
-    <el-button type="warning" :icon="Star" circle />
-    <el-button type="danger" :icon="Delete" circle />
-  </el-row>
+  <div class="container">
+    <a-space>
+      <a-button type="primary">Primary</a-button>
+      <a-button>Secondary</a-button>
+      <a-button type="dashed">Dashed</a-button>
+      <a-button type="outline">Outline</a-button>
+      <a-button type="text">Text</a-button>
+    </a-space>
+  </div>
 </template>
 
-<script lang="ts" setup>
-import {
-  Check,
-  Delete,
-  Edit,
-  Message,
-  Search,
-  Star,
-} from '@element-plus/icons-vue'
-</script>
-
-<style scoped>
-.mb-4 {
-  margin-bottom: 16px;
+<style lang="less">
+.container {
+  padding: 16px;
 }
 </style>
 `.trim();
@@ -90,10 +52,9 @@ import {
 const importMap = `
 {
   "imports": {
-    "vue": "https://esm.sh/vue",
-    "element-plus": "https://esm.sh/element-plus@2.3.12",
-    "element-plus/": "https://esm.sh/element-plus@2.3.12/",
-    "@element-plus/": "https://esm.sh/@element-plus/"
+    "vue": "https://esm.sh/vue@3.3.8",
+    "@arco-design/web-vue": "https://esm.sh/@arco-design/web-vue@2.53.1",
+    "@arco-design/web-vue/": "https://esm.sh/@arco-design/web-vue@2.53.1/"
   }
 }
 `.trim();
