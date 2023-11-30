@@ -52,7 +52,7 @@ const appVue = `
 const importMap = `
 {
   "imports": {
-    "vue": "https://esm.sh/vue@3.3.8",
+    "vue": "https://esm.sh/vue",
     "@arco-design/web-vue": "https://esm.sh/@arco-design/web-vue@2.53.1",
     "@arco-design/web-vue/": "https://esm.sh/@arco-design/web-vue@2.53.1/"
   }
