@@ -52,9 +52,9 @@ const appVue = `
 const importMap = `
 {
   "imports": {
-    "vue": "https://esm.sh/vue",
-    "@arco-design/web-vue": "https://esm.sh/@arco-design/web-vue@2.53.1",
-    "@arco-design/web-vue/": "https://esm.sh/@arco-design/web-vue@2.53.1/"
+    "vue": "https://esm.sh/vue@latest",
+    "@arco-design/web-vue": "https://esm.sh/@arco-design/web-vue?deps=vue@latest",
+    "@arco-design/web-vue/": "https://esm.sh/@arco-design/web-vue/"
   }
 }
 `.trim();

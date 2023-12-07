@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, computed, ref } from 'vue';
+import { watch, computed, ref, onMounted } from 'vue';
 import { store } from '@/store';
 import { atou } from '@/utils';
 import { getTemplate, File } from '@/compiler';
@@ -18,9 +18,17 @@ const loaded = ref(false);
 const CodeSlotName = computed(() => (store.reverse ? 'right' : 'left'));
 const PreviewSlotName = computed(() => (store.reverse ? 'left' : 'right'));
 
-window.onload = () => {
-  loaded.value = true;
+const onLoad = (cb: () => void) => {
+  if (document.readyState === 'complete') {
+    cb();
+  } else {
+    window.addEventListener('load', cb);
+  }
 };
+
+onLoad(() => {
+  loaded.value = true;
+});
 
 const init = () => {
   const params = new URLSearchParams(location.search);
