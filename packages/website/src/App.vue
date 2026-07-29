@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import CodePlayer, { CodePlayerOptions } from '../../core';
+import CodePlayer, { CodePlayerOptions } from 'codeplayer';
 
 const options: CodePlayerOptions = {
   appType: 'react',

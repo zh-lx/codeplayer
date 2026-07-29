@@ -21,6 +21,7 @@ import { getOrCreateModel } from './utils';
 import { loadGrammars, loadTheme } from 'monaco-volar';
 import { store } from '@/store';
 import { getFileLanguage, getFileExtraName } from '@/compiler';
+import { debounce } from '@/utils';
 import CopyIcon from '@/components/toolbar/icons/copy.vue';
 
 const containerRef = ref<HTMLDivElement>();
@@ -115,7 +116,7 @@ onMounted(async () => {
         editorInstance.focus();
       }
 
-      monaco.editor.setModelLanguage(model!, 'javascript');
+      monaco.editor.setModelLanguage(model!, getFileLanguage(store.activeFile));
       if (
         ['.css', '.less', '.sass', '.scss'].includes(
           getFileExtraName(store.activeFile)
@@ -135,8 +136,10 @@ onMounted(async () => {
     // ignore save event
   });
 
+  const acquireTypes = debounce(() => store.acquireTypes(), 500);
   editorInstance.onDidChangeModelContent(() => {
     store.files[store.activeFile].code = editorInstance.getValue();
+    acquireTypes();
   });
 
   store.reloadLanguageTools();

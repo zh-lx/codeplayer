@@ -22,7 +22,7 @@
     "monaco-editor-core": "0.41.0",
     "monaco-volar": "^0.4.0",
     "rollup-plugin-visualizer": "^5.9.0",
-    "sass": "^1.66.1",
+    "sass": "1.66.1",
     "sucrase": "^3.29.0",
     "tslib": "^2.5.0",
     "typescript": "^4.9.3",
