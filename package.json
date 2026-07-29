@@ -1,16 +1,16 @@
 {
-  "name": "codeplayer",
+  "name": "@codeplayer/monorepo",
   "version": "1.0.0",
   "description": "一个浏览器代码编辑&可视化运行 web 组件，支持 vue/react 等代码的浏览器编辑及运行",
-  "main": "index.js",
+  "packageManager": "pnpm@10.8.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:core": "pnpm --filter codeplayer dev",
+    "dev:website": "pnpm --filter @codeplayer/website dev",
+    "dev:docs": "pnpm --filter @codeplayer/docs dev",
+    "build": "pnpm --recursive --if-present build"
   },
   "private": true,
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "workspaces": [
-    "packages/*"
-  ]
+  "license": "ISC"
 }
