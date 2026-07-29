@@ -29,16 +29,16 @@ root.render(<App />)
 
 const appTsx = `
 import React from 'react';
-import { Button, Space } from 'antd';
+import { Button, Flex } from 'antd';
 
 const App: React.FC = () => (
-  <Space wrap>
+  <Flex gap="small" wrap>
     <Button type="primary">Primary Button</Button>
     <Button>Default Button</Button>
     <Button type="dashed">Dashed Button</Button>
     <Button type="text">Text Button</Button>
     <Button type="link">Link Button</Button>
-  </Space>
+  </Flex>
 );
 
 export default App;
@@ -47,10 +47,9 @@ export default App;
 const importMap = `
 {
   "imports": {
-    "react": "https://esm.sh/react@18.2.0",
-    "react-dom/": "https://esm.sh/react-dom@18.2.0/",
-    "antd": "https://esm.sh/antd@5.8.5",
-    "@antd/": "https://esm.sh/@antd@5.8.5/"
+    "react": "https://esm.sh/react@latest",
+    "react-dom/": "https://esm.sh/react-dom@latest/",
+    "antd": "https://esm.sh/antd@6.5.2?bundle&deps=react@latest,react-dom@latest"
   }
 }
 `.trim();

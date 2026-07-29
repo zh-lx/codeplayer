@@ -247,6 +247,7 @@ async function doCompileTemplate(
     source: descriptor.template!.content,
     filename: descriptor.filename,
     isProduction: false,
+    prettify: false,
     bindings: bindingMetadata,
     isTS,
     compilerOptions: {

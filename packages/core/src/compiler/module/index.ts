@@ -259,6 +259,9 @@ function processModule(
       if (!binding) {
         return;
       }
+      if (!parent) {
+        return;
+      }
       if (isStaticProperty(parent) && parent.shorthand) {
         // let binding used in a property shorthand
         // { foo } -> { foo: __import_x__.foo }
