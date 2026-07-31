@@ -23,6 +23,7 @@ export interface Store {
   typescriptVersion: string;
   theme: Theme;
   reloadLanguageTools: () => void;
+  acquireTypes: () => Promise<void>;
   document: string;
   github: string;
 }
@@ -52,6 +53,7 @@ export const store = reactive<Store>({
     (localStorage.getItem(LocalThemeKey) as Theme) ||
     'light',
   reloadLanguageTools: () => {},
+  acquireTypes: async () => {},
   document: decodeURIComponent(
     params.get('document') || 'https://play.fe-dev.cn/docs'
   ),

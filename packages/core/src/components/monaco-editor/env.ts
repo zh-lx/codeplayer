@@ -51,7 +51,7 @@ export function initMonaco(store: Store) {
       const path = resource.path;
       if (/^\//.test(path)) {
         const fileName = path.replace('/', '');
-        if (fileName !== store.activeFile) {
+        if (fileName !== store.activeFile && store.files[fileName]) {
           store.activeFile = fileName;
           return true;
         }
@@ -70,12 +70,16 @@ export function loadWasm() {
 
 export class WorkerHost {
   onFetchCdnFile(uri: string, text: string) {
-    getOrCreateModel(Uri.parse(uri), undefined, text);
+    const model = getOrCreateModel(Uri.parse(uri), undefined, text);
+    if (model && /\.d\.[cm]?ts$/.test(uri)) {
+      model.updateOptions({ readOnly: true });
+    }
   }
 }
 
 let disposeVue: undefined | (() => void);
 export async function reloadLanguageTools(store: Store) {
+  store.acquireTypes = async () => {};
   disposeVue?.();
 
   let dependencies: Record<string, string> = {
@@ -95,7 +99,6 @@ export async function reloadLanguageTools(store: Store) {
       '@vue/runtime-core': version,
       '@vue/runtime-dom': version,
       '@vue/shared': version,
-      '@types/react': '18.0.0',
     };
   }
 
@@ -140,6 +143,18 @@ export async function reloadLanguageTools(store: Store) {
     Object.keys(store.files).map((filename) =>
       Uri.parse(`file:///${filename}`)
     );
+  const acquireTypes = async () => {
+    try {
+      const languageService = await worker.withSyncedResources(getSyncUris());
+      await languageService.acquireTypes(
+        Object.values(store.files)
+          .map((file) => file.code)
+          .join('\n')
+      );
+    } catch (error) {
+      console.warn('[codeplayer] Automatic type acquisition failed', error);
+    }
+  };
   const { dispose: disposeMarkers } = volar.editor.activateMarkers(
     worker,
     languageId,
@@ -164,7 +179,10 @@ export async function reloadLanguageTools(store: Store) {
     disposeMarkers();
     disposeAutoInsertion();
     disposeProvides();
+    worker.dispose();
   };
+  store.acquireTypes = acquireTypes;
+  void acquireTypes();
 }
 
 export interface WorkerMessage {

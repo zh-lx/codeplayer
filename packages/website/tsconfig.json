@@ -14,7 +14,8 @@
     "noEmit": true,
     "declaration": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "codeplayer": ["../core/src/index.ts"],
+      "@/*": ["../core/src/*"]
     }
   },
   "include": [
@@ -22,7 +23,8 @@
     "src/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "src/**/*.ce.vue"
+    "src/**/*.ce.vue",
+    "../core/src/**/*.d.ts"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

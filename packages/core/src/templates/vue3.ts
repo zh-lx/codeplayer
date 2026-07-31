@@ -53,7 +53,7 @@ const importMap = `
 {
   "imports": {
     "vue": "https://esm.sh/vue@latest",
-    "@arco-design/web-vue": "https://esm.sh/@arco-design/web-vue?deps=vue@latest",
+    "@arco-design/web-vue": "https://esm.sh/@arco-design/web-vue?bundle&deps=vue@latest",
     "@arco-design/web-vue/": "https://esm.sh/@arco-design/web-vue/"
   }
 }
