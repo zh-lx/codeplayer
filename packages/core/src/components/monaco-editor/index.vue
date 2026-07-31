@@ -138,7 +138,9 @@ onMounted(async () => {
 
   const acquireTypes = debounce(() => store.acquireTypes(), 500);
   editorInstance.onDidChangeModelContent(() => {
-    store.files[store.activeFile].code = editorInstance.getValue();
+    if (store.files[store.activeFile]) {
+      store.files[store.activeFile].code = editorInstance.getValue();
+    }
     acquireTypes();
   });
 

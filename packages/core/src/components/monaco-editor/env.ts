@@ -51,7 +51,7 @@ export function initMonaco(store: Store) {
       const path = resource.path;
       if (/^\//.test(path)) {
         const fileName = path.replace('/', '');
-        if (fileName !== store.activeFile) {
+        if (fileName !== store.activeFile && store.files[fileName]) {
           store.activeFile = fileName;
           return true;
         }
@@ -70,13 +70,16 @@ export function loadWasm() {
 
 export class WorkerHost {
   onFetchCdnFile(uri: string, text: string) {
-    if (/\.d\.[cm]?ts$/.test(uri)) return;
-    getOrCreateModel(Uri.parse(uri), undefined, text);
+    const model = getOrCreateModel(Uri.parse(uri), undefined, text);
+    if (model && /\.d\.[cm]?ts$/.test(uri)) {
+      model.updateOptions({ readOnly: true });
+    }
   }
 }
 
 let disposeVue: undefined | (() => void);
 export async function reloadLanguageTools(store: Store) {
+  store.acquireTypes = async () => {};
   disposeVue?.();
 
   let dependencies: Record<string, string> = {
