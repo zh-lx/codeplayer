@@ -117,10 +117,11 @@ self.onmessage = async (msg: MessageEvent<WorkerMessage>) => {
           const fileName = env.uriToFileName(uri);
           return typeFiles.get(fileName) ?? fallbackFs?.readFile(uri);
         },
-        readDirectory(uri) {
+        async readDirectory(uri) {
           const fileName = env.uriToFileName(uri);
           const typeEntries = readTypeFileDirectory(fileName);
-          const fallbackEntries = fallbackFs?.readDirectory(uri) ?? [];
+          const fallbackEntries: [string, number][] =
+            (await fallbackFs?.readDirectory(uri)) ?? [];
           if (!typeEntries.length) return fallbackEntries;
           const typeNames = new Set(typeEntries.map(([name]) => name));
           return [

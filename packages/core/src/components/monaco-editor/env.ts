@@ -72,7 +72,11 @@ export class WorkerHost {
   onFetchCdnFile(uri: string, text: string) {
     const model = getOrCreateModel(Uri.parse(uri), undefined, text);
     if (model && /\.d\.[cm]?ts$/.test(uri)) {
-      model.updateOptions({ readOnly: true });
+      for (const codeEditor of editor.getEditors()) {
+        if (codeEditor.getModel() === model) {
+          codeEditor.updateOptions({ readOnly: true });
+        }
+      }
     }
   }
 }
