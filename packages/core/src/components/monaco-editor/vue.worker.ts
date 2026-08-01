@@ -152,10 +152,17 @@ self.onmessage = async (msg: MessageEvent<WorkerMessage>) => {
           if (!typeEntries.length && !cachedEntries.length) {
             return fallbackEntries;
           }
-          const allEntries = [...typeEntries, ...cachedEntries];
-          const typeNames = new Set(allEntries.map(([name]) => name));
+          const mergedEntries = new Map<string, number>();
+          for (const [name, type] of [...typeEntries, ...cachedEntries]) {
+            const previousType = mergedEntries.get(name);
+            mergedEntries.set(
+              name,
+              previousType === 2 || type === 2 ? 2 : 1
+            );
+          }
+          const typeNames = new Set(mergedEntries.keys());
           return [
-            ...allEntries,
+            ...mergedEntries,
             ...fallbackEntries.filter(([name]) => !typeNames.has(name)),
           ];
         },

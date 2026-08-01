@@ -27,7 +27,7 @@ export function initMonaco(store: Store) {
       getOrCreateModel(
         Uri.parse(`file:///${filename}`),
         getFileLanguage(file.filename),
-        file.code
+        file.code,
       );
     }
 
@@ -88,13 +88,13 @@ export async function reloadLanguageTools(store: Store) {
   disposeVue?.();
 
   const vueDependencyVersion =
-    store.vueVersion?.toString() === '2' ? '2.7.15' : '3.3.6';
+    store.vueVersion?.toString() === '2' ? '2.7.15' : 'latest';
   let dependencies: Record<string, string> = {
     vue: vueDependencyVersion,
   };
 
   if (store.vueVersion) {
-    const version = store.vueVersion.toString() === '2' ? '2.7.15' : '3.3.6';
+    const version = store.vueVersion.toString() === '2' ? '2.7.15' : 'latest';
     dependencies = {
       ...dependencies,
       vue: version,
@@ -153,7 +153,7 @@ export async function reloadLanguageTools(store: Store) {
   const languageId = ['vue', 'javascript', 'typescript'];
   const getSyncUris = () =>
     Object.keys(store.files).map((filename) =>
-      Uri.parse(`file:///${filename}`)
+      Uri.parse(`file:///${filename}`),
     );
   const getLanguageServiceUris = () =>
     Object.keys(store.files)
@@ -165,7 +165,7 @@ export async function reloadLanguageTools(store: Store) {
       await languageService.acquireTypes(
         Object.values(store.files)
           .map((file) => file.code)
-          .join('\n')
+          .join('\n'),
       );
     } catch (error) {
       console.warn('[codeplayer] Automatic type acquisition failed', error);
@@ -174,8 +174,14 @@ export async function reloadLanguageTools(store: Store) {
   const warmupLanguageService = async () => {
     try {
       const languageService = await worker.withSyncedResources(getSyncUris());
-      for (const uri of getLanguageServiceUris()) {
-        await languageService.doValidation(uri.toString(), 'all');
+      const uris = getLanguageServiceUris();
+      const batchSize = 4;
+      for (let index = 0; index < uris.length; index += batchSize) {
+        await Promise.all(
+          uris
+            .slice(index, index + batchSize)
+            .map((uri) => languageService.doValidation(uri.toString(), 'all'))
+        );
       }
     } catch (error) {
       console.warn('[codeplayer] Language service warmup failed', error);
@@ -186,19 +192,19 @@ export async function reloadLanguageTools(store: Store) {
     languageId,
     'vue',
     getSyncUris,
-    editor as any
+    editor as any,
   );
   const { dispose: disposeAutoInsertion } = volar.editor.activateAutoInsertion(
     worker,
     languageId,
     getSyncUris,
-    editor as any
+    editor as any,
   );
   const { dispose: disposeProvides } = await volar.languages.registerProvides(
     worker,
     languageId,
     getSyncUris,
-    languages
+    languages,
   );
 
   disposeVue = () => {
