@@ -3,6 +3,7 @@ import type { File } from '@/compiler';
 
 const versionCacheName = 'codeplayer-package-versions-v1';
 const versionCacheTtl = 60 * 60 * 1000;
+const versionStoragePrefix = 'codeplayer-package-version-v1:';
 const exactVersionPattern =
   /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/;
 const resolvedVersions = new Map<string, string>();
@@ -156,6 +157,14 @@ async function fetchResolvedVersion(packageName: string, reference: string) {
     `${encodeURIComponent(packageName)}@${encodeURIComponent(reference)}`;
   const cache = await getVersionCache();
   let staleVersion: string | undefined;
+  const storedVersion = readStoredVersion(url);
+
+  if (storedVersion) {
+    if (Date.now() - storedVersion.cachedAt < versionCacheTtl) {
+      return storedVersion.version;
+    }
+    staleVersion = storedVersion.version;
+  }
 
   if (cache) {
     try {
@@ -169,7 +178,7 @@ async function fetchResolvedVersion(packageName: string, reference: string) {
           if (cachedAt && Date.now() - cachedAt < versionCacheTtl) {
             return cachedVersion;
           }
-          staleVersion = cachedVersion;
+          staleVersion ||= cachedVersion;
         }
       }
     } catch {
@@ -178,7 +187,9 @@ async function fetchResolvedVersion(packageName: string, reference: string) {
   }
 
   try {
-    const response = await fetch(url, { cache: 'no-store' });
+    const response = await fetch(url, {
+      cache: storedVersion || staleVersion ? 'reload' : 'default',
+    });
     if (!response.ok) return staleVersion;
     const payload = await response.json();
     const version =
@@ -202,9 +213,41 @@ async function fetchResolvedVersion(packageName: string, reference: string) {
         // Cache Storage is an optimization; keep the resolved version.
       }
     }
+    writeStoredVersion(url, version);
     return version;
   } catch {
     return staleVersion;
+  }
+}
+
+function readStoredVersion(url: string) {
+  try {
+    const value = globalThis.localStorage.getItem(
+      `${versionStoragePrefix}${url}`
+    );
+    if (!value) return;
+    const stored = JSON.parse(value);
+    if (
+      typeof stored?.version !== 'string' ||
+      !isExactVersion(stored.version) ||
+      typeof stored.cachedAt !== 'number'
+    ) {
+      return;
+    }
+    return stored as { version: string; cachedAt: number };
+  } catch {
+    return;
+  }
+}
+
+function writeStoredVersion(url: string, version: string) {
+  try {
+    globalThis.localStorage.setItem(
+      `${versionStoragePrefix}${url}`,
+      JSON.stringify({ version, cachedAt: Date.now() })
+    );
+  } catch {
+    // Local storage is an optimization; keep the resolved version in memory.
   }
 }
 
