@@ -194,7 +194,14 @@ self.onmessage = async (msg: MessageEvent<WorkerMessage>) => {
               );
               if (packages.length) {
                 await acquire(
-                  packages.map((name) => `import '${name}';`).join('\n')
+                  packages
+                    .map(
+                      (name) =>
+                        `import '${name}'; // types: ${
+                          dependencies[name] || 'latest'
+                        }`
+                    )
+                    .join('\n')
                 );
                 for (const packageName of packages) {
                   acquiredPackages.add(packageName);
@@ -323,16 +330,13 @@ self.onmessage = async (msg: MessageEvent<WorkerMessage>) => {
 };
 
 function createTypeFileCache(onReadFile: (uri: string, text: string) => void) {
-  const cacheName = 'codeplayer-type-files-v1';
+  const cacheName = 'codeplayer-type-files-v2';
   const networkFetch = globalThis.fetch.bind(globalThis);
   let cachePromise: Promise<Cache | undefined> | undefined;
   const notified = new Set<string>();
 
   function isCacheableUri(uri: string) {
-    return (
-      uri.startsWith(jsDelivrUriBase + '/') ||
-      uri.startsWith('https://data.jsdelivr.com/')
-    );
+    return isVersionedCdnUri(uri);
   }
 
   function getUri(input: RequestInfo | URL) {
@@ -455,6 +459,51 @@ function createTypeFileCache(onReadFile: (uri: string, text: string) => void) {
       }
     },
   };
+}
+
+function isVersionedCdnUri(uri: string) {
+  try {
+    const url = new URL(uri);
+    const jsDelivrBase = new URL(jsDelivrUriBase);
+    if (
+      url.origin === jsDelivrBase.origin &&
+      url.pathname.startsWith(`${jsDelivrBase.pathname}/`)
+    ) {
+      return hasExactPackageVersion(
+        url.pathname.slice(jsDelivrBase.pathname.length + 1)
+      );
+    }
+
+    if (url.origin === 'https://data.jsdelivr.com') {
+      for (const prefix of [
+        '/v1/package/resolve/npm/',
+        '/v1/package/npm/',
+      ]) {
+        if (url.pathname.startsWith(prefix)) {
+          return hasExactPackageVersion(url.pathname.slice(prefix.length));
+        }
+      }
+    }
+  } catch {
+    return false;
+  }
+  return false;
+}
+
+function hasExactPackageVersion(path: string) {
+  const segments = decodeURIComponent(path).split('/').filter(Boolean);
+  const packageSegment = segments[0]?.startsWith('@')
+    ? segments[1]
+    : segments[0];
+  if (!packageSegment) return false;
+  const marker = packageSegment.lastIndexOf('@');
+  return marker > 0 && isExactVersion(packageSegment.slice(marker + 1));
+}
+
+function isExactVersion(value: string) {
+  return /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(
+    value
+  );
 }
 
 async function importTsFromCdn(tsVersion: string) {

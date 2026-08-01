@@ -11,6 +11,7 @@ export interface ComplierPluginParams {
   entry: string;
   iframe: HTMLIFrameElement;
   render: boolean;
+  runtimeImportMap?: string;
 }
 
 export interface ComplierPluginResult {

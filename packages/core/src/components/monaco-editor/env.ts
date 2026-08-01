@@ -10,20 +10,14 @@ import { Store } from '@/store';
 import type { CreateData } from './vue.worker';
 import vueWorker from './vue.worker?worker';
 import { getFileLanguage } from '@/compiler';
-import { getImportMapDependencies } from './type-imports';
+import {
+  getImportedPackages,
+  getImportMapDependencies,
+  resolveDependencyVersions,
+  vueDependencyNames,
+} from './type-imports';
 
 let initted = false;
-const vueDependencyNames = [
-  'vue',
-  '@vue/compiler-core',
-  '@vue/compiler-dom',
-  '@vue/compiler-sfc',
-  '@vue/compiler-ssr',
-  '@vue/reactivity',
-  '@vue/runtime-core',
-  '@vue/runtime-dom',
-  '@vue/shared',
-] as const;
 
 export function initMonaco(store: Store) {
   if (initted) return;
@@ -124,6 +118,18 @@ export async function reloadLanguageTools(store: Store) {
     // Keep Vue runtime and compiler declarations on one import-map version.
     for (const packageName of vueDependencyNames) {
       dependencies[packageName] = importMapDependencies.vue;
+    }
+  }
+  for (const packageName of getImportedPackages(store.files, false)) {
+    if (!(packageName in dependencies)) {
+      dependencies[packageName] = 'latest';
+    }
+  }
+  dependencies = await resolveDependencyVersions(dependencies);
+  if (dependencies.vue) {
+    // Keep all Vue declarations on the same resolved session snapshot.
+    for (const packageName of vueDependencyNames) {
+      dependencies[packageName] = dependencies.vue;
     }
   }
 

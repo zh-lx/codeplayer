@@ -1,6 +1,25 @@
 import { MapFile } from '@/constant';
 import type { File } from '@/compiler';
 
+const versionCacheName = 'codeplayer-package-versions-v1';
+const versionCacheTtl = 60 * 60 * 1000;
+const exactVersionPattern =
+  /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/;
+const resolvedVersions = new Map<string, string>();
+const resolvingVersions = new Map<string, Promise<string | undefined>>();
+let versionCachePromise: Promise<Cache | undefined> | undefined;
+export const vueDependencyNames = [
+  'vue',
+  '@vue/compiler-core',
+  '@vue/compiler-dom',
+  '@vue/compiler-sfc',
+  '@vue/compiler-ssr',
+  '@vue/reactivity',
+  '@vue/runtime-core',
+  '@vue/runtime-dom',
+  '@vue/shared',
+] as const;
+
 export function getImportedPackages(
   files: Record<string, File>,
   includeImportMap = true
@@ -31,20 +50,342 @@ export function getImportMapDependencies(
   if (!importMap) return {};
 
   try {
-    const imports = JSON.parse(importMap).imports;
-    if (!imports || typeof imports !== 'object') return {};
-
     const dependencies: Record<string, string> = {};
-    for (const [specifier, target] of Object.entries(imports)) {
-      if (typeof target !== 'string') continue;
-      const packageName = normalizePackageName(specifier);
-      if (!packageName) continue;
-      dependencies[packageName] = getVersionFromUrl(target) || 'latest';
+    const parsedImportMap = JSON.parse(importMap);
+    collectImportMapDependencies(parsedImportMap.imports, dependencies);
+    for (const scopes of Object.values(parsedImportMap.scopes || {})) {
+      collectImportMapDependencies(scopes, dependencies);
     }
     return dependencies;
   } catch {
     return {};
   }
+}
+
+export async function resolveDependencyVersions(
+  dependencies: Record<string, string>
+): Promise<Record<string, string>> {
+  const entries = await Promise.all(
+    Object.entries(dependencies).map(async ([packageName, reference]) => [
+      packageName,
+      await resolveDependencyVersion(packageName, reference),
+    ] as const)
+  );
+  return Object.fromEntries(entries);
+}
+
+export async function resolveImportMap(
+  files: Record<string, File>
+): Promise<string> {
+  const source = files[MapFile]?.code || '';
+  if (!source) return source;
+
+  let importMap: any;
+  try {
+    importMap = JSON.parse(source);
+  } catch {
+    return source;
+  }
+
+  const dependencies = await resolveDependencyVersions(
+    getImportMapDependencies(files)
+  );
+  if (dependencies.vue) {
+    for (const packageName of vueDependencyNames) {
+      dependencies[packageName] = dependencies.vue;
+    }
+  }
+  rewriteImportMap(importMap, dependencies);
+  return JSON.stringify(importMap, null, 2);
+}
+
+function collectImportMapDependencies(
+  mappings: unknown,
+  dependencies: Record<string, string>
+) {
+  if (!mappings || typeof mappings !== 'object') return;
+
+  for (const [specifier, target] of Object.entries(mappings)) {
+    if (typeof target !== 'string') continue;
+    const packageName = normalizePackageName(specifier);
+    if (!packageName) continue;
+
+    dependencies[packageName] =
+      getVersionFromUrl(target, packageName) || 'latest';
+    const targetDependencies = getQueryDependencies(target);
+    for (const [dependencyName, reference] of targetDependencies) {
+      if (!(dependencyName in dependencies)) {
+        dependencies[dependencyName] = reference;
+      }
+    }
+  }
+}
+
+async function resolveDependencyVersion(
+  packageName: string,
+  reference: string
+) {
+  if (isExactVersion(reference)) return reference;
+
+  const key = `${packageName}@${reference}`;
+  const resolved = resolvedVersions.get(key);
+  if (resolved) return resolved;
+
+  let request = resolvingVersions.get(key);
+  if (!request) {
+    request = fetchResolvedVersion(packageName, reference);
+    resolvingVersions.set(key, request);
+  }
+
+  let version: string | undefined;
+  try {
+    version = await request;
+  } catch {
+    // Keep the original reference when version resolution fails.
+  } finally {
+    resolvingVersions.delete(key);
+  }
+  const sessionVersion = version || reference;
+  resolvedVersions.set(key, sessionVersion);
+  return sessionVersion;
+}
+
+async function fetchResolvedVersion(packageName: string, reference: string) {
+  const url =
+    `https://data.jsdelivr.com/v1/package/resolve/npm/` +
+    `${encodeURIComponent(packageName)}@${encodeURIComponent(reference)}`;
+  const cache = await getVersionCache();
+  let staleVersion: string | undefined;
+
+  if (cache) {
+    try {
+      const cachedResponse = await cache.match(url);
+      if (cachedResponse) {
+        const cachedVersion = await readCachedVersion(cachedResponse);
+        if (cachedVersion) {
+          const cachedAt = Number(
+            cachedResponse.headers.get('x-codeplayer-cached-at')
+          );
+          if (cachedAt && Date.now() - cachedAt < versionCacheTtl) {
+            return cachedVersion;
+          }
+          staleVersion = cachedVersion;
+        }
+      }
+    } catch {
+      // Cache Storage is an optimization; use the network when it fails.
+    }
+  }
+
+  try {
+    const response = await fetch(url, { cache: 'no-store' });
+    if (!response.ok) return staleVersion;
+    const payload = await response.json();
+    const version =
+      typeof payload?.version === 'string' && isExactVersion(payload.version)
+        ? payload.version
+        : undefined;
+    if (!version) return staleVersion;
+
+    if (cache) {
+      try {
+        await cache.put(
+          url,
+          new Response(JSON.stringify({ version }), {
+            headers: {
+              'content-type': 'application/json',
+              'x-codeplayer-cached-at': String(Date.now()),
+            },
+          })
+        );
+      } catch {
+        // Cache Storage is an optimization; keep the resolved version.
+      }
+    }
+    return version;
+  } catch {
+    return staleVersion;
+  }
+}
+
+async function getVersionCache() {
+  if (typeof globalThis.caches === 'undefined') return;
+  versionCachePromise ||= globalThis.caches
+    .open(versionCacheName)
+    .catch(() => undefined);
+  return versionCachePromise;
+}
+
+async function readCachedVersion(response: Response) {
+  try {
+    const payload = await response.json();
+    return (
+      typeof payload?.version === 'string' && isExactVersion(payload.version)
+    )
+      ? payload.version
+      : undefined;
+  } catch {
+    return;
+  }
+}
+
+function rewriteImportMap(
+  importMap: any,
+  dependencies: Record<string, string>
+) {
+  rewriteMappings(importMap.imports, dependencies);
+  if (importMap.scopes && typeof importMap.scopes === 'object') {
+    for (const mappings of Object.values(importMap.scopes)) {
+      rewriteMappings(mappings, dependencies);
+    }
+  }
+}
+
+function rewriteMappings(
+  mappings: unknown,
+  dependencies: Record<string, string>
+) {
+  if (!mappings || typeof mappings !== 'object') return;
+
+  for (const [specifier, target] of Object.entries(mappings)) {
+    if (typeof target !== 'string') continue;
+    const packageName = normalizePackageName(specifier);
+    if (!packageName) continue;
+    const version = dependencies[packageName];
+    if (!version) continue;
+    (mappings as Record<string, unknown>)[specifier] = rewriteTarget(
+      target,
+      packageName,
+      version,
+      dependencies
+    );
+  }
+}
+
+function rewriteTarget(
+  target: string,
+  packageName: string,
+  version: string,
+  dependencies: Record<string, string>
+) {
+  try {
+    const url = new URL(target);
+    const packagePath = findPackagePath(url, packageName);
+    if (packagePath) {
+      const currentVersion = packagePath.version;
+      if (
+        isExactVersion(version) &&
+        (!currentVersion || !isExactVersion(currentVersion))
+      ) {
+        const segments = url.pathname.split('/');
+        const segment = decodeURIComponent(segments[packagePath.versionIndex]);
+        const marker = segment.lastIndexOf('@');
+        const packageSegment = marker > 0 ? segment.slice(0, marker) : segment;
+        segments[packagePath.versionIndex] = `${packageSegment}@${version}`;
+        url.pathname = segments.join('/');
+      }
+    }
+
+    const queryDependencies = url.searchParams.get('deps');
+    if (queryDependencies) {
+      url.searchParams.set(
+        'deps',
+        rewriteDependencyList(queryDependencies, dependencies)
+      );
+    }
+    return url.toString();
+  } catch {
+    return target;
+  }
+}
+
+function findPackagePath(url: URL, packageName: string) {
+  const segments = url.pathname.split('/');
+  const packageParts = packageName.split('/');
+
+  for (let index = 0; index < segments.length; index++) {
+    const segment = decodeURIComponent(segments[index]);
+    if (packageParts.length === 1) {
+      const marker = segment.lastIndexOf('@');
+      const name = marker > 0 ? segment.slice(0, marker) : segment;
+      if (name === packageName) {
+        return {
+          version: marker > 0 ? segment.slice(marker + 1) : undefined,
+          versionIndex: index,
+        };
+      }
+      continue;
+    }
+
+    const encodedPackageName = packageParts.join('/');
+    if (
+      segment === encodedPackageName ||
+      segment.startsWith(`${encodedPackageName}@`)
+    ) {
+      const marker = segment.lastIndexOf('@');
+      return {
+        version: marker > 0 ? segment.slice(marker + 1) : undefined,
+        versionIndex: index,
+      };
+    }
+
+    const nextSegment = segments[index + 1];
+    if (segment !== packageParts[0] || nextSegment === undefined) continue;
+    const decodedNextSegment = decodeURIComponent(nextSegment);
+    const marker = decodedNextSegment.lastIndexOf('@');
+    const name =
+      marker > 0 ? decodedNextSegment.slice(0, marker) : decodedNextSegment;
+    if (name === packageParts[1]) {
+      return {
+        version: marker > 0 ? decodedNextSegment.slice(marker + 1) : undefined,
+        versionIndex: index + 1,
+      };
+    }
+  }
+}
+
+function rewriteDependencyList(
+  value: string,
+  dependencies: Record<string, string>
+) {
+  return value
+    .split(',')
+    .map((item) => {
+      const parsed = parseDependencyReference(item);
+      if (!parsed || !dependencies[parsed.packageName]) return item;
+      return `${parsed.packageName}@${dependencies[parsed.packageName]}`;
+    })
+    .join(',');
+}
+
+function getQueryDependencies(target: string) {
+  try {
+    const value = new URL(target).searchParams.get('deps');
+    if (!value) return [];
+    return value
+      .split(',')
+      .map(parseDependencyReference)
+      .filter((item): item is { packageName: string; reference: string } =>
+        !!item
+      )
+      .map(({ packageName, reference }) => [packageName, reference] as const);
+  } catch {
+    return [];
+  }
+}
+
+function parseDependencyReference(value: string) {
+  const item = value.trim();
+  if (!item) return;
+
+  const marker = item.lastIndexOf('@');
+  if (marker <= 0) {
+    return { packageName: item, reference: 'latest' };
+  }
+  return {
+    packageName: item.slice(0, marker),
+    reference: item.slice(marker + 1) || 'latest',
+  };
 }
 
 function normalizePackageName(specifier: string) {
@@ -65,18 +406,28 @@ function normalizePackageName(specifier: string) {
     : packageName.split('/')[0];
 }
 
-function getVersionFromUrl(target: string) {
+function getVersionFromUrl(target: string, packageName?: string) {
   try {
     const url = new URL(target);
+    if (packageName) {
+      const packagePath = findPackagePath(url, packageName);
+      if (packagePath) return packagePath.version || 'latest';
+    }
     const segments = url.pathname.split('/').filter(Boolean);
     if (!segments.length) return;
-    const packageSegment = segments[0].startsWith('@')
-      ? segments[1]
-      : segments[0];
-    if (!packageSegment) return;
+    const packageIndex = segments[0] === 'npm' ? 1 : 0;
+    const firstSegment = segments[packageIndex];
+    const packageSegment = firstSegment?.startsWith('@')
+      ? segments[packageIndex + 1]
+      : firstSegment;
+    if (!packageSegment) return 'latest';
     const marker = packageSegment.lastIndexOf('@');
     return marker > 0 ? packageSegment.slice(marker + 1) : 'latest';
   } catch {
     return 'latest';
   }
+}
+
+function isExactVersion(value: string) {
+  return exactVersionPattern.test(value);
 }

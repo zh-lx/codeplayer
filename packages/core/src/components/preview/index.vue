@@ -3,6 +3,7 @@ import { ref, Ref, onMounted, watch } from 'vue';
 import { store } from '@/store';
 import { modulesKey, exportKey, dynamicImportKey, MapFile } from '@/constant';
 import { Compiler } from '@/compiler';
+import { resolveImportMap } from '@/components/monaco-editor/type-imports';
 import {
   Hooks,
   ComplierPluginParams,
@@ -107,6 +108,7 @@ async function renderSandbox() {
   if (!previewDOM.value) {
     return;
   }
+  const runtimeImportMap = await resolveImportMap(store.files);
 
   // 建立一个新的 iframe
   iframe.value?.remove();
@@ -121,6 +123,7 @@ async function renderSandbox() {
     entry: store.entry,
     iframe: iframe.value as HTMLIFrameElement,
     render: true,
+    runtimeImportMap,
   });
   errors.value = result.errors;
 }
@@ -129,6 +132,7 @@ async function refreshSandbox() {
   if (!previewDOM.value) {
     return;
   }
+  const runtimeImportMap = await resolveImportMap(store.files);
   // 建立一个新的 iframe
   const result = { errors: [] };
   await compiler.run({
@@ -137,6 +141,7 @@ async function refreshSandbox() {
     entry: store.entry,
     iframe: iframe.value as HTMLIFrameElement,
     render: false,
+    runtimeImportMap,
   });
   errors.value = result.errors;
 }
