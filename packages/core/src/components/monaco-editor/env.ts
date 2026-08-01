@@ -10,6 +10,12 @@ import { Store } from '@/store';
 import type { CreateData } from './vue.worker';
 import vueWorker from './vue.worker?worker';
 import { getFileLanguage } from '@/compiler';
+import {
+  getImportedPackages,
+  getImportMapDependencies,
+  resolveDependencyVersions,
+  vueDependencyNames,
+} from './type-imports';
 
 let initted = false;
 
@@ -26,7 +32,7 @@ export function initMonaco(store: Store) {
       getOrCreateModel(
         Uri.parse(`file:///${filename}`),
         getFileLanguage(file.filename),
-        file.code
+        file.code,
       );
     }
 
@@ -86,24 +92,17 @@ export async function reloadLanguageTools(store: Store) {
   store.acquireTypes = async () => {};
   disposeVue?.();
 
+  const vueDependencyVersion =
+    store.vueVersion?.toString() === '2' ? '2.7.15' : 'latest';
   let dependencies: Record<string, string> = {
-    // ...store.state.dependencyVersion,
+    vue: vueDependencyVersion,
   };
 
   if (store.vueVersion) {
-    const version = store.vueVersion.toString() === '2' ? '2.7.15' : '3.3.6';
-    dependencies = {
-      ...dependencies,
-      vue: version,
-      '@vue/compiler-core': version,
-      '@vue/compiler-dom': version,
-      '@vue/compiler-sfc': version,
-      '@vue/compiler-ssr': version,
-      '@vue/reactivity': version,
-      '@vue/runtime-core': version,
-      '@vue/runtime-dom': version,
-      '@vue/shared': version,
-    };
+    const version = store.vueVersion.toString() === '2' ? '2.7.15' : 'latest';
+    for (const packageName of vueDependencyNames) {
+      dependencies[packageName] = version;
+    }
   }
 
   if (store.typescriptVersion) {
@@ -111,6 +110,27 @@ export async function reloadLanguageTools(store: Store) {
       ...dependencies,
       typescript: store.typescriptVersion,
     };
+  }
+
+  const importMapDependencies = getImportMapDependencies(store.files);
+  dependencies = { ...dependencies, ...importMapDependencies };
+  if (importMapDependencies.vue) {
+    // Keep Vue runtime and compiler declarations on one import-map version.
+    for (const packageName of vueDependencyNames) {
+      dependencies[packageName] = importMapDependencies.vue;
+    }
+  }
+  for (const packageName of getImportedPackages(store.files, false)) {
+    if (!(packageName in dependencies)) {
+      dependencies[packageName] = 'latest';
+    }
+  }
+  dependencies = await resolveDependencyVersions(dependencies);
+  if (dependencies.vue) {
+    // Keep all Vue declarations on the same resolved session snapshot.
+    for (const packageName of vueDependencyNames) {
+      dependencies[packageName] = dependencies.vue;
+    }
   }
 
   const worker = editor.createWebWorker<any>({
@@ -145,18 +165,38 @@ export async function reloadLanguageTools(store: Store) {
   const languageId = ['vue', 'javascript', 'typescript'];
   const getSyncUris = () =>
     Object.keys(store.files).map((filename) =>
-      Uri.parse(`file:///${filename}`)
+      Uri.parse(`file:///${filename}`),
     );
+  const getLanguageServiceUris = () =>
+    Object.keys(store.files)
+      .filter((filename) => languageId.includes(getFileLanguage(filename)))
+      .map((filename) => Uri.parse(`file:///${filename}`));
   const acquireTypes = async () => {
     try {
       const languageService = await worker.withSyncedResources(getSyncUris());
       await languageService.acquireTypes(
         Object.values(store.files)
           .map((file) => file.code)
-          .join('\n')
+          .join('\n'),
       );
     } catch (error) {
       console.warn('[codeplayer] Automatic type acquisition failed', error);
+    }
+  };
+  const warmupLanguageService = async () => {
+    try {
+      const languageService = await worker.withSyncedResources(getSyncUris());
+      const uris = getLanguageServiceUris();
+      const batchSize = 4;
+      for (let index = 0; index < uris.length; index += batchSize) {
+        await Promise.all(
+          uris
+            .slice(index, index + batchSize)
+            .map((uri) => languageService.doValidation(uri.toString(), 'all'))
+        );
+      }
+    } catch (error) {
+      console.warn('[codeplayer] Language service warmup failed', error);
     }
   };
   const { dispose: disposeMarkers } = volar.editor.activateMarkers(
@@ -164,19 +204,19 @@ export async function reloadLanguageTools(store: Store) {
     languageId,
     'vue',
     getSyncUris,
-    editor as any
+    editor as any,
   );
   const { dispose: disposeAutoInsertion } = volar.editor.activateAutoInsertion(
     worker,
     languageId,
     getSyncUris,
-    editor as any
+    editor as any,
   );
   const { dispose: disposeProvides } = await volar.languages.registerProvides(
     worker,
     languageId,
     getSyncUris,
-    languages
+    languages,
   );
 
   disposeVue = () => {
@@ -186,7 +226,10 @@ export async function reloadLanguageTools(store: Store) {
     worker.dispose();
   };
   store.acquireTypes = acquireTypes;
-  void acquireTypes();
+  void (async () => {
+    await acquireTypes();
+    await warmupLanguageService();
+  })();
 }
 
 export interface WorkerMessage {

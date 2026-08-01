@@ -24,7 +24,7 @@ onMounted(() => {
         theme: store.theme === 'dark' ? '' : 'light',
       }) as unknown as Instance<Props>;
     },
-    { immediate: true }
+    { immediate: true },
   );
 });
 
@@ -91,7 +91,7 @@ const initSettingMenu = () => {
           uniqueActive: true,
         })),
       },
-    ]
+    ],
   );
 };
 </script>
@@ -197,6 +197,7 @@ const initSettingMenu = () => {
   border-radius: 5px;
   background-color: var(--codeplayer-float-bgc);
   box-shadow: var(--codeplayer-menu-shadow);
+  font-family: @font-family;
   li {
     padding: 2.5px 20px 2.5px 20px;
     width: 200px;

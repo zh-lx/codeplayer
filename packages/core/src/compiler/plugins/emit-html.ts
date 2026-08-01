@@ -16,7 +16,7 @@ async function emitHtml(
   result: ComplierPluginResult
 ) {
   const { iframe, render, fileMap } = params;
-  const importMap = fileMap[MapFile].code;
+  const importMap = params.runtimeImportMap ?? fileMap[MapFile].code;
   const { html, links, modules, styles } = result;
   count++;
   const currentCount = count;
