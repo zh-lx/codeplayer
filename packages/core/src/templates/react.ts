@@ -47,9 +47,9 @@ export default App;
 const importMap = `
 {
   "imports": {
-    "react": "https://esm.sh/react@latest",
-    "react-dom/": "https://esm.sh/react-dom@latest/",
-    "antd": "https://esm.sh/antd@6.5.2?bundle&deps=react@latest,react-dom@latest"
+    "react": "https://esm.sh/react@19.2.8",
+    "react-dom/": "https://esm.sh/react-dom@19.2.8/",
+    "antd": "https://esm.sh/antd@6.5.3?bundle&deps=react@19.2.8,react-dom@19.2.8"
   }
 }
 `.trim();

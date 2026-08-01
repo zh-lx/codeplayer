@@ -10,6 +10,7 @@ import { Store } from '@/store';
 import type { CreateData } from './vue.worker';
 import vueWorker from './vue.worker?worker';
 import { getFileLanguage } from '@/compiler';
+import { getImportMapDependencies } from './type-imports';
 
 let initted = false;
 
@@ -86,8 +87,10 @@ export async function reloadLanguageTools(store: Store) {
   store.acquireTypes = async () => {};
   disposeVue?.();
 
+  const vueDependencyVersion =
+    store.vueVersion?.toString() === '2' ? '2.7.15' : '3.3.6';
   let dependencies: Record<string, string> = {
-    // ...store.state.dependencyVersion,
+    vue: vueDependencyVersion,
   };
 
   if (store.vueVersion) {
@@ -112,6 +115,11 @@ export async function reloadLanguageTools(store: Store) {
       typescript: store.typescriptVersion,
     };
   }
+
+  dependencies = {
+    ...dependencies,
+    ...getImportMapDependencies(store.files),
+  };
 
   const worker = editor.createWebWorker<any>({
     moduleId: 'vs/language/vue/vueWorker',
@@ -147,6 +155,10 @@ export async function reloadLanguageTools(store: Store) {
     Object.keys(store.files).map((filename) =>
       Uri.parse(`file:///${filename}`)
     );
+  const getLanguageServiceUris = () =>
+    Object.keys(store.files)
+      .filter((filename) => languageId.includes(getFileLanguage(filename)))
+      .map((filename) => Uri.parse(`file:///${filename}`));
   const acquireTypes = async () => {
     try {
       const languageService = await worker.withSyncedResources(getSyncUris());
@@ -157,6 +169,16 @@ export async function reloadLanguageTools(store: Store) {
       );
     } catch (error) {
       console.warn('[codeplayer] Automatic type acquisition failed', error);
+    }
+  };
+  const warmupLanguageService = async () => {
+    try {
+      const languageService = await worker.withSyncedResources(getSyncUris());
+      for (const uri of getLanguageServiceUris()) {
+        await languageService.doValidation(uri.toString(), 'all');
+      }
+    } catch (error) {
+      console.warn('[codeplayer] Language service warmup failed', error);
     }
   };
   const { dispose: disposeMarkers } = volar.editor.activateMarkers(
@@ -186,7 +208,10 @@ export async function reloadLanguageTools(store: Store) {
     worker.dispose();
   };
   store.acquireTypes = acquireTypes;
-  void acquireTypes();
+  void (async () => {
+    await acquireTypes();
+    await warmupLanguageService();
+  })();
 }
 
 export interface WorkerMessage {

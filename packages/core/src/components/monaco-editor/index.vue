@@ -22,6 +22,7 @@ import { loadGrammars, loadTheme } from 'monaco-volar';
 import { store } from '@/store';
 import { getFileLanguage, getFileExtraName } from '@/compiler';
 import { debounce } from '@/utils';
+import { getImportedPackages } from './type-imports';
 import CopyIcon from '@/components/toolbar/icons/copy.vue';
 
 const containerRef = ref<HTMLDivElement>();
@@ -136,7 +137,15 @@ onMounted(async () => {
     // ignore save event
   });
 
-  const acquireTypes = debounce(() => store.acquireTypes(), 500);
+  let knownImports = getImportedPackages(store.files, false);
+  const acquireTypes = debounce(() => {
+    const nextImports = getImportedPackages(store.files, false);
+    const hasNewImport = [...nextImports].some(
+      (packageName) => !knownImports.has(packageName)
+    );
+    knownImports = nextImports;
+    if (hasNewImport) void store.acquireTypes();
+  }, 500);
   editorInstance.onDidChangeModelContent(() => {
     if (store.files[store.activeFile]) {
       store.files[store.activeFile].code = editorInstance.getValue();
