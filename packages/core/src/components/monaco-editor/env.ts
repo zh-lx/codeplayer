@@ -13,6 +13,17 @@ import { getFileLanguage } from '@/compiler';
 import { getImportMapDependencies } from './type-imports';
 
 let initted = false;
+const vueDependencyNames = [
+  'vue',
+  '@vue/compiler-core',
+  '@vue/compiler-dom',
+  '@vue/compiler-sfc',
+  '@vue/compiler-ssr',
+  '@vue/reactivity',
+  '@vue/runtime-core',
+  '@vue/runtime-dom',
+  '@vue/shared',
+] as const;
 
 export function initMonaco(store: Store) {
   if (initted) return;
@@ -95,18 +106,9 @@ export async function reloadLanguageTools(store: Store) {
 
   if (store.vueVersion) {
     const version = store.vueVersion.toString() === '2' ? '2.7.15' : 'latest';
-    dependencies = {
-      ...dependencies,
-      vue: version,
-      '@vue/compiler-core': version,
-      '@vue/compiler-dom': version,
-      '@vue/compiler-sfc': version,
-      '@vue/compiler-ssr': version,
-      '@vue/reactivity': version,
-      '@vue/runtime-core': version,
-      '@vue/runtime-dom': version,
-      '@vue/shared': version,
-    };
+    for (const packageName of vueDependencyNames) {
+      dependencies[packageName] = version;
+    }
   }
 
   if (store.typescriptVersion) {
@@ -116,10 +118,14 @@ export async function reloadLanguageTools(store: Store) {
     };
   }
 
-  dependencies = {
-    ...dependencies,
-    ...getImportMapDependencies(store.files),
-  };
+  const importMapDependencies = getImportMapDependencies(store.files);
+  dependencies = { ...dependencies, ...importMapDependencies };
+  if (importMapDependencies.vue) {
+    // Keep Vue runtime and compiler declarations on one import-map version.
+    for (const packageName of vueDependencyNames) {
+      dependencies[packageName] = importMapDependencies.vue;
+    }
+  }
 
   const worker = editor.createWebWorker<any>({
     moduleId: 'vs/language/vue/vueWorker',
