@@ -165,7 +165,9 @@ async function resolveDependencyVersion(
     resolvingVersions.delete(key);
   }
   const sessionVersion = version || normalizedReference;
-  resolvedVersions.set(key, sessionVersion);
+  if (version) {
+    resolvedVersions.set(key, version);
+  }
   return sessionVersion;
 }
 
@@ -367,15 +369,18 @@ function rewriteTarget(
     const packagePath = findPackagePath(url, packageName);
     if (packagePath) {
       const currentVersion = packagePath.version;
-      const hasMalformedVersion = currentVersion?.includes('@') ?? false;
+      const segments = url.pathname.split('/');
+      const segment = decodeURIComponent(segments[packagePath.versionIndex]);
+      const hasMalformedVersion = hasMalformedPackageVersion(
+        segment,
+        packageName
+      );
       if (
         (isExactVersion(version) || hasMalformedVersion) &&
         (!currentVersion ||
           !isExactVersion(currentVersion) ||
           hasMalformedVersion)
       ) {
-        const segments = url.pathname.split('/');
-        const segment = decodeURIComponent(segments[packagePath.versionIndex]);
         const packageSegment = getPackageSegment(segment, packageName);
         const replacementVersion = isExactVersion(version) ? version : 'latest';
         segments[
@@ -404,6 +409,13 @@ function getPackageSegment(segment: string, packageName: string) {
   }
   const marker = segment.indexOf('@');
   return marker > 0 ? segment.slice(0, marker) : segment;
+}
+
+function hasMalformedPackageVersion(segment: string, packageName: string) {
+  const packageSegment = getPackageSegment(segment, packageName);
+  if (!segment.startsWith(packageSegment)) return false;
+  const version = segment.slice(packageSegment.length);
+  return version.startsWith('@') && version.indexOf('@', 1) >= 0;
 }
 
 function findPackagePath(url: URL, packageName: string) {
