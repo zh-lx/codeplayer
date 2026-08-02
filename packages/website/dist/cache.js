@@ -1,6 +1,7 @@
 (() => {
-  const cacheName = 'codeplayer-website-assets-v1';
-  const buildVersion = 'msbqzvwf';
+  const buildVersion = 'msbrn2fq';
+  const cacheNamePrefix = 'codeplayer-website-assets-';
+  const cacheName = `${cacheNamePrefix}${buildVersion}`;
   const configuredBase =
     'https://cdn.jsdelivr.net/gh/zh-lx/codeplayer/packages/website/dist/';
   const currentScript = document.currentScript;
@@ -51,8 +52,27 @@
   }
 
   function getCache() {
-    cachePromise ||= globalThis.caches.open(cacheName).catch(() => undefined);
+    cachePromise ||= cleanupOldCaches()
+      .then(() => globalThis.caches.open(cacheName))
+      .catch(() => undefined);
     return cachePromise;
+  }
+
+  async function cleanupOldCaches() {
+    try {
+      const cacheNames = await globalThis.caches.keys();
+      const staleCacheNames = cacheNames.filter(
+        (name) =>
+          name.startsWith(cacheNamePrefix) && name !== cacheName
+      );
+      await Promise.all(
+        staleCacheNames.map((name) =>
+          globalThis.caches.delete(name).catch(() => false)
+        )
+      );
+    } catch {
+      // Cache cleanup is an optimization; it must not block network requests.
+    }
   }
 
   async function readCache(cache, request) {
