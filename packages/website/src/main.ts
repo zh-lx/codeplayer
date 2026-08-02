@@ -1,7 +1,5 @@
-import { createApp } from 'vue';
 import 'codeplayer/dist/style.css';
 
-import App from './App.vue';
+void import('./bootstrap');
 
-const app = createApp(App);
-app.mount('#app');
+export {};
