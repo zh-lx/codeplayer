@@ -317,9 +317,15 @@ self.onmessage = async (msg: MessageEvent<WorkerMessage>) => {
           return;
         }
         const parts = moduleName.split('/');
-        return moduleName.startsWith('@')
+        const packageName = moduleName.startsWith('@')
           ? parts.slice(0, 2).join('/')
           : parts[0];
+        const versionMarker = packageName.startsWith('@')
+          ? packageName.indexOf('@', packageName.indexOf('/') + 1)
+          : packageName.indexOf('@');
+        return versionMarker > 0
+          ? packageName.slice(0, versionMarker)
+          : packageName;
       }
     },
   );
@@ -517,13 +523,13 @@ function createTypeFileCache(onReadFile: (uri: string, text: string) => void) {
       const policy = getCachePolicy(uri);
       if (!policy) return false;
       const { response } = await findCachedResponse(uri, policy);
-      return !!response;
+      return !!response?.ok;
     },
     async read(uri: string) {
       const policy = getCachePolicy(uri);
       if (!policy) return;
       const { response } = await findCachedResponse(uri, policy);
-      return response ? await response.text() : undefined;
+      return response?.ok ? await response.text() : undefined;
     },
     async write(uri: string, text: string) {
       if (!isCacheableUri(uri)) return;
@@ -568,14 +574,14 @@ function createTypeFileCache(onReadFile: (uri: string, text: string) => void) {
         if (staleResponse) return staleResponse;
         throw error;
       }
-      if (cache && response.ok) {
+      if (shouldPersistResponse(uri, response)) {
         const cachedAt = Date.now();
-        await createCachedResponse(response.clone(), cachedAt)
-          .then((cachedResponse) => cache.put(uri, cachedResponse))
-          .catch(() => undefined);
+        if (cache) {
+          await createCachedResponse(response.clone(), cachedAt)
+            .then((cachedResponse) => cache.put(uri, cachedResponse))
+            .catch(() => undefined);
+        }
         await writeDatabase(uri, response.clone(), cachedAt);
-      } else if (response.ok) {
-        await writeDatabase(uri, response.clone());
       }
       return response;
     },
@@ -612,6 +618,23 @@ function createTypeFileCache(onReadFile: (uri: string, text: string) => void) {
       }
     },
   };
+}
+
+function shouldPersistResponse(uri: string, response: Response) {
+  return (
+    response.ok ||
+    (isFloatingPackageApiUri(uri) &&
+      (response.status === 400 || response.status === 404))
+  );
+}
+
+function isFloatingPackageApiUri(uri: string) {
+  try {
+    const url = new URL(uri);
+    return url.origin === 'https://data.jsdelivr.com' && isFloatingCdnUri(uri);
+  } catch {
+    return false;
+  }
 }
 
 interface StoredResponse {
