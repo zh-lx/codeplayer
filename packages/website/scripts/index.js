@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 
 const directoryPath = path.resolve(__dirname, '../dist'); // 指定要遍历的目录
+const buildVersion =
+  process.env.CODEPLAYER_BUILD_VERSION || Date.now().toString(36);
 
 function replaceTextInFile(filePath, search, replace) {
   let data = fs.readFileSync(filePath, 'utf8');
@@ -21,6 +23,11 @@ function traverseDirectory(dir) {
       // 递归遍历子目录
       traverseDirectory(filePath);
     } else {
+      replaceTextInFile(
+        filePath,
+        '__CODEPLAYER_BUILD_VERSION__',
+        buildVersion
+      );
       // 处理文件中的文本替换
       replaceTextInFile(
         filePath,
