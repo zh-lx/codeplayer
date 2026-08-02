@@ -6,7 +6,10 @@ const versionCacheTtl = 60 * 60 * 1000;
 const versionStoragePrefix = 'codeplayer-package-version-v1:';
 const exactVersionPattern =
   /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/;
-const resolvedVersions = new Map<string, string>();
+const resolvedVersions = new Map<
+  string,
+  { version: string; cachedAt: number }
+>();
 const resolvingVersions = new Map<string, Promise<string | undefined>>();
 let versionCachePromise: Promise<Cache | undefined> | undefined;
 
@@ -148,7 +151,12 @@ async function resolveDependencyVersion(
 
   const key = `${packageName}@${normalizedReference}`;
   const resolved = resolvedVersions.get(key);
-  if (resolved) return resolved;
+  if (resolved) {
+    if (Date.now() - resolved.cachedAt < versionCacheTtl) {
+      return resolved.version;
+    }
+    resolvedVersions.delete(key);
+  }
 
   let request = resolvingVersions.get(key);
   if (!request) {
@@ -165,9 +173,10 @@ async function resolveDependencyVersion(
     resolvingVersions.delete(key);
   }
   const sessionVersion = version || normalizedReference;
-  if (version) {
-    resolvedVersions.set(key, version);
-  }
+  resolvedVersions.set(key, {
+    version: sessionVersion,
+    cachedAt: Date.now(),
+  });
   return sessionVersion;
 }
 

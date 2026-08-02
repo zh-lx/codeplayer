@@ -1,5 +1,5 @@
 (() => {
-  const buildVersion = 'negative-type-cache-v4';
+  const buildVersion = 'negative-type-cache-v5';
   const cacheNamePrefix = 'codeplayer-website-assets-';
   const cacheName = `${cacheNamePrefix}${buildVersion}`;
   const configuredBase =
