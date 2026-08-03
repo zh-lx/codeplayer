@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue';
 import { File } from '@/compiler';
 import { store } from '@/store';
+import { UIText } from '@/constant';
 import AddFile from './icons/add-file.vue';
 import FileInput from './file-input.vue';
 import FileList from './file-list.vue';
@@ -9,6 +10,7 @@ import FileList from './file-list.vue';
 const newFilename = ref('');
 const originFilename = ref('');
 const showNewFile = ref(false);
+const filesTitle = computed(() => UIText.Files);
 
 // 切换文件
 const changeActiveFile = (filename: string) => {
@@ -84,7 +86,7 @@ const newFileError = computed(() => {
   <div :class="`codeplayer-files-container`">
     <div class="files-container">
       <div class="files-head">
-        <div class="files-head-left">Files</div>
+        <div class="files-head-left">{{ filesTitle }}</div>
         <div class="files-head-right">
           <AddFile @click="() => handleEditFilename()" />
         </div>

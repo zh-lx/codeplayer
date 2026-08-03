@@ -6,6 +6,7 @@ import RefreshIcon from './icons/refresh.vue';
 import ShareIcon from './icons/share.vue';
 import DocsIcon from './icons/docs.vue';
 import GithubIcon from './icons/git.vue';
+import LanguageIcon from './icons/language.vue';
 
 const showDidiver = computed(() => {
   if (
@@ -32,6 +33,7 @@ const showDidiver = computed(() => {
     <div class="toolbar-right">
       <DocsIcon />
       <GithubIcon />
+      <LanguageIcon />
       <div class="vertical-divider" v-if="showDidiver"></div>
       <RefreshIcon />
       <ShareIcon />

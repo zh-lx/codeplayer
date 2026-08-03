@@ -1,31 +1,15 @@
 <script lang="ts" setup>
-import { onMounted, ref, watch } from 'vue';
-import tippy from 'tippy.js';
-import type { Instance, Props } from 'tippy.js';
+import { onMounted, ref } from 'vue';
 import { store, Theme } from '@/store';
-import { TooltipText, CodeSizes, LocalThemeKey } from '@/constant';
+import { TooltipText, UIText, CodeSizes, LocalThemeKey } from '@/constant';
 import RightMenu, { activeClass } from '@/components/menus';
+import { useTooltip } from '@/composables/use-tooltip';
 
 const settingDOM = ref();
-let tippyDOM: Instance<Props> | undefined;
+useTooltip(settingDOM, () => TooltipText.Settings);
 
 onMounted(() => {
   initSettingMenu();
-  watch(
-    () => store.theme,
-    () => {
-      if (tippyDOM) {
-        tippyDOM.destroy();
-      }
-      tippyDOM = tippy(settingDOM.value, {
-        content: TooltipText.Settings,
-        placement: 'bottom',
-        arrow: false,
-        theme: store.theme === 'dark' ? '' : 'light',
-      }) as unknown as Instance<Props>;
-    },
-    { immediate: true },
-  );
 });
 
 const initSettingMenu = () => {
@@ -39,28 +23,28 @@ const initSettingMenu = () => {
     () => [
       {
         type: 'li',
-        text: `文件栏`,
+        text: UIText.FileBar,
         class: store.showFileBar ? activeClass : '',
         callback: () => (store.showFileBar = !store.showFileBar),
         arrow: true,
       },
       {
         type: 'li',
-        text: `代码编辑器`,
+        text: UIText.CodeEditor,
         class: store.showCode ? activeClass : '',
         callback: () => (store.showCode = !store.showCode),
         arrow: true,
       },
       {
         type: 'li',
-        text: `预览区`,
+        text: UIText.Preview,
         class: store.showPreview ? activeClass : '',
         callback: () => (store.showPreview = !store.showPreview),
         arrow: true,
       },
       {
         type: 'li',
-        text: '翻转布局',
+        text: UIText.ReverseLayout,
         class: !store.reverse ? '' : activeClass,
         callback: () => (store.reverse = !store.reverse),
         arrow: true,
@@ -68,7 +52,7 @@ const initSettingMenu = () => {
       { type: 'hr' },
       {
         type: 'ul',
-        text: '编辑器字号',
+        text: UIText.EditorFontSize,
         children: CodeSizes.map((size) => ({
           type: 'li',
           text: `${size} px`,
@@ -79,10 +63,10 @@ const initSettingMenu = () => {
       },
       {
         type: 'ul',
-        text: '主题',
-        children: ['light', 'dark'].map((theme) => ({
+        text: UIText.Theme,
+        children: (['light', 'dark'] as const).map((theme) => ({
           type: 'li',
-          text: theme,
+          text: theme === 'light' ? UIText.Light : UIText.Dark,
           class: store.theme === theme ? activeClass : '',
           callback: () => {
             (store.theme = theme as Theme),

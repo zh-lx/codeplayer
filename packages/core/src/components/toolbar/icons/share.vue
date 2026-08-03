@@ -1,35 +1,16 @@
 <script lang="ts" setup>
 import { store } from '@/store';
-import { watch, ref, onMounted } from 'vue';
-import tippy from 'tippy.js';
-import type { Instance, Props } from 'tippy.js';
+import { ref } from 'vue';
 import { TooltipText } from '@/constant';
 import { message } from '@/utils';
+import { useTooltip } from '@/composables/use-tooltip';
 
 const reference = ref();
-let tippyDOM: Instance<Props> | undefined;
-
-onMounted(() => {
-  watch(
-    () => store.theme,
-    () => {
-      if (tippyDOM) {
-        tippyDOM.destroy();
-      }
-      tippyDOM = tippy(reference.value, {
-        content: TooltipText.Share,
-        placement: 'bottom',
-        arrow: false,
-        theme: store.theme === 'dark' ? '' : 'light',
-      }) as unknown as Instance<Props>;
-    },
-    { immediate: true }
-  );
-});
+useTooltip(reference, () => TooltipText.Share);
 
 function share() {
   navigator.clipboard.writeText(location.href);
-  message('已将链接复制至剪切板', { type: 'success' });
+  message(TooltipText.CopyLink, { type: 'success' });
 }
 </script>
 

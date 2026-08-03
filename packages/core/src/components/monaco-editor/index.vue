@@ -24,10 +24,18 @@ import { getFileLanguage, getFileExtraName } from '@/compiler';
 import { debounce } from '@/utils';
 import { getImportedPackages } from './type-imports';
 import CopyIcon from '@/components/toolbar/icons/copy.vue';
+import { currentLanguage } from '@/constant';
 
 const containerRef = ref<HTMLDivElement>();
-const ready = ref(false);
 const editor = shallowRef<monaco.editor.IStandaloneCodeEditor>();
+const editorWatchStops: Array<() => void> = [];
+const editorDisposables: monaco.IDisposable[] = [];
+
+let editorTheme: Awaited<ReturnType<typeof loadTheme>>;
+let editorLanguage: string | undefined;
+let editorReady = false;
+let isMounted = false;
+let rebuildPromise = Promise.resolve();
 
 initMonaco(store);
 
@@ -43,20 +51,29 @@ const tempJsModel = getOrCreateModel(
   'let temp = 1'
 );
 
-onMounted(async () => {
-  const theme = await loadTheme(monaco.editor as any);
-  ready.value = true;
-  await nextTick();
+function disposeEditor() {
+  editorWatchStops.splice(0).forEach((stop) => stop());
+  editorDisposables.splice(0).forEach((disposable) => disposable.dispose());
+  editor.value?.dispose();
+  editor.value = undefined;
+  editorLanguage = undefined;
+}
 
-  if (!containerRef.value) {
-    throw new Error('Cannot find containerRef');
+function saveEditorViewState() {
+  const file = store.files[store.activeFile];
+  if (file && editor.value) {
+    file.editorViewState = editor.value.saveViewState();
   }
+}
+
+function createEditor() {
+  if (!containerRef.value || !editorTheme) return;
 
   const editorInstance = monaco.editor.create(containerRef.value, {
     value: store.files[store.activeFile]?.code || '',
     language: lang.value,
     fontSize: 13,
-    theme: theme[store.theme],
+    theme: editorTheme[store.theme],
     automaticLayout: true,
     scrollBeyondLastLine: false,
     minimap: {
@@ -69,6 +86,7 @@ onMounted(async () => {
     fixedOverflowWidgets: true,
   });
   editor.value = editorInstance;
+  editorLanguage = currentLanguage.value;
 
   // Support for semantic highlighting
   const t = (editorInstance as any)._themeService._theme;
@@ -92,10 +110,9 @@ onMounted(async () => {
     }
   };
 
-  watch(
+  const stopActiveFileWatch = watch(
     () => store.activeFile,
-    async (_, oldFilename) => {
-      if (!editorInstance) return;
+    (_, oldFilename) => {
       const file = store.files[store.activeFile];
       if (!file) return null;
 
@@ -130,8 +147,7 @@ onMounted(async () => {
     },
     { immediate: true }
   );
-
-  await loadGrammars(monaco as any, editorInstance as any);
+  editorWatchStops.push(stopActiveFileWatch);
 
   editorInstance.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
     // ignore save event
@@ -146,16 +162,16 @@ onMounted(async () => {
     knownImports = nextImports;
     if (hasNewImport) void store.acquireTypes();
   }, 500);
-  editorInstance.onDidChangeModelContent(() => {
-    if (store.files[store.activeFile]) {
-      store.files[store.activeFile].code = editorInstance.getValue();
-    }
-    acquireTypes();
-  });
+  editorDisposables.push(
+    editorInstance.onDidChangeModelContent(() => {
+      if (store.files[store.activeFile]) {
+        store.files[store.activeFile].code = editorInstance.getValue();
+      }
+      acquireTypes();
+    })
+  );
 
-  store.reloadLanguageTools();
-
-  watch(
+  const stopCodeSizeWatch = watch(
     () => store.codeSize,
     () => {
       editorInstance.updateOptions({
@@ -166,20 +182,75 @@ onMounted(async () => {
       immediate: true,
     }
   );
+  editorWatchStops.push(stopCodeSizeWatch);
 
-  watch(
+  const stopThemeWatch = watch(
     () => store.theme,
     (n) => {
       editorInstance.updateOptions({
-        theme: n === 'light' ? theme.light : theme.dark,
+        theme: n === 'light' ? editorTheme.light : editorTheme.dark,
       });
     },
     { immediate: true }
   );
+  editorWatchStops.push(stopThemeWatch);
+
+  return editorInstance;
+}
+
+function rebuildEditor() {
+  if (!editorReady || !editorTheme || !containerRef.value) return;
+
+  rebuildPromise = rebuildPromise.then(async () => {
+    if (!editorReady || editorLanguage === currentLanguage.value) return;
+
+    saveEditorViewState();
+    disposeEditor();
+    await nextTick();
+
+    if (isMounted) {
+      createEditor();
+    }
+  });
+
+  return rebuildPromise;
+}
+
+const stopLanguageWatch = watch(currentLanguage, () => {
+  void rebuildEditor();
+});
+
+onMounted(async () => {
+  isMounted = true;
+  editorTheme = await loadTheme(monaco.editor as any);
+
+  if (!isMounted) return;
+
+  await nextTick();
+
+  if (!containerRef.value) {
+    throw new Error('Cannot find containerRef');
+  }
+
+  const editorInstance = createEditor();
+  if (!editorInstance) return;
+
+  await loadGrammars(monaco as any, editorInstance as any);
+  if (!isMounted) return;
+
+  store.reloadLanguageTools();
+  editorReady = true;
+  if (editorLanguage !== currentLanguage.value) {
+    void rebuildEditor();
+  }
 });
 
 onBeforeUnmount(() => {
-  editor.value?.dispose();
+  isMounted = false;
+  editorReady = false;
+  stopLanguageWatch();
+  saveEditorViewState();
+  disposeEditor();
 });
 </script>
 

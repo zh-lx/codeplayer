@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { store } from '@/store';
 import { message } from '@/utils';
+import { TooltipText, UIText } from '@/constant';
 
 const copied = ref(false);
 let timer: any;
@@ -18,7 +19,7 @@ function copyCode() {
       copied.value = false;
     }, 3000);
   } catch (error) {
-    message('复制失败: ' + String(error), { type: 'danger' });
+    message(`${TooltipText.CopyFailed}: ` + String(error), { type: 'danger' });
   }
 }
 </script>
@@ -26,7 +27,7 @@ function copyCode() {
 <template>
   <div @click="copyCode" class="toolbar-icon copy-code-icon">
     <div class="copied-box" v-if="copied">
-      <span>Copied</span>
+      <span>{{ UIText.Copied }}</span>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"

@@ -27,6 +27,7 @@ export const fileTypes = [
 export const extensions = ['.js', '.ts', '.json', '.jsx', '.tsx', '.vue'];
 export const URLCodeKey = '_codeplayer_code';
 export * from './tooltip';
+export * from './text';
 
 export const CodeSizes = [12, 13, 14, 15, 16, 17, 18];
 export const LocalThemeKey = 'codeplayer_local_theme_key';

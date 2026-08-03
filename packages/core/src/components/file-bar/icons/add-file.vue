@@ -1,30 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
-import tippy from 'tippy.js';
-import type { Instance, Props } from 'tippy.js';
+import { ref } from 'vue';
 import { TooltipText } from '@/constant';
-import { store } from '@/store';
+import { useTooltip } from '@/composables/use-tooltip';
 
 const reference = ref();
-let tippyDOM: Instance<Props> | undefined;
-
-onMounted(() => {
-  watch(
-    () => store.theme,
-    () => {
-      if (tippyDOM) {
-        tippyDOM.destroy();
-      }
-      tippyDOM = tippy(reference.value, {
-        content: TooltipText.AddFile,
-        placement: 'bottom',
-        arrow: false,
-        theme: store.theme === 'dark' ? '' : 'light',
-      }) as unknown as Instance<Props>;
-    },
-    { immediate: true }
-  );
-});
+useTooltip(reference, () => TooltipText.AddFile);
 </script>
 <template>
   <div class="operate-btn" ref="reference">
