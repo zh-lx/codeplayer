@@ -34,13 +34,13 @@ initMonaco(store);
 const lang = computed(() =>
   ['css', 'less', 'sass', 'scss'].includes(getFileExtraName(store.activeFile))
     ? 'css'
-    : 'javascript'
+    : 'javascript',
 );
 
 const tempJsModel = getOrCreateModel(
   monaco.Uri.parse(`file:///temp.js`),
   'javascript',
-  'let temp = 1'
+  'let temp = 1',
 );
 
 onMounted(async () => {
@@ -75,7 +75,7 @@ onMounted(async () => {
   t.getTokenStyleMetadata = (
     type: string,
     modifiers: string[],
-    _language: string
+    _language: string,
   ) => {
     const _readonly = modifiers.includes('readonly');
     switch (type) {
@@ -102,7 +102,7 @@ onMounted(async () => {
       const model = getOrCreateModel(
         monaco.Uri.parse(`file:///${store.activeFile}`),
         getFileLanguage(store.activeFile),
-        file.code
+        file.code,
       );
 
       const oldFile = oldFilename ? store.files[oldFilename] : null;
@@ -120,7 +120,7 @@ onMounted(async () => {
       monaco.editor.setModelLanguage(model!, getFileLanguage(store.activeFile));
       if (
         ['.css', '.less', '.sass', '.scss'].includes(
-          getFileExtraName(store.activeFile)
+          getFileExtraName(store.activeFile),
         )
       ) {
         nextTick(() => {
@@ -128,7 +128,7 @@ onMounted(async () => {
         });
       }
     },
-    { immediate: true }
+    { immediate: true },
   );
 
   await loadGrammars(monaco as any, editorInstance as any);
@@ -141,7 +141,7 @@ onMounted(async () => {
   const acquireTypes = debounce(() => {
     const nextImports = getImportedPackages(store.files, false);
     const hasNewImport = [...nextImports].some(
-      (packageName) => !knownImports.has(packageName)
+      (packageName) => !knownImports.has(packageName),
     );
     knownImports = nextImports;
     if (hasNewImport) void store.acquireTypes();
@@ -164,7 +164,7 @@ onMounted(async () => {
     },
     {
       immediate: true,
-    }
+    },
   );
 
   watch(
@@ -174,7 +174,7 @@ onMounted(async () => {
         theme: n === 'light' ? theme.light : theme.dark,
       });
     },
-    { immediate: true }
+    { immediate: true },
   );
 });
 

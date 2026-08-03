@@ -1,7 +1,7 @@
 (() => {
   const cdnServiceWorkerUrl =
     'https://cdn.jsdelivr.net/gh/zh-lx/codeplayer/packages/website/dist/sw.js';
-  const buildVersion = 'negative-type-cache-v5';
+  const buildVersion = 'mscsa1mq';
   const runtimeLoadedKey = '__CODEPLAYER_SW_RUNTIME_LOADED__';
   const isLocalDevelopment = /^(?:localhost|127\.0\.0\.1)$/.test(
     self.location.hostname

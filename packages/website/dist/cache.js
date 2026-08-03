@@ -1,5 +1,5 @@
 (() => {
-  const buildVersion = 'negative-type-cache-v5';
+  const buildVersion = 'mscsa1mq';
   const cacheNamePrefix = 'codeplayer-website-assets-';
   const cacheName = `${cacheNamePrefix}${buildVersion}`;
   const configuredBase =
