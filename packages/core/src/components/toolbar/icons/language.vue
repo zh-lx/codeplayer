@@ -59,4 +59,11 @@ useTooltip(reference, () => TooltipText.ToggleLanguage);
 .language-tertiary path {
   stroke: @text-color-tertiary;
 }
+
+.toolbar-icon:hover {
+  .language-primary path,
+  .language-tertiary path {
+    stroke: var(--codeplayer-brand-hover);
+  }
+}
 </style>
