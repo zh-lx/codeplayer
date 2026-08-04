@@ -21,6 +21,7 @@ export function useTooltip(
       placement: 'bottom',
       arrow: false,
       theme: store.theme === 'dark' ? '' : 'light',
+      hideOnClick: false,
     }) as unknown as Instance<Props>;
   });
 
